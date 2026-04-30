@@ -39,86 +39,98 @@ export default function CollegeWaitlistModal({ isOpen, onClose }: { isOpen: bool
   };
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
-      <div className="absolute inset-0 bg-black/80 backdrop-blur-xl" onClick={onClose}></div>
+  return (
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-6">
+      <div className="absolute inset-0 bg-black/60 backdrop-blur-2xl" onClick={onClose}></div>
       
-      <div className="relative bg-[#0a0a0a] border border-white/10 rounded-3xl w-full max-w-lg overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.5)]">
+      <div className="relative nm-card w-full max-w-xl overflow-hidden border-none">
         {/* Header */}
-        <div className="bg-primary/10 border-b border-white/5 p-8 relative">
-          <h2 className="text-3xl font-black text-white uppercase tracking-tight mb-1">Join the Waitlist</h2>
-          <p className="text-primary text-xs font-black uppercase tracking-widest">Carflex Training Institute Hub</p>
-          <button onClick={onClose} className="absolute top-8 right-8 text-gray-500 hover:text-white">
+        <div className="p-10 relative">
+          <div className="nm-inset inline-flex items-center gap-2 px-3 py-1 mb-4">
+             <span className="w-1.5 h-1.5 bg-primary rounded-full shadow-[0_0_8px_#E60000]"></span>
+             <p className="text-zinc-500 font-bold uppercase tracking-widest text-[8px]">Carflex College Hub</p>
+          </div>
+          <h2 className="text-4xl font-black text-white uppercase tracking-tighter leading-none mb-2">Request <br/> <span className="text-stroke italic">Enrollment.</span></h2>
+          <button onClick={onClose} className="absolute top-10 right-10 text-zinc-600 hover:text-white transition-colors">
             <span className="material-symbols-outlined">close</span>
           </button>
         </div>
 
         {status === "success" ? (
-          <div className="p-12 text-center">
-            <div className="w-20 h-20 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-6 border border-green-500/30">
-              <span className="material-symbols-outlined text-green-500 text-4xl">check_circle</span>
+          <div className="p-16 text-center animate-scale-up">
+            <div className="w-20 h-20 nm-inset rounded-full flex items-center justify-center mx-auto mb-8 border-none">
+              <span className="material-symbols-outlined text-primary text-4xl">verified_user</span>
             </div>
-            <h3 className="text-2xl font-black text-white uppercase mb-2">You're on the list!</h3>
-            <p className="text-gray-400 font-medium">We'll notify you as soon as admissions open.</p>
+            <h3 className="text-2xl font-black text-white uppercase tracking-tight mb-4">NODE REGISTERED</h3>
+            <p className="text-zinc-500 font-bold uppercase tracking-widest text-[9px] leading-relaxed">Your application has been logged into the <br/> Carflex Admissions Mainframe.</p>
           </div>
         ) : (
-          <form onSubmit={handleSubmit} className="p-8 space-y-6">
-            <div>
-              <label className="block text-[10px] font-black text-gray-500 uppercase tracking-widest mb-2">Full Name</label>
-              <input
-                type="text"
-                required
-                value={formData.fullName}
-                onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
-                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-sm font-bold focus:outline-none focus:border-primary/50"
-                placeholder="JOHN DOE"
-              />
-            </div>
-            
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="block text-[10px] font-black text-gray-500 uppercase tracking-widest mb-2">Email</label>
+          <form onSubmit={handleSubmit} className="p-10 pt-0 space-y-8">
+            <div className="space-y-3">
+              <label className="block text-[9px] font-black text-zinc-500 uppercase tracking-widest px-2">Operator Full Name</label>
+              <div className="nm-inset">
                 <input
-                  type="email"
+                  type="text"
                   required
-                  value={formData.email}
-                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-sm font-bold focus:outline-none focus:border-primary/50"
-                  placeholder="JOHN@EXAMPLE.COM"
+                  value={formData.fullName}
+                  onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
+                  className="w-full bg-transparent px-6 py-4 text-white text-sm font-bold focus:outline-none placeholder:text-white/5 border-none"
+                  placeholder="IDENTITY_STRING"
                 />
               </div>
-              <div>
-                <label className="block text-[10px] font-black text-gray-500 uppercase tracking-widest mb-2">Phone</label>
-                <input
-                  type="tel"
-                  required
-                  value={formData.phone}
-                  onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                  className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-sm font-bold focus:outline-none focus:border-primary/50"
-                  placeholder="+254..."
-                />
+            </div>
+            
+            <div className="grid grid-cols-2 gap-6">
+              <div className="space-y-3">
+                <label className="block text-[9px] font-black text-zinc-500 uppercase tracking-widest px-2">Email Node</label>
+                <div className="nm-inset">
+                  <input
+                    type="email"
+                    required
+                    value={formData.email}
+                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                    className="w-full bg-transparent px-6 py-4 text-white text-sm font-bold focus:outline-none placeholder:text-white/5 border-none"
+                    placeholder="NAME@HUB.COM"
+                  />
+                </div>
+              </div>
+              <div className="space-y-3">
+                <label className="block text-[9px] font-black text-zinc-500 uppercase tracking-widest px-2">Phone Link</label>
+                <div className="nm-inset">
+                  <input
+                    type="tel"
+                    required
+                    value={formData.phone}
+                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                    className="w-full bg-transparent px-6 py-4 text-white text-sm font-bold focus:outline-none placeholder:text-white/5 border-none"
+                    placeholder="+254_SYNC"
+                  />
+                </div>
               </div>
             </div>
 
-            <div>
-              <label className="block text-[10px] font-black text-gray-500 uppercase tracking-widest mb-2">Course Preference</label>
-              <select
-                value={formData.coursePref}
-                onChange={(e) => setFormData({ ...formData, coursePref: e.target.value })}
-                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-sm font-bold focus:outline-none focus:border-primary/50 appearance-none"
-              >
-                <option value="Mechanical Engineering">Mechanical Engineering</option>
-                <option value="Automotive Sales">Automotive Sales</option>
-                <option value="Dealer Management">Dealer Management</option>
-                <option value="Industrial Tech">Industrial Tech</option>
-              </select>
+            <div className="space-y-3">
+              <label className="block text-[9px] font-black text-zinc-500 uppercase tracking-widest px-2">Discipline Selection</label>
+              <div className="nm-inset">
+                <select
+                  value={formData.coursePref}
+                  onChange={(e) => setFormData({ ...formData, coursePref: e.target.value })}
+                  className="w-full bg-transparent px-6 py-4 text-white text-sm font-bold focus:outline-none appearance-none border-none"
+                >
+                  <option value="Mechanical Engineering">Mechanical Engineering</option>
+                  <option value="Automotive Sales">Automotive Sales</option>
+                  <option value="Dealer Management">Dealer Management</option>
+                  <option value="Industrial Tech">Industrial Tech</option>
+                </select>
+              </div>
             </div>
 
             <button
               type="submit"
               disabled={status === "loading"}
-              className="w-full bg-primary hover:bg-primary-dark text-white py-4 rounded-xl font-black text-sm tracking-widest uppercase transition-all shadow-[0_0_30px_rgba(239,68,68,0.3)] disabled:opacity-50"
+              className="w-full nm-card bg-primary text-white py-6 font-black text-xs tracking-[0.2em] uppercase hover:scale-[1.02] active:scale-95 transition-all border-none shadow-[0_15px_30px_rgba(230,0,0,0.3)] disabled:opacity-50"
             >
-              {status === "loading" ? "SUBMITTING..." : "JOIN WAITLIST"}
+              {status === "loading" ? "UPLOADING DATA..." : "AUTHORIZE ENROLLMENT"}
             </button>
           </form>
         )}
