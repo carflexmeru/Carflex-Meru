@@ -29,17 +29,25 @@ export default function GateCheckIn() {
 
   useEffect(() => {
     async function fetchZones() {
-      const res = await fetch("/api/zones");
-      const data = await res.json();
-      setZones(data);
-      if (data.length > 0) {
-        setFormData((prev) => ({ ...prev, zone: data[0].id }));
+      try {
+        const res = await fetch("/api/zones");
+        const data = await res.json();
+        if (Array.isArray(data)) {
+          setZones(data);
+          if (data.length > 0) {
+            setFormData((prev) => ({ ...prev, zone: data[0].id }));
+          }
+        } else {
+          setZones([]);
+        }
+      } catch (err) {
+        setZones([]);
       }
     }
     fetchZones();
   }, []);
 
-  const selectedZone = zones.find((z) => z.id === formData.zone);
+  const selectedZone = Array.isArray(zones) ? zones.find((z) => z.id === formData.zone) : null;
 
   const handleSubmit = async (e: React.FormEvent) => {
     if (e) e.preventDefault();
@@ -149,10 +157,14 @@ export default function GateCheckIn() {
 
   const [waitlist, setWaitlist] = useState<any[]>([]);
   const fetchWaitlist = async () => {
-    const res = await fetch("/api/gate/defer-payment");
-    if (res.ok) {
-      const data = await res.json();
-      setWaitlist(data);
+    try {
+      const res = await fetch("/api/gate/defer-payment");
+      if (res.ok) {
+        const data = await res.json();
+        setWaitlist(Array.isArray(data) ? data : []);
+      }
+    } catch (err) {
+      setWaitlist([]);
     }
   };
 
