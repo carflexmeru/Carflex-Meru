@@ -24,12 +24,12 @@ export default function GlobalFooter() {
       ]
     },
     {
-      title: "Legal & DNA",
+      title: "Tactical Hub",
       links: [
-        { name: "Bazaar Terms", href: "/support/legal" },
-        { name: "Privacy Policy", href: "/support/legal" },
-        { name: "Vehicle Verification", href: "/college" },
-        { name: "Contact Hub", href: "/garage" },
+        { name: "Staff Terminal", href: "/staff/login" },
+        { name: "Ground Feed", href: "/staff/ground" },
+        { name: "Gate Control", href: "/staff/gate" },
+        { name: "Intake Vault", href: "/staff/registration" },
       ]
     }
   ];

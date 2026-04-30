@@ -212,3 +212,11 @@ model AuditLog {
   action    String
   createdAt DateTime @default(now())
 }
+
+model StaffAgent {
+  id        String   @id @default(uuid())
+  type      String   @unique // REGISTRATION_AGENT, GATE_VERIFICATION_AGENT, GROUND_VERIFICATION_AGENT
+  password  String
+  name      String
+  lastLogin DateTime @default(now())
+}
