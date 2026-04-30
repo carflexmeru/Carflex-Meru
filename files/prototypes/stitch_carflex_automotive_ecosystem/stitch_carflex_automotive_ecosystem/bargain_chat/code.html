@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Carflex Bazaar Chat</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "secondary-fixed-dim": "#ffb77d",
+                    "secondary": "#904d00",
+                    "on-tertiary": "#ffffff",
+                    "primary-container": "#0056b3",
+                    "primary": "#003f87",
+                    "on-primary-fixed-variant": "#004491",
+                    "surface": "#f9f9ff",
+                    "on-secondary-container": "#603100",
+                    "inverse-primary": "#acc7ff",
+                    "on-tertiary-container": "#91e38b",
+                    "surface-container-high": "#dee8ff",
+                    "on-primary-fixed": "#001a40",
+                    "on-primary": "#ffffff",
+                    "surface-variant": "#d8e3fb",
+                    "tertiary-fixed-dim": "#88d982",
+                    "inverse-on-surface": "#ecf1ff",
+                    "outline": "#727784",
+                    "surface-container": "#e7eeff",
+                    "on-surface-variant": "#424752",
+                    "on-tertiary-fixed-variant": "#005312",
+                    "surface-container-low": "#f0f3ff",
+                    "background": "#f9f9ff",
+                    "surface-container-lowest": "#ffffff",
+                    "surface-container-highest": "#d8e3fb",
+                    "on-surface": "#111c2d",
+                    "secondary-fixed": "#ffdcc3",
+                    "on-secondary-fixed": "#2f1500",
+                    "tertiary-container": "#13671f",
+                    "surface-dim": "#cfdaf2",
+                    "on-error-container": "#93000a",
+                    "on-primary-container": "#bbd0ff",
+                    "primary-fixed-dim": "#acc7ff",
+                    "tertiary": "#004d10",
+                    "on-secondary-fixed-variant": "#6e3900",
+                    "surface-tint": "#115cb9",
+                    "error": "#ba1a1a",
+                    "on-tertiary-fixed": "#002204",
+                    "surface-bright": "#f9f9ff",
+                    "secondary-container": "#fd8b00",
+                    "tertiary-fixed": "#a3f69c",
+                    "primary-fixed": "#d7e2ff",
+                    "on-error": "#ffffff",
+                    "inverse-surface": "#263143",
+                    "error-container": "#ffdad6",
+                    "on-secondary": "#ffffff",
+                    "outline-variant": "#c2c6d4",
+                    "on-background": "#111c2d"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "stack-md": "24px",
+                    "stack-lg": "48px",
+                    "gutter": "16px",
+                    "margin-mobile": "20px",
+                    "touch-target-min": "48px",
+                    "margin-desktop": "40px",
+                    "stack-sm": "12px",
+                    "unit": "8px"
+            },
+            "fontFamily": {
+                    "button": ["Inter"],
+                    "h1": ["Inter"],
+                    "label-caps": ["Inter"],
+                    "h2": ["Inter"],
+                    "body-md": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "h3": ["Inter"]
+            },
+            "fontSize": {
+                    "button": ["16px", {"lineHeight": "1.0", "fontWeight": "600"}],
+                    "h1": ["40px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "label-caps": ["14px", {"lineHeight": "1.2", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                    "h2": ["32px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                    "body-md": ["16px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                    "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                    "h3": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 600, 'GRAD' 0, 'opsz' 24;
+        }
+        .chat-gradient {
+            background: linear-gradient(180deg, #FFFFFF 0%, #F1F5F9 100%);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background font-body-md text-on-surface">
+<!-- TopAppBar -->
+<header class="fixed top-0 left-0 w-full z-50 flex justify-between items-center bg-white dark:bg-slate-950 px-5 h-16 border-b-2 border-slate-200 dark:border-slate-800">
+<div class="flex items-center gap-3">
+<button class="material-symbols-outlined text-slate-600 active:scale-95 transition-transform duration-75">arrow_back</button>
+<div class="flex flex-col">
+<span class="font-['Inter'] font-black tracking-tight uppercase text-xl text-[#0056B3]">KDJ 482X</span>
+<span class="font-label-caps text-secondary text-[12px]">KES 2,450,000</span>
+</div>
+</div>
+<button class="material-symbols-outlined text-[#0056B3] active:scale-95 transition-transform duration-75">sync</button>
+</header>
+<!-- Main Chat Canvas -->
+<main class="pt-20 pb-40 px-margin-mobile flex flex-col gap-gutter">
+<!-- Date Indicator -->
+<div class="flex justify-center my-stack-sm">
+<span class="bg-surface-container text-on-surface-variant text-[12px] font-bold px-3 py-1 rounded-full uppercase tracking-widest">Today</span>
+</div>
+<!-- Buyer Message -->
+<div class="flex flex-col items-start max-w-[85%]">
+<div class="bg-white border-2 border-slate-200 p-4 rounded-xl rounded-tl-none">
+<p class="font-body-md">Is the engine in good condition? I'd like to hear it running before I come over to the lot.</p>
+<span class="text-[10px] text-slate-400 mt-2 block font-bold">10:14 AM</span>
+</div>
+</div>
+<!-- Vendor Widget: Audio Snippet (Engine Sound) -->
+<div class="flex flex-col items-end w-full">
+<div class="bg-primary border-2 border-primary text-white p-4 rounded-xl rounded-tr-none w-[85%]">
+<div class="flex items-center gap-4">
+<button class="w-12 h-12 bg-white text-primary rounded-full flex items-center justify-center active:scale-95 transition-transform">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+</button>
+<div class="flex-1">
+<div class="h-1.5 w-full bg-white/30 rounded-full overflow-hidden">
+<div class="h-full bg-white w-1/3"></div>
+</div>
+<div class="flex justify-between mt-2 text-[10px] font-bold">
+<span>0:12 / 0:45</span>
+<span class="uppercase">Engine_Cold_Start.wav</span>
+</div>
+</div>
+</div>
+<span class="text-[10px] text-white/70 mt-2 block font-bold text-right">Sent 10:16 AM</span>
+</div>
+</div>
+<!-- Buyer Message: Offer Widget -->
+<div class="flex flex-col items-start w-full">
+<div class="bg-white border-2 border-secondary p-4 rounded-xl rounded-tl-none w-[85%] shadow-[4px_4px_0px_#904d00]">
+<div class="flex items-center gap-3 mb-3">
+<span class="material-symbols-outlined text-secondary">request_quote</span>
+<span class="font-h3 text-secondary">New Offer</span>
+</div>
+<div class="bg-secondary-container/10 border-2 border-dashed border-secondary/30 p-3 mb-4 text-center">
+<span class="text-secondary font-black text-2xl">KES 2,300,000</span>
+</div>
+<div class="flex gap-2">
+<button class="flex-1 bg-secondary text-white font-button text-button h-touch-target-min uppercase">Accept</button>
+<button class="flex-1 border-2 border-secondary text-secondary font-button text-button h-touch-target-min uppercase">Counter</button>
+</div>
+</div>
+</div>
+<!-- Vendor Widget: Location/Spot -->
+<div class="flex flex-col items-end w-full">
+<div class="bg-white border-2 border-primary p-2 rounded-xl rounded-tr-none w-[85%] overflow-hidden">
+<div class="relative h-32 w-full mb-2 bg-slate-200">
+<img alt="Map of car lot" class="w-full h-full object-cover rounded-lg" data-alt="clean minimalist map interface showing a car lot location with a blue pin marker high contrast vector style" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAslft3ZveYsZagdXRjrujaGEqJDEkCA-hESEnxXbB8WGXzNp-rpX9oExCYh_gssb_JsNqUHd1nNTT0fbBgr2xhT4dC9F9faY1DX8RsrN3DYfNcP_jGEvqr20RsTd8M-U-CWaRhX6QW7AydBOMNU666Nf-YNgvMhHjxKk4Q1Tf0Sn7uoZWM_3uONnmRCF4EVKTkA6-hIxYBd60BuigyQ8e_Eu2ppw6H9VVuzm6A4IxdkQsDsW3j5xgGy4He029o3dVOP-w8cgfNuF4"/>
+<div class="absolute inset-0 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary text-4xl" style="font-variation-settings: 'FILL' 1;">location_on</span>
+</div>
+</div>
+<div class="px-2 pb-2">
+<p class="font-bold text-primary text-sm uppercase">Carflex Bazaar - Zone B</p>
+<p class="text-xs text-slate-500">I'm currently at the main gate. Look for the blue signage.</p>
+</div>
+</div>
+</div>
+<!-- Seller Actions Footer Area -->
+<div class="fixed bottom-20 left-0 w-full px-margin-mobile pb-stack-md flex flex-col gap-3 pointer-events-none">
+<div class="flex justify-between gap-3 pointer-events-auto">
+<button class="flex-1 bg-white border-2 border-primary text-primary h-touch-target-min font-button flex items-center justify-center gap-2 shadow-lg active:scale-95 transition-transform">
+<span class="material-symbols-outlined">mic</span>
+                    RECORD
+                </button>
+<button class="flex-1 bg-white border-2 border-primary text-primary h-touch-target-min font-button flex items-center justify-center gap-2 shadow-lg active:scale-95 transition-transform">
+<span class="material-symbols-outlined">location_on</span>
+                    SPOT
+                </button>
+</div>
+<button class="w-full bg-on-tertiary-fixed-variant text-white h-touch-target-min font-button flex items-center justify-center gap-2 shadow-lg rounded-full pointer-events-auto active:scale-95 transition-transform">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                MARK AS SOLD / CLOSE DEAL
+            </button>
+</div>
+</main>
+<!-- Chat Input Bar -->
+<div class="fixed bottom-0 left-0 w-full bg-white border-t-2 border-slate-200 p-3 flex items-center gap-3 z-50">
+<button class="material-symbols-outlined text-slate-500">add_circle</button>
+<div class="flex-1 bg-slate-100 border-2 border-slate-200 px-4 py-2 flex items-center">
+<input class="bg-transparent border-none outline-none w-full text-on-surface focus:ring-0" placeholder="Type a message..." type="text"/>
+</div>
+<button class="bg-[#0056B3] text-white w-12 h-12 flex items-center justify-center active:opacity-80">
+<span class="material-symbols-outlined">send</span>
+</button>
+</div>
+</body></html>

@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary-fixed-dim": "#ffb77d",
+                        "secondary": "#904d00",
+                        "on-tertiary": "#ffffff",
+                        "primary-container": "#0056b3",
+                        "primary": "#003f87",
+                        "on-primary-fixed-variant": "#004491",
+                        "surface": "#f9f9ff",
+                        "on-secondary-container": "#603100",
+                        "inverse-primary": "#acc7ff",
+                        "on-primary-fixed": "#001a40",
+                        "on-primary": "#ffffff",
+                        "surface-variant": "#d8e3fb",
+                        "tertiary-fixed-dim": "#88d982",
+                        "inverse-on-surface": "#ecf1ff",
+                        "outline": "#727784",
+                        "surface-container": "#e7eeff",
+                        "on-surface-variant": "#424752",
+                        "on-tertiary-fixed-variant": "#005312",
+                        "surface-container-low": "#f0f3ff",
+                        "background": "#f9f9ff",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-highest": "#d8e3fb",
+                        "on-surface": "#111c2d",
+                        "secondary-fixed": "#ffdcc3",
+                        "on-secondary-fixed": "#2f1500",
+                        "tertiary-container": "#13671f",
+                        "surface-dim": "#cfdaf2",
+                        "on-error-container": "#93000a",
+                        "on-primary-container": "#bbd0ff",
+                        "primary-fixed-dim": "#acc7ff",
+                        "tertiary": "#004d10",
+                        "on-secondary-fixed-variant": "#6e3900",
+                        "surface-tint": "#115cb9",
+                        "error": "#ba1a1a",
+                        "on-tertiary-fixed": "#002204",
+                        "surface-bright": "#f9f9ff",
+                        "secondary-container": "#fd8b00",
+                        "tertiary-fixed": "#a3f69c",
+                        "primary-fixed": "#d7e2ff",
+                        "on-error": "#ffffff",
+                        "inverse-surface": "#263143",
+                        "error-container": "#ffdad6",
+                        "on-secondary": "#ffffff",
+                        "outline-variant": "#c2c6d4",
+                        "on-background": "#111c2d"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "stack-md": "24px",
+                        "stack-lg": "48px",
+                        "gutter": "16px",
+                        "margin-mobile": "20px",
+                        "touch-target-min": "48px",
+                        "margin-desktop": "40px",
+                        "stack-sm": "12px",
+                        "unit": "8px"
+                    },
+                    "fontFamily": {
+                        "button": ["Inter"],
+                        "h1": ["Inter"],
+                        "label-caps": ["Inter"],
+                        "h2": ["Inter"],
+                        "body-md": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "h3": ["Inter"]
+                    },
+                    "fontSize": {
+                        "button": ["16px", {"lineHeight": "1.0", "fontWeight": "600"}],
+                        "h1": ["40px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "label-caps": ["14px", {"lineHeight": "1.2", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                        "h2": ["32px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                        "body-md": ["16px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                        "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "h3": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 700, 'GRAD' 0, 'opsz' 48;
+            vertical-align: middle;
+        }
+        .receipt-jagged {
+            background-image: linear-gradient(135deg, transparent 25%, #ffffff 25%), linear-gradient(225deg, transparent 25%, #ffffff 25%);
+            background-position: 0 0;
+            background-size: 10px 10px;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface font-body-md text-on-surface min-h-screen pb-32">
+<!-- Top Navigation Anchor -->
+<header class="bg-white dark:bg-slate-950 flex justify-between items-center w-full px-5 h-16 border-b-2 border-slate-200 dark:border-slate-800 sticky top-0 z-50">
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-slate-600 active:scale-95 transition-transform duration-75" data-icon="menu">menu</button>
+<h1 class="font-['Inter'] font-black tracking-tight uppercase text-xl text-[#0056B3] dark:text-blue-500">CARFLEX BAZAAR</h1>
+</div>
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-slate-600 active:scale-95 transition-transform duration-75" data-icon="sync">sync</button>
+</div>
+</header>
+<main class="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop py-stack-md">
+<!-- Header Section -->
+<section class="mb-stack-lg">
+<h2 class="font-h2 text-h2 text-primary mb-2">Priority Modal Library</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl">High-visibility communication patterns for critical bazaar operations including emergency alerts, compliance checks, and transaction finalization.</p>
+</section>
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-stack-lg">
+<!-- 1. EMERGENCY BROADCAST MODAL (STOLEN VEHICLE) -->
+<div class="relative min-h-[600px] border-4 border-error overflow-hidden rounded-lg bg-error-container">
+<div class="absolute inset-0 bg-error flex flex-col p-8 text-on-error">
+<div class="flex justify-between items-start mb-stack-lg">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-5xl" style="font-variation-settings: 'FILL' 1;">warning</span>
+<span class="font-label-caps text-label-caps tracking-widest bg-white text-error px-4 py-1 rounded-full">BROADCAST ACTIVE</span>
+</div>
+<button class="material-symbols-outlined text-3xl">close</button>
+</div>
+<h1 class="font-h1 text-h1 mb-stack-sm leading-none uppercase">STOLEN VEHICLE ALERT</h1>
+<p class="font-body-lg text-body-lg mb-stack-md opacity-90">Gate access suspended across all Bazaar sectors. Immediate intercept required at Gate 7.</p>
+<div class="bg-white/10 border-2 border-white/20 p-6 rounded-lg mb-stack-md backdrop-blur-md">
+<div class="grid grid-cols-2 gap-stack-md">
+<div>
+<p class="font-label-caps text-label-caps opacity-70 mb-1">VEHICLE ID</p>
+<p class="font-h3 text-h3">KCX 942B</p>
+</div>
+<div>
+<p class="font-label-caps text-label-caps opacity-70 mb-1">MODEL</p>
+<p class="font-h3 text-h3">Toyota Land Cruiser</p>
+</div>
+<div>
+<p class="font-label-caps text-label-caps opacity-70 mb-1">COLOR</p>
+<p class="font-h3 text-h3">Graphite Grey</p>
+</div>
+<div>
+<p class="font-label-caps text-label-caps opacity-70 mb-1">LAST SEEN</p>
+<p class="font-h3 text-h3">Sector B - 09:42</p>
+</div>
+</div>
+</div>
+<div class="rounded-lg overflow-hidden border-4 border-white mb-stack-lg h-48">
+<img class="w-full h-full object-cover" data-alt="Rugged dark grey Toyota Land Cruiser parked in a high-contrast industrial outdoor car lot environment with dramatic lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBRVgeJfjZfZdhnNoWyhQ19S4LvDp6nHSq2AUb_yppaZKEfJpwda2B0ikV9xV5f-B74iehuUjvsZByxjXxyj1RDDtl7HHMhH67MG4V0CRpuwfUtXdDCwU9RmBF-Da1OF_0ehZ0gYO6l3O-9pDvdJlxNGdraeQT8ivlFI3UekQ529m67PifMww-ufU7oe292f-KdiZEujvyLoI9p4XmsaL5QlIMuVdfEoF1wC7PTZLEJryF5fPoNKHwres2Y5uCjAGd7k_ZTfZn0tpw"/>
+</div>
+<div class="mt-auto grid grid-cols-1 gap-4">
+<button class="bg-white text-error font-button text-button h-[56px] rounded-lg flex items-center justify-center gap-2 active:scale-[0.98] transition-all">
+<span class="material-symbols-outlined">radio</span>
+                            REPORT SIGHTING
+                        </button>
+<button class="border-2 border-white text-white font-button text-button h-[56px] rounded-lg active:scale-[0.98] transition-all">
+                            ACKNOWLEDGE ALERT
+                        </button>
+</div>
+</div>
+</div>
+<!-- 2. ZONAL MISMATCH OVERLAY (STAFF) -->
+<div class="bg-surface-container-highest border-2 border-outline-variant p-8 rounded-xl flex flex-col justify-center items-center">
+<div class="max-w-md w-full bg-white border-2 border-secondary p-1 overflow-hidden shadow-2xl">
+<div class="bg-secondary-container p-6 text-on-secondary-container flex items-center gap-4">
+<span class="material-symbols-outlined text-4xl" style="font-variation-settings: 'FILL' 1;">wrong_location</span>
+<h3 class="font-h3 text-h3 leading-tight uppercase">ZONAL MISMATCH</h3>
+</div>
+<div class="p-8">
+<p class="font-body-md text-on-surface-variant mb-stack-md">
+                            Unauthorized Agent location detected. Current credentials do not permit entry into <strong class="text-on-surface">Sector D: Premium Inventory</strong>.
+                        </p>
+<div class="flex flex-col gap-unit mb-stack-lg">
+<div class="flex justify-between items-center py-stack-sm border-b-2 border-surface-container">
+<span class="font-label-caps text-label-caps">AGENT NAME</span>
+<span class="font-body-md font-bold text-primary">AGENT 004</span>
+</div>
+<div class="flex justify-between items-center py-stack-sm border-b-2 border-surface-container">
+<span class="font-label-caps text-label-caps">ASSIGNED ZONE</span>
+<span class="font-body-md font-bold text-on-tertiary-container bg-tertiary-container px-2 py-1 rounded">SECTOR A &amp; B</span>
+</div>
+<div class="flex justify-between items-center py-stack-sm border-b-2 border-surface-container">
+<span class="font-label-caps text-label-caps">CURRENT ZONE</span>
+<span class="font-body-md font-bold text-on-error-container bg-error-container px-2 py-1 rounded">SECTOR D</span>
+</div>
+</div>
+<div class="flex gap-4">
+<button class="flex-1 bg-secondary text-white font-button text-button h-touch-target-min rounded border-b-4 border-on-secondary-fixed-variant active:border-b-0 active:translate-y-1 transition-all">
+                                REQUEST ACCESS
+                            </button>
+<button class="flex-1 border-2 border-outline text-outline font-button text-button h-touch-target-min rounded active:bg-surface-container transition-all">
+                                EXIT ZONE
+                            </button>
+</div>
+</div>
+<div class="bg-surface-container-low px-8 py-4 text-center">
+<p class="text-xs font-label-caps opacity-60 italic">LOGGED AT GATE 4 BY SECURITY SCANNER #8221</p>
+</div>
+</div>
+</div>
+<!-- 3. SUCCESS RECEIPT (CASH PAYMENT) -->
+<div class="bg-primary p-12 rounded-xl flex items-center justify-center relative overflow-hidden">
+<!-- Background Decoration -->
+<div class="absolute -top-24 -right-24 w-64 h-64 bg-primary-container rounded-full opacity-50"></div>
+<div class="absolute -bottom-12 -left-12 w-48 h-48 bg-primary-container rounded-full opacity-30"></div>
+<div class="w-full max-w-sm bg-white relative">
+<!-- Thermal Receipt Top Edge -->
+<div class="absolute -top-3 left-0 w-full flex justify-around overflow-hidden h-3">
+<div class="w-6 h-6 bg-primary rounded-full shrink-0"></div>
+<div class="w-6 h-6 bg-primary rounded-full shrink-0"></div>
+<div class="w-6 h-6 bg-primary rounded-full shrink-0"></div>
+<div class="w-6 h-6 bg-primary rounded-full shrink-0"></div>
+<div class="w-6 h-6 bg-primary rounded-full shrink-0"></div>
+<div class="w-6 h-6 bg-primary rounded-full shrink-0"></div>
+<div class="w-6 h-6 bg-primary rounded-full shrink-0"></div>
+</div>
+<div class="p-8 text-center border-x-2 border-slate-100">
+<span class="material-symbols-outlined text-tertiary-container text-6xl mb-stack-sm" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<h2 class="font-h2 text-h3 text-on-surface leading-tight">PAYMENT SUCCESS</h2>
+<p class="font-label-caps text-label-caps text-slate-500 uppercase tracking-widest mt-1">Transaction ID: CFX-8829-01</p>
+<div class="my-stack-md border-y-2 border-dashed border-slate-200 py-stack-md">
+<p class="font-label-caps text-slate-400 mb-1">TOTAL AMOUNT PAID</p>
+<p class="font-h1 text-h1 text-primary">KES 420,000</p>
+<p class="font-body-md font-bold text-on-tertiary-container bg-tertiary-fixed-dim inline-block px-4 py-1 mt-2 rounded">CASH PAYMENT RECEIVED</p>
+</div>
+<div class="mb-stack-md flex justify-center">
+<div class="bg-white border-2 border-slate-800 p-2">
+<img class="w-32 h-32 grayscale contrast-125" data-alt="A clean, high-contrast black and white QR code used for digital transaction verification" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDFd3xmxLxcOuHP-wqTZBXUsIEwPCbVKVQ3jPXz8cUApKzDFX1rRZOe2NihaQh9sIoDT3W7_uv5atonNzT0o7OQHwEDuBskCaqJ3eocUKioRsu5iWG2Ml8RnxfluWbBXTiY0fnCfEYJFSuw8w7RvOj1c_As30gdwjeQhsaWHUIlPui5DwkMINT40hsC4jVZCDFYmeXa8vDYHMgUpMJxQuMpSyZNNosADYptdjNTxRcIe3fN3-VkH5zHdEMPHSTVu5Crlid1QpLwPGw"/>
+</div>
+</div>
+<div class="text-left space-y-2 mb-stack-lg">
+<div class="flex justify-between text-sm">
+<span class="text-slate-500">Service Fee</span>
+<span class="font-bold">KES 5,000</span>
+</div>
+<div class="flex justify-between text-sm">
+<span class="text-slate-500">Bazaar Tax</span>
+<span class="font-bold">KES 1,200</span>
+</div>
+</div>
+<button class="w-full bg-primary text-white font-button text-button h-touch-target-min rounded-xl flex items-center justify-center gap-2 mb-3 shadow-lg active:scale-95 transition-all">
+<span class="material-symbols-outlined">print</span>
+                            PRINT THERMAL RECEIPT
+                        </button>
+<button class="w-full text-primary font-button text-button h-touch-target-min active:bg-slate-50">
+                            DOWNLOAD DIGITAL PDF
+                        </button>
+</div>
+<!-- Thermal Receipt Bottom Edge -->
+<div class="absolute -bottom-3 left-0 w-full flex justify-around overflow-hidden h-3 rotate-180">
+<div class="w-6 h-6 bg-primary rounded-full shrink-0"></div>
+<div class="w-6 h-6 bg-primary rounded-full shrink-0"></div>
+<div class="w-6 h-6 bg-primary rounded-full shrink-0"></div>
+<div class="w-6 h-6 bg-primary rounded-full shrink-0"></div>
+<div class="w-6 h-6 bg-primary rounded-full shrink-0"></div>
+<div class="w-6 h-6 bg-primary rounded-full shrink-0"></div>
+<div class="w-6 h-6 bg-primary rounded-full shrink-0"></div>
+</div>
+</div>
+</div>
+<!-- Modal Trigger Guide / Utility Section -->
+<div class="flex flex-col gap-stack-md">
+<div class="bg-white border-2 border-slate-200 p-gutter rounded-lg">
+<h3 class="font-h3 text-h3 mb-stack-sm flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">info</span>
+                        UI Guidance
+                    </h3>
+<ul class="space-y-4">
+<li class="flex gap-4">
+<div class="w-10 h-10 rounded-full bg-error-container flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-error" style="font-variation-settings: 'FILL' 1;">priority_high</span>
+</div>
+<div>
+<p class="font-bold">Level 1: Emergency Alert</p>
+<p class="text-sm text-on-surface-variant">Used for theft, physical security breaches, or health emergencies. Full-screen takeovers with high-contrast motion indicators.</p>
+</div>
+</li>
+<li class="flex gap-4">
+<div class="w-10 h-10 rounded-full bg-secondary-container flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-on-secondary-container" style="font-variation-settings: 'FILL' 1;">lock</span>
+</div>
+<div>
+<p class="font-bold">Level 2: Operational Mismatch</p>
+<p class="text-sm text-on-surface-variant">Used for zonal restricted areas, license expirations, or inventory locked states. Prompts for escalation.</p>
+</div>
+</li>
+<li class="flex gap-4">
+<div class="w-10 h-10 rounded-full bg-tertiary-fixed flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-tertiary" style="font-variation-settings: 'FILL' 1;">verified</span>
+</div>
+<div>
+<p class="font-bold">Level 3: Confirmation</p>
+<p class="text-sm text-on-surface-variant">Used for cash transactions, gate clears, and successful inspections. Focuses on proof of activity.</p>
+</div>
+</li>
+</ul>
+</div>
+<div class="grid grid-cols-2 gap-stack-sm">
+<div class="bg-white border-2 border-slate-200 p-6 rounded-lg text-center active:bg-slate-50 cursor-pointer transition-colors">
+<span class="material-symbols-outlined text-slate-400 block mb-2">settings_input_antenna</span>
+<p class="font-label-caps text-xs">TEST BROADCAST</p>
+</div>
+<div class="bg-white border-2 border-slate-200 p-6 rounded-lg text-center active:bg-slate-50 cursor-pointer transition-colors">
+<span class="material-symbols-outlined text-slate-400 block mb-2">bug_report</span>
+<p class="font-label-caps text-xs">LOG OVERLAY ERROR</p>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Bottom Navigation Bar (Fixed) -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center bg-white dark:bg-slate-950 h-20 px-2 border-t-2 border-slate-200 dark:border-slate-800">
+<a class="flex flex-col items-center justify-center bg-[#0056B3] text-white rounded-none p-2 min-h-[48px] active:opacity-80 transition-opacity duration-100" href="#">
+<span class="material-symbols-outlined" data-icon="storefront">storefront</span>
+<span class="font-['Inter'] text-[12px] font-bold uppercase">Bazaar</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-600 dark:text-slate-400 p-2 min-h-[48px] active:opacity-80 transition-opacity duration-100 hover:bg-slate-100 dark:hover:bg-slate-900" href="#">
+<span class="material-symbols-outlined" data-icon="door_front">door_front</span>
+<span class="font-['Inter'] text-[12px] font-bold uppercase">Gate</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-600 dark:text-slate-400 p-2 min-h-[48px] active:opacity-80 transition-opacity duration-100 hover:bg-slate-100 dark:hover:bg-slate-900" href="#">
+<span class="material-symbols-outlined" data-icon="forum">forum</span>
+<span class="font-['Inter'] text-[12px] font-bold uppercase">Chat</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-600 dark:text-slate-400 p-2 min-h-[48px] active:opacity-80 transition-opacity duration-100 hover:bg-slate-100 dark:hover:bg-slate-900" href="#">
+<span class="material-symbols-outlined" data-icon="security">security</span>
+<span class="font-['Inter'] text-[12px] font-bold uppercase">Exit</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-600 dark:text-slate-400 p-2 min-h-[48px] active:opacity-80 transition-opacity duration-100 hover:bg-slate-100 dark:hover:bg-slate-900" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-['Inter'] text-[12px] font-bold uppercase">Admin</span>
+</a>
+</nav>
+<!-- Contextual FAB -->
+<button class="fixed bottom-24 right-6 w-14 h-14 bg-secondary-container text-on-secondary-container rounded-full shadow-[0px_4px_12px_rgba(0,0,0,0.2)] flex items-center justify-center active:scale-95 transition-transform z-40">
+<span class="material-symbols-outlined text-3xl" data-icon="add_alert">add_alert</span>
+</button>
+</body></html>

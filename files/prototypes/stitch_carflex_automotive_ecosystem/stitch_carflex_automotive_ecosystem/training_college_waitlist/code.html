@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>CARFLEX BAZAAR - Mechanic Training College</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "secondary-fixed-dim": "#ffb77d",
+                      "secondary": "#904d00",
+                      "on-tertiary": "#ffffff",
+                      "primary-container": "#0056b3",
+                      "primary": "#003f87",
+                      "on-primary-fixed-variant": "#004491",
+                      "surface": "#f9f9ff",
+                      "on-secondary-container": "#603100",
+                      "inverse-primary": "#acc7ff",
+                      "on-tertiary-container": "#91e38b",
+                      "surface-container-high": "#dee8ff",
+                      "on-primary-fixed": "#001a40",
+                      "on-primary": "#ffffff",
+                      "surface-variant": "#d8e3fb",
+                      "tertiary-fixed-dim": "#88d982",
+                      "inverse-on-surface": "#ecf1ff",
+                      "outline": "#727784",
+                      "surface-container": "#e7eeff",
+                      "on-surface-variant": "#424752",
+                      "on-tertiary-fixed-variant": "#005312",
+                      "surface-container-low": "#f0f3ff",
+                      "background": "#f9f9ff",
+                      "surface-container-lowest": "#ffffff",
+                      "surface-container-highest": "#d8e3fb",
+                      "on-surface": "#111c2d",
+                      "secondary-fixed": "#ffdcc3",
+                      "on-secondary-fixed": "#2f1500",
+                      "tertiary-container": "#13671f",
+                      "surface-dim": "#cfdaf2",
+                      "on-error-container": "#93000a",
+                      "on-primary-container": "#bbd0ff",
+                      "primary-fixed-dim": "#acc7ff",
+                      "tertiary": "#004d10",
+                      "on-secondary-fixed-variant": "#6e3900",
+                      "surface-tint": "#115cb9",
+                      "error": "#ba1a1a",
+                      "on-tertiary-fixed": "#002204",
+                      "surface-bright": "#f9f9ff",
+                      "secondary-container": "#fd8b00",
+                      "tertiary-fixed": "#a3f69c",
+                      "primary-fixed": "#d7e2ff",
+                      "on-error": "#ffffff",
+                      "inverse-surface": "#263143",
+                      "error-container": "#ffdad6",
+                      "on-secondary": "#ffffff",
+                      "outline-variant": "#c2c6d4",
+                      "on-background": "#111c2d"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "spacing": {
+                      "stack-md": "24px",
+                      "stack-lg": "48px",
+                      "gutter": "16px",
+                      "margin-mobile": "20px",
+                      "touch-target-min": "48px",
+                      "margin-desktop": "40px",
+                      "stack-sm": "12px",
+                      "unit": "8px"
+              },
+              "fontFamily": {
+                      "button": ["Inter"],
+                      "h1": ["Inter"],
+                      "label-caps": ["Inter"],
+                      "h2": ["Inter"],
+                      "body-md": ["Inter"],
+                      "body-lg": ["Inter"],
+                      "h3": ["Inter"]
+              },
+              "fontSize": {
+                      "button": ["16px", {"lineHeight": "1.0", "fontWeight": "600"}],
+                      "h1": ["40px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "label-caps": ["14px", {"lineHeight": "1.2", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                      "h2": ["32px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                      "body-md": ["16px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                      "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                      "h3": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}]
+              }
+            },
+          },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 48;
+        }
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 16px;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body-md min-h-screen">
+<!-- TopAppBar -->
+<header class="bg-white dark:bg-slate-950 border-b-2 border-slate-200 dark:border-slate-800 flex justify-between items-center w-full px-5 h-16 sticky top-0 z-50">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-[#0056B3] cursor-pointer active:scale-95 transition-transform duration-75">menu</span>
+<h1 class="font-['Inter'] font-black tracking-tight uppercase text-xl text-[#0056B3] dark:text-blue-500">CARFLEX BAZAAR</h1>
+</div>
+<div class="flex items-center">
+<span class="material-symbols-outlined text-[#0056B3] cursor-pointer active:scale-95 transition-transform duration-75">sync</span>
+</div>
+</header>
+<main class="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop py-stack-lg">
+<!-- Hero Section -->
+<section class="mb-stack-lg relative overflow-hidden rounded-xl bg-primary-container p-stack-lg text-white">
+<div class="absolute inset-0 opacity-20">
+<img alt="" class="w-full h-full object-cover" data-alt="Close-up of a modern car engine with chrome details and bright workshop lighting, high-contrast industrial aesthetic" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDaQYIbsZ5aVlkW0QpMDhblqhN0aR8WysCqzUdwsYxXlL1jbEe-8RPIY_KrM1HZ3qVzjv70WZKY23SRqdKh4Mz_oiXYmWe6gHbSui9gw4sZbehtxKmNZE2xvjQt3GlHq1jmWHuhqHP1W2rqYJQOsSTLPAWAG5R6Mldw4AfxEyXZBUXpEhSBJp_qGw7KylP-qH6rIx2-U9cC8g2U0qVQZrJpTLDFgWq0qXtFQMVkokTVYxf9QKG2LiSchNTej-MCjxwuuNphsyjrTxA"/>
+</div>
+<div class="relative z-10 max-w-2xl">
+<span class="font-label-caps text-label-caps bg-secondary px-3 py-1 rounded-sm mb-4 inline-block">COMING SOON</span>
+<h2 class="font-h1 text-h1 mb-4 uppercase">The Next Generation of Industrial Tech</h2>
+<p class="font-body-lg text-body-lg mb-8 text-on-primary-container">Master the tools of the trade. Kenya's premier Mechanic Training College is opening its doors in the Bazaar soon. Join the waitlist for early enrollment.</p>
+<!-- Join Waitlist Form -->
+<form class="flex flex-col sm:flex-row gap-4 max-w-md">
+<div class="flex-grow">
+<label class="block font-label-caps text-label-caps mb-2 text-white uppercase">Phone Number</label>
+<input class="w-full h-[48px] px-4 bg-white text-on-surface border-2 border-transparent focus:border-secondary-container rounded-lg outline-none transition-all" placeholder="+254 7XX XXX XXX" required="" type="tel"/>
+</div>
+<button class="h-[48px] px-8 bg-secondary-container text-on-secondary-container font-button text-button rounded-lg uppercase self-end active:scale-95 transition-transform" type="submit">
+                        Join Waitlist
+                    </button>
+</form>
+</div>
+</section>
+<!-- Course Polling Widget -->
+<section class="mb-stack-lg">
+<div class="flex items-center justify-between mb-8">
+<div>
+<h3 class="font-h2 text-h2 text-primary uppercase">Shape Your Future</h3>
+<p class="text-on-surface-variant font-body-md">Vote for the course you want to see launched first.</p>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-gutter">
+<!-- Engine Diagnostics -->
+<div class="bg-white border-2 border-slate-200 rounded-xl overflow-hidden flex flex-col group hover:border-primary transition-colors cursor-pointer">
+<div class="h-48 overflow-hidden relative">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Mechanic using a digital diagnostic tablet on a car engine in a professional garage setting, bright neon accents" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAZv-VlhtSfXW6RnyA86MRgN1WOHVAAJackDi6EEN6J1NlzQTNrkC2t8BF2IdB7_pfzDRe0W4df9UaUh01R7GPRzS-UWQk3mf2JgKDZ7QCcAovUrYYXwrfWqmb0mFmyCZq25igpq-4JrWsi8QWSmLg7zyRtRUifn69TjAOPpbI2ndG8znQubc3-uPoDI02JmkkEW91t1QP4T51u2Ikv7Rn5VjTzcLNox8NmgkrPYnxM8_619pNpP0Hx64Xoyk-szWzCDkSUH3J9R0U"/>
+<div class="absolute top-4 right-4 bg-primary text-white p-2 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined text-[20px]">bolt</span>
+</div>
+</div>
+<div class="p-6 flex-grow flex flex-col">
+<h4 class="font-h3 text-h3 mb-2 uppercase text-on-surface">Engine Diagnostics</h4>
+<p class="text-on-surface-variant font-body-md flex-grow mb-6">Advanced electronic fault-finding and sensor calibration for modern EFI systems.</p>
+<button class="w-full py-4 border-2 border-primary text-primary font-button text-button uppercase hover:bg-primary-fixed-dim transition-colors active:scale-95">
+                            Vote for Course
+                        </button>
+</div>
+</div>
+<!-- Heavy Machinery -->
+<div class="bg-white border-2 border-slate-200 rounded-xl overflow-hidden flex flex-col group hover:border-primary transition-colors cursor-pointer">
+<div class="h-48 overflow-hidden relative">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Close-up of a massive yellow hydraulic piston on a construction excavator, rugged industrial texture" src="https://lh3.googleusercontent.com/aida-public/AB6AXuALhMt4xjr4rL0o56fZuoik6w9RHIm775d_RGHQV0cUPRlzSd8C1F8a3K6_MPxhea_C3ZovaEck2DoAUs0816MPSmIXej8EchDos6yCuMUu7ltrHJGx1Vu8O-WidIuqp1XbkYekA6dihVMNBwYFn8oXfsHPcg63dau0sbqPCIXLIw7Y4UqdD4k-I8Fe0FcXn6ry2PluWK8bw4mHBHXn8B52FiRNPc7jOGDTWBV0f5Pt1KMJaDG518fU5dwk06dKv3kpdFBwg0fjIvc"/>
+<div class="absolute top-4 right-4 bg-primary text-white p-2 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined text-[20px]">settings_accessibility</span>
+</div>
+</div>
+<div class="p-6 flex-grow flex flex-col">
+<h4 class="font-h3 text-h3 mb-2 uppercase text-on-surface">Heavy Machinery</h4>
+<p class="text-on-surface-variant font-body-md flex-grow mb-6">Hydraulic systems, diesel engines, and maintenance for Earth-moving equipment.</p>
+<button class="w-full py-4 border-2 border-primary text-primary font-button text-button uppercase hover:bg-primary-fixed-dim transition-colors active:scale-95">
+                            Vote for Course
+                        </button>
+</div>
+</div>
+<!-- Panel Beating -->
+<div class="bg-white border-2 border-slate-200 rounded-xl overflow-hidden flex flex-col group hover:border-primary transition-colors cursor-pointer">
+<div class="h-48 overflow-hidden relative">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Automotive specialist sanding a car body panel with sparks flying, dramatic cinematic lighting in a dark workshop" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCtvnYB513EHNBSLQCcGwQCDRh-2sfPQ_yb1gEX3kRNUMimiP50ueRxjSvp7CnN9fJPLFF49s01boHqIGMA6wHMXS5nUVmsd2oqYjAc5isMKAeaSNs7BH4WyabqSIBXxLz36lJJM3nklBSlLMuP3fWgM1xMSqke6_7qqmEfIqVZgHTb9AFwj780FaVx-_R9f6V8mmcdbm3nEpeSfE5cdlWIijz1K84W7-_SQQwrCeSvxDkTvxbcPza_jc8b4vUrryjr4D_bUkpYsQM"/>
+<div class="absolute top-4 right-4 bg-primary text-white p-2 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined text-[20px]">precision_manufacturing</span>
+</div>
+</div>
+<div class="p-6 flex-grow flex flex-col">
+<h4 class="font-h3 text-h3 mb-2 uppercase text-on-surface">Panel Beating</h4>
+<p class="text-on-surface-variant font-body-md flex-grow mb-6">Structural repair, metal welding, and precision body alignment techniques.</p>
+<button class="w-full py-4 border-2 border-primary text-primary font-button text-button uppercase hover:bg-primary-fixed-dim transition-colors active:scale-95">
+                            Vote for Course
+                        </button>
+</div>
+</div>
+</div>
+</section>
+<!-- Bento Features -->
+<section class="mb-stack-lg">
+<div class="bento-grid">
+<div class="col-span-12 md:col-span-8 bg-surface-container rounded-xl p-8 border-2 border-slate-100 flex flex-col justify-center min-h-[300px]">
+<h3 class="font-h2 text-h2 mb-4 uppercase text-primary">Certified by the Bazaar</h3>
+<p class="font-body-lg text-body-lg text-on-surface-variant mb-6">Our certifications are recognized across the automotive industry, providing agents and mechanics with the credentials needed for high-tier contracts.</p>
+<div class="flex gap-4">
+<div class="flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 rounded-full">
+<span class="material-symbols-outlined text-tertiary">check_circle</span>
+<span class="font-label-caps text-label-caps">NITA APPROVED</span>
+</div>
+<div class="flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 rounded-full">
+<span class="material-symbols-outlined text-tertiary">check_circle</span>
+<span class="font-label-caps text-label-caps">CARFLEX ACCREDITED</span>
+</div>
+</div>
+</div>
+<div class="col-span-12 md:col-span-4 bg-tertiary-container text-white rounded-xl p-8 border-2 border-tertiary flex flex-col items-center justify-center text-center">
+<span class="material-symbols-outlined text-[64px] mb-4">school</span>
+<h3 class="font-h3 text-h3 mb-2 uppercase">Hands-on Lab</h3>
+<p class="font-body-md opacity-90">80% practical training in our state-of-the-art facility.</p>
+</div>
+</div>
+</section>
+</main>
+<!-- FAB -->
+<button class="fixed bottom-24 right-6 w-14 h-14 bg-secondary-container text-on-secondary-container rounded-full shadow-[0px_4px_12px_rgba(0,0,0,0.2)] flex items-center justify-center z-40 active:scale-95 transition-transform">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">add</span>
+</button>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center bg-white dark:bg-slate-950 h-20 px-2 border-t-2 border-slate-200 dark:border-slate-800">
+<div class="flex flex-col items-center justify-center bg-[#0056B3] text-white rounded-none p-2 min-h-[48px] flex-1 active:opacity-80 transition-opacity duration-100">
+<span class="material-symbols-outlined">storefront</span>
+<span class="font-['Inter'] text-[12px] font-bold uppercase">Bazaar</span>
+</div>
+<div class="flex flex-col items-center justify-center text-slate-600 dark:text-slate-400 p-2 min-h-[48px] flex-1 hover:bg-slate-100 dark:hover:bg-slate-900 transition-opacity duration-100">
+<span class="material-symbols-outlined">door_front</span>
+<span class="font-['Inter'] text-[12px] font-bold uppercase">Gate</span>
+</div>
+<div class="flex flex-col items-center justify-center text-slate-600 dark:text-slate-400 p-2 min-h-[48px] flex-1 hover:bg-slate-100 dark:hover:bg-slate-900 transition-opacity duration-100">
+<span class="material-symbols-outlined">forum</span>
+<span class="font-['Inter'] text-[12px] font-bold uppercase">Chat</span>
+</div>
+<div class="flex flex-col items-center justify-center text-slate-600 dark:text-slate-400 p-2 min-h-[48px] flex-1 hover:bg-slate-100 dark:hover:bg-slate-900 transition-opacity duration-100">
+<span class="material-symbols-outlined">security</span>
+<span class="font-['Inter'] text-[12px] font-bold uppercase">Exit</span>
+</div>
+<div class="flex flex-col items-center justify-center text-slate-600 dark:text-slate-400 p-2 min-h-[48px] flex-1 hover:bg-slate-100 dark:hover:bg-slate-900 transition-opacity duration-100">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-['Inter'] text-[12px] font-bold uppercase">Admin</span>
+</div>
+</nav>
+</body></html>

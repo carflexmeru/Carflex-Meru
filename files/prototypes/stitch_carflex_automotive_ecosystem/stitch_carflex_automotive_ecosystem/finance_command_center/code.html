@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>CARFLEX BAZAAR | Admin Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary-fixed-dim": "#ffb77d",
+                        "secondary": "#904d00",
+                        "on-tertiary": "#ffffff",
+                        "primary-container": "#0056b3",
+                        "primary": "#003f87",
+                        "on-primary-fixed-variant": "#004491",
+                        "surface": "#f9f9ff",
+                        "on-secondary-container": "#603100",
+                        "inverse-primary": "#acc7ff",
+                        "on-tertiary-container": "#91e38b",
+                        "surface-container-high": "#dee8ff",
+                        "on-primary-fixed": "#001a40",
+                        "on-primary": "#ffffff",
+                        "surface-variant": "#d8e3fb",
+                        "tertiary-fixed-dim": "#88d982",
+                        "inverse-on-surface": "#ecf1ff",
+                        "outline": "#727784",
+                        "surface-container": "#e7eeff",
+                        "on-surface-variant": "#424752",
+                        "on-tertiary-fixed-variant": "#005312",
+                        "surface-container-low": "#f0f3ff",
+                        "background": "#f9f9ff",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-highest": "#d8e3fb",
+                        "on-surface": "#111c2d",
+                        "secondary-fixed": "#ffdcc3",
+                        "on-secondary-fixed": "#2f1500",
+                        "tertiary-container": "#13671f",
+                        "surface-dim": "#cfdaf2",
+                        "on-error-container": "#93000a",
+                        "on-primary-container": "#bbd0ff",
+                        "primary-fixed-dim": "#acc7ff",
+                        "tertiary": "#004d10",
+                        "on-secondary-fixed-variant": "#6e3900",
+                        "surface-tint": "#115cb9",
+                        "error": "#ba1a1a",
+                        "on-tertiary-fixed": "#002204",
+                        "surface-bright": "#f9f9ff",
+                        "secondary-container": "#fd8b00",
+                        "tertiary-fixed": "#a3f69c",
+                        "primary-fixed": "#d7e2ff",
+                        "on-error": "#ffffff",
+                        "inverse-surface": "#263143",
+                        "error-container": "#ffdad6",
+                        "on-secondary": "#ffffff",
+                        "outline-variant": "#c2c6d4",
+                        "on-background": "#111c2d"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "stack-md": "24px",
+                        "stack-lg": "48px",
+                        "gutter": "16px",
+                        "margin-mobile": "20px",
+                        "touch-target-min": "48px",
+                        "margin-desktop": "40px",
+                        "stack-sm": "12px",
+                        "unit": "8px"
+                    },
+                    "fontFamily": {
+                        "button": ["Inter"],
+                        "h1": ["Inter"],
+                        "label-caps": ["Inter"],
+                        "h2": ["Inter"],
+                        "body-md": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "h3": ["Inter"]
+                    },
+                    "fontSize": {
+                        "button": ["16px", {"lineHeight": "1.0", "fontWeight": "600"}],
+                        "h1": ["40px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "label-caps": ["14px", {"lineHeight": "1.2", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                        "h2": ["32px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                        "body-md": ["16px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                        "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "h3": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body {
+            background-color: #020617; /* Explicit slate-950 for command center feel */
+            color: #f8fafc;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="font-body-md text-body-md overflow-hidden">
+<div class="flex h-screen w-full">
+<!-- Navigation Drawer (SideNav) -->
+<aside class="hidden md:flex flex-col h-full w-80 border-r-2 border-slate-800 bg-slate-900 shadow-2xl">
+<div class="flex flex-col h-full py-6">
+<!-- Brand Header -->
+<div class="px-6 mb-10">
+<h1 class="text-2xl font-black text-blue-500 font-['Inter'] tracking-tight">CARFLEX BAZAAR</h1>
+</div>
+<!-- Profile Section -->
+<div class="px-6 mb-8 flex items-center gap-4">
+<div class="w-12 h-12 rounded-full overflow-hidden border-2 border-primary-container">
+<img alt="Agent 004" class="w-full h-full object-cover" data-alt="Professional male security agent in uniform with a focused expression, high-contrast studio lighting, industrial background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA0wa-ba8ByLGQolzv6q5tAadgtLNP6uIHy5Sp8e4zoV3YUX17Eqgq6xMqW-CYejiVPTTpmpXE5uxJJ6jRoYka38DtbEQbvuZdRZSJgdhKwRXAPzasWWAJClrnNESIcKafzCDPxOWxu1RHndCM8p2t9Q3AA7R7qa-e3S364jgVFCS-QR6vd80fLr3NfYOGGMvxyPA9lWJqdvbZPb2K-TN8D_MOXcy6t8-VrF6rmxbKGjKfuld80UpSiXcCJwyt85-QGIt3PquUQik4"/>
+</div>
+<div>
+<div class="font-bold text-base text-white">Agent 004</div>
+<div class="text-sm text-slate-400">Bazaar Security</div>
+<div class="text-xs text-green-500 font-bold uppercase tracking-widest mt-1">Online</div>
+</div>
+</div>
+<!-- Navigation Items -->
+<nav class="flex-1 px-3 space-y-2">
+<a class="flex items-center gap-4 px-4 py-3 text-slate-300 hover:bg-slate-800 transition-transform duration-150 active:translate-x-1 font-bold text-base" href="#">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span>Profile</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 text-slate-300 hover:bg-slate-800 transition-transform duration-150 active:translate-x-1 font-bold text-base" href="#">
+<span class="material-symbols-outlined" data-icon="notifications_active">notifications_active</span>
+<span>Alerts</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 text-slate-300 hover:bg-slate-800 transition-transform duration-150 active:translate-x-1 font-bold text-base" href="#">
+<span class="material-symbols-outlined" data-icon="cloud_sync">cloud_sync</span>
+<span>Sync Status</span>
+</a>
+<!-- Active State for Admin -->
+<a class="flex items-center gap-4 px-4 py-3 bg-slate-800 text-[#0056B3] border-l-4 border-[#0056B3] transition-transform duration-150 active:translate-x-1 font-bold text-base" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span>Settings</span>
+</a>
+</nav>
+<!-- Footer Nav from BottomNavBar logic for desktop integration -->
+<div class="mt-auto px-3 border-t-2 border-slate-800 pt-6">
+<div class="grid grid-cols-1 gap-2">
+<div class="flex items-center gap-4 px-4 py-3 text-white bg-[#0056B3] font-bold uppercase text-[12px]">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span>Admin Panel</span>
+</div>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Viewport -->
+<main class="flex-1 flex flex-col min-w-0 bg-slate-950 overflow-y-auto">
+<!-- TopAppBar -->
+<header class="flex justify-between items-center w-full px-5 h-16 bg-slate-950 border-b-2 border-slate-800 sticky top-0 z-10">
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-blue-500 hover:bg-slate-900 p-2 rounded transition-transform active:scale-95" data-icon="menu">menu</button>
+<h2 class="font-['Inter'] font-black tracking-tight uppercase text-xl text-blue-500">ADMIN COMMAND</h2>
+</div>
+<div class="flex items-center gap-4">
+<span class="text-slate-400 font-bold text-sm hidden lg:inline">LAST SYNC: 2 MINS AGO</span>
+<button class="material-symbols-outlined text-blue-500 hover:bg-slate-900 p-2 rounded transition-transform active:scale-95" data-icon="sync">sync</button>
+</div>
+</header>
+<!-- Dashboard Content -->
+<div class="p-stack-md lg:p-margin-desktop space-y-stack-lg">
+<!-- KPI Bento Grid -->
+<section class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<!-- KPI 1: M-Pesa -->
+<div class="bg-slate-900 border-2 border-slate-800 p-6 flex flex-col justify-between h-48 relative overflow-hidden group">
+<div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-symbols-outlined text-8xl" data-icon="payments">payments</span>
+</div>
+<div class="z-10">
+<h3 class="font-label-caps text-label-caps text-slate-400 mb-2">TOTAL M-PESA (DIGITAL)</h3>
+<div class="text-h2 font-h2 text-white">KES 1,482,900</div>
+</div>
+<div class="z-10 flex items-center gap-2 text-green-400 font-bold">
+<span class="material-symbols-outlined text-sm" data-icon="trending_up">trending_up</span>
+<span>+12.4% vs Yesterday</span>
+</div>
+</div>
+<!-- KPI 2: Cash on Hand -->
+<div class="bg-slate-900 border-2 border-slate-800 p-6 flex flex-col justify-between h-48 relative overflow-hidden group">
+<div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-symbols-outlined text-8xl" data-icon="account_balance_wallet">account_balance_wallet</span>
+</div>
+<div class="z-10">
+<h3 class="font-label-caps text-label-caps text-slate-400 mb-2">TOTAL CASH ON HAND</h3>
+<div class="text-h2 font-h2 text-secondary-container">KES 342,150</div>
+</div>
+<div class="z-10 flex items-center gap-2 text-slate-400 font-bold">
+<span class="material-symbols-outlined text-sm" data-icon="schedule">schedule</span>
+<span>Pending Reconciliation</span>
+</div>
+</div>
+<!-- KPI 3: Zonal Occupancy -->
+<div class="bg-slate-900 border-2 border-slate-800 p-6 flex flex-col justify-between h-48 relative overflow-hidden group">
+<div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-symbols-outlined text-8xl" data-icon="grid_view">grid_view</span>
+</div>
+<div class="z-10">
+<h3 class="font-label-caps text-label-caps text-slate-400 mb-2">ZONAL OCCUPANCY %</h3>
+<div class="text-h2 font-h2 text-blue-400">88.4%</div>
+</div>
+<div class="z-10 flex items-center gap-2 text-blue-400 font-bold">
+<span>412 / 466 Slots Occupied</span>
+</div>
+<div class="w-full bg-slate-800 h-2 mt-2">
+<div class="bg-blue-500 h-full" style="width: 88.4%;"></div>
+</div>
+</div>
+</section>
+<!-- Main Content Row -->
+<section class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+<!-- Cash Reconciliation Table -->
+<div class="lg:col-span-2 bg-slate-900 border-2 border-slate-800 rounded-none overflow-hidden">
+<div class="p-6 border-b-2 border-slate-800 flex justify-between items-center">
+<h3 class="font-h3 text-h3 text-white">CASH RECONCILIATION</h3>
+<button class="bg-[#0056B3] text-white font-button text-button px-6 py-3 hover:opacity-90 active:scale-95 transition-all">
+                                EXPORT REPORT
+                            </button>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-slate-800 text-slate-400 font-label-caps text-xs">
+<th class="p-4 border-b border-slate-700">AGENT ID</th>
+<th class="p-4 border-b border-slate-700 text-right">SYSTEM RECORDED</th>
+<th class="p-4 border-b border-slate-700 text-right">PHYSICAL COUNT</th>
+<th class="p-4 border-b border-slate-700 text-right">VARIANCE</th>
+<th class="p-4 border-b border-slate-700 text-center">STATUS</th>
+</tr>
+</thead>
+<tbody class="text-slate-200">
+<tr class="border-b border-slate-800 hover:bg-slate-800/50 transition-colors">
+<td class="p-4 font-bold">AGENT_004 (Gate A)</td>
+<td class="p-4 text-right">KES 45,200</td>
+<td class="p-4 text-right">KES 45,200</td>
+<td class="p-4 text-right text-green-400 font-bold">0.00</td>
+<td class="p-4 text-center">
+<span class="bg-green-900/30 text-green-500 text-xs px-2 py-1 border border-green-500 font-bold">MATCHED</span>
+</td>
+</tr>
+<tr class="border-b border-slate-800 hover:bg-slate-800/50 transition-colors">
+<td class="p-4 font-bold">AGENT_012 (Zone C)</td>
+<td class="p-4 text-right">KES 12,850</td>
+<td class="p-4 text-right">KES 12,800</td>
+<td class="p-4 text-right text-red-400 font-bold">-50.00</td>
+<td class="p-4 text-center">
+<span class="bg-red-900/30 text-red-500 text-xs px-2 py-1 border border-red-500 font-bold">DISCREPANCY</span>
+</td>
+</tr>
+<tr class="border-b border-slate-800 hover:bg-slate-800/50 transition-colors">
+<td class="p-4 font-bold">AGENT_007 (Showroom)</td>
+<td class="p-4 text-right">KES 89,400</td>
+<td class="p-4 text-right">KES 89,400</td>
+<td class="p-4 text-right text-green-400 font-bold">0.00</td>
+<td class="p-4 text-center">
+<span class="bg-green-900/30 text-green-500 text-xs px-2 py-1 border border-green-500 font-bold">MATCHED</span>
+</td>
+</tr>
+<tr class="border-b border-slate-800 hover:bg-slate-800/50 transition-colors">
+<td class="p-4 font-bold">AGENT_019 (Gate B)</td>
+<td class="p-4 text-right">KES 22,100</td>
+<td class="p-4 text-right">---</td>
+<td class="p-4 text-right text-slate-500">PENDING</td>
+<td class="p-4 text-center">
+<span class="bg-slate-800 text-slate-400 text-xs px-2 py-1 border border-slate-600 font-bold uppercase">In-Transit</span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- Side Panel: Zone Map Mockup -->
+<div class="flex flex-col gap-6">
+<div class="bg-slate-900 border-2 border-slate-800 p-6 flex-1">
+<h3 class="font-label-caps text-label-caps text-slate-400 mb-6">LIVE SHOWGROUND MAP</h3>
+<div class="relative w-full aspect-square bg-slate-800 border-2 border-slate-700 flex items-center justify-center overflow-hidden">
+<img alt="Showground Map" class="w-full h-full object-cover opacity-40" data-alt="Aerial architectural top-down site plan of a vehicle showground, neon grid overlays, tech aesthetic, dark blueprint style" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAmDJ49A8jtu0pMYBjr5TxwAEpoKoh1brQBFYUQXBzThL7cH8vmrhCK1-TWnyrAUnmUiQoWGQur5RXZ8kcoX1_H7mkXbSRe9SSzHQfjuxgC-RYsYJAtqfgE_txx80vuwyEmyoaUDCcuOI1BqSXCfvwjFKnz3SLgctrMS3xwHsHrt1rIQMA6WlRsHZvzXisIPBldEcnf6cig15NFUGZ2w_K1V5rubce92keHmxAI3kXPA-EEMkmEEEBUZvthmBRprvIkU_eGrtN_BcE"/>
+<div class="absolute inset-0 grid grid-cols-4 grid-rows-4 p-4 gap-2">
+<div class="bg-green-500/40 border border-green-500 flex items-center justify-center text-[10px] font-bold">Z-A</div>
+<div class="bg-blue-500/40 border border-blue-500 flex items-center justify-center text-[10px] font-bold">Z-B</div>
+<div class="bg-green-500/40 border border-green-500 flex items-center justify-center text-[10px] font-bold">Z-C</div>
+<div class="bg-red-500/40 border border-red-500 flex items-center justify-center text-[10px] font-bold">Z-D</div>
+</div>
+</div>
+<div class="mt-6 space-y-4">
+<div class="flex justify-between items-center">
+<span class="text-sm font-bold text-slate-300">Zone A (Premium)</span>
+<span class="text-green-500 font-black">FULL</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-sm font-bold text-slate-300">Zone B (Standard)</span>
+<span class="text-slate-400">12 Available</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-sm font-bold text-slate-300">Exhibition Hall</span>
+<span class="text-red-500 font-black">OVER CAPACITY</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+</div>
+<!-- Floating Action Button -->
+<button class="fixed bottom-margin-mobile right-margin-mobile w-14 h-14 bg-secondary-container text-white rounded-full flex items-center justify-center shadow-[0px_4px_12px_rgba(0,0,0,0.4)] hover:scale-105 active:scale-95 transition-all z-40">
+<span class="material-symbols-outlined text-3xl" data-icon="add">add</span>
+</button>
+<!-- BottomNavBar (Visible on Mobile Only) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center bg-slate-900 h-20 px-2 border-t-2 border-slate-800">
+<a class="flex flex-col items-center justify-center text-slate-400 p-2 min-h-[48px]" href="#">
+<span class="material-symbols-outlined" data-icon="storefront">storefront</span>
+<span class="font-['Inter'] text-[10px] font-bold uppercase">Bazaar</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 p-2 min-h-[48px]" href="#">
+<span class="material-symbols-outlined" data-icon="door_front">door_front</span>
+<span class="font-['Inter'] text-[10px] font-bold uppercase">Gate</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 p-2 min-h-[48px]" href="#">
+<span class="material-symbols-outlined" data-icon="forum">forum</span>
+<span class="font-['Inter'] text-[10px] font-bold uppercase">Chat</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-[#0056B3] text-white p-2 min-h-[48px]" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-['Inter'] text-[10px] font-bold uppercase">Admin</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 p-2 min-h-[48px]" href="#">
+<span class="material-symbols-outlined" data-icon="security">security</span>
+<span class="font-['Inter'] text-[10px] font-bold uppercase">Exit</span>
+</a>
+</nav>
+</main>
+</div>
+</body></html>

@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Carflex Bazaar - Gate Entry</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary-fixed-dim": "#ffb77d",
+                        "secondary": "#904d00",
+                        "on-tertiary": "#ffffff",
+                        "primary-container": "#0056b3",
+                        "primary": "#003f87",
+                        "on-primary-fixed-variant": "#004491",
+                        "surface": "#f9f9ff",
+                        "on-secondary-container": "#603100",
+                        "inverse-primary": "#acc7ff",
+                        "on-primary-fixed": "#001a40",
+                        "on-primary": "#ffffff",
+                        "surface-variant": "#d8e3fb",
+                        "tertiary-fixed-dim": "#88d982",
+                        "inverse-on-surface": "#ecf1ff",
+                        "outline": "#727784",
+                        "surface-container": "#e7eeff",
+                        "on-surface-variant": "#424752",
+                        "on-tertiary-fixed-variant": "#005312",
+                        "surface-container-low": "#f0f3ff",
+                        "background": "#f9f9ff",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-highest": "#d8e3fb",
+                        "on-surface": "#111c2d",
+                        "secondary-fixed": "#ffdcc3",
+                        "on-secondary-fixed": "#2f1500",
+                        "tertiary-container": "#13671f",
+                        "surface-dim": "#cfdaf2",
+                        "on-error-container": "#93000a",
+                        "on-primary-container": "#bbd0ff",
+                        "primary-fixed-dim": "#acc7ff",
+                        "tertiary": "#004d10",
+                        "on-secondary-fixed-variant": "#6e3900",
+                        "surface-tint": "#115cb9",
+                        "error": "#ba1a1a",
+                        "on-tertiary-fixed": "#002204",
+                        "surface-bright": "#f9f9ff",
+                        "secondary-container": "#fd8b00",
+                        "tertiary-fixed": "#a3f69c",
+                        "primary-fixed": "#d7e2ff",
+                        "on-error": "#ffffff",
+                        "inverse-surface": "#263143",
+                        "error-container": "#ffdad6",
+                        "on-secondary": "#ffffff",
+                        "outline-variant": "#c2c6d4",
+                        "on-background": "#111c2d"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "stack-md": "24px",
+                        "stack-lg": "48px",
+                        "gutter": "16px",
+                        "margin-mobile": "20px",
+                        "touch-target-min": "48px",
+                        "margin-desktop": "40px",
+                        "stack-sm": "12px",
+                        "unit": "8px"
+                    },
+                    "fontFamily": {
+                        "button": ["Inter"],
+                        "h1": ["Inter"],
+                        "label-caps": ["Inter"],
+                        "h2": ["Inter"],
+                        "body-md": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "h3": ["Inter"]
+                    },
+                    "fontSize": {
+                        "button": ["16px", {"lineHeight": "1.0", "fontWeight": "600"}],
+                        "h1": ["40px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "label-caps": ["14px", {"lineHeight": "1.2", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                        "h2": ["32px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                        "body-md": ["16px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                        "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "h3": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .active-zone {
+            border-color: #0056B3 !important;
+            background-color: #e7eeff !important;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface font-body-md min-h-screen flex flex-col">
+<!-- TopAppBar from JSON -->
+<header class="bg-white dark:bg-slate-950 flex justify-between items-center w-full px-5 h-16 border-b-2 border-slate-200 dark:border-slate-800 sticky top-0 z-40">
+<div class="flex items-center gap-4">
+<button class="active:scale-95 transition-transform duration-75">
+<span class="material-symbols-outlined text-slate-600 dark:text-slate-400">menu</span>
+</button>
+<h1 class="font-['Inter'] font-black tracking-tight uppercase text-xl text-[#0056B3] dark:text-blue-500">CARFLEX BAZAAR</h1>
+</div>
+<div class="flex items-center gap-3">
+<div class="flex items-center text-tertiary font-bold text-xs gap-1 px-2 py-1 bg-tertiary-fixed rounded-full">
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">cloud_sync</span>
+<span>SYNCED</span>
+</div>
+<button class="active:scale-95 transition-transform duration-75">
+<span class="material-symbols-outlined text-[#0056B3] dark:text-blue-500">sync</span>
+</button>
+</div>
+</header>
+<main class="flex-grow flex flex-col md:flex-row h-[calc(100vh-144px)]">
+<!-- Top Half (Mobile) / Left Side (Desktop): Data Entry -->
+<section class="flex-1 p-margin-mobile md:p-margin-desktop flex flex-col justify-center border-b-2 md:border-b-0 md:border-r-2 border-slate-200">
+<div class="max-w-xl mx-auto w-full space-y-stack-md">
+<div class="space-y-unit">
+<label class="font-label-caps text-label-caps text-on-surface-variant uppercase">Vehicle Number Plate</label>
+<input class="w-full h-24 text-[48px] font-black text-center border-4 border-on-surface focus:border-primary focus:ring-0 uppercase placeholder:text-surface-dim rounded-none bg-white" placeholder="KAA 001A" type="text"/>
+</div>
+<div class="grid grid-cols-2 gap-gutter">
+<div class="p-4 bg-surface-container-low border-2 border-outline-variant flex flex-col">
+<span class="text-label-caps font-label-caps text-on-surface-variant uppercase">Staff ID</span>
+<span class="text-h3 font-h3">AGENT-004</span>
+</div>
+<div class="p-4 bg-secondary-container border-2 border-on-secondary-container flex flex-col">
+<span class="text-label-caps font-label-caps text-on-secondary-container uppercase">Role</span>
+<span class="text-h3 font-h3 text-on-secondary-container">GATE STAFF</span>
+</div>
+</div>
+<button class="w-full h-16 bg-secondary-container text-on-secondary-container font-button text-button uppercase flex items-center justify-center gap-2 border-b-4 border-on-secondary-container active:translate-y-1 transition-all">
+<span class="material-symbols-outlined">payments</span>
+                    Trigger M-Pesa Payment
+                </button>
+</div>
+</section>
+<!-- Bottom Half (Mobile) / Right Side (Desktop): Zone Capacity -->
+<section class="flex-1 p-margin-mobile md:p-margin-desktop bg-surface-container-lowest">
+<div class="max-w-xl mx-auto w-full space-y-stack-md">
+<h2 class="text-h2 font-h2 uppercase tracking-tighter text-primary">Zone Selector</h2>
+<div class="space-y-gutter">
+<!-- Zone P -->
+<div class="bg-white border-2 border-slate-200 p-4 active-zone cursor-pointer">
+<div class="flex justify-between items-end mb-2">
+<div>
+<span class="text-h3 font-black block">ZONE P</span>
+<span class="text-label-caps text-on-surface-variant uppercase">Premium Parking</span>
+</div>
+<span class="text-h3 font-bold text-primary">85%</span>
+</div>
+<div class="w-full bg-surface-container-high h-4 rounded-none overflow-hidden border border-slate-300">
+<div class="bg-primary h-full" style="width: 85%"></div>
+</div>
+<p class="mt-2 text-xs font-bold text-error uppercase">Action: Restricted Entry</p>
+</div>
+<!-- Zone G -->
+<div class="bg-white border-2 border-slate-200 p-4 cursor-pointer hover:border-primary-container transition-colors">
+<div class="flex justify-between items-end mb-2">
+<div>
+<span class="text-h3 font-black block text-on-surface">ZONE G</span>
+<span class="text-label-caps text-on-surface-variant uppercase">General Bazaar</span>
+</div>
+<span class="text-h3 font-bold text-tertiary-container">42%</span>
+</div>
+<div class="w-full bg-surface-container-high h-4 rounded-none overflow-hidden border border-slate-300">
+<div class="bg-tertiary-container h-full" style="width: 42%"></div>
+</div>
+<p class="mt-2 text-xs font-bold text-tertiary-container uppercase">Action: Clear to Park</p>
+</div>
+<!-- Zone S -->
+<div class="bg-white border-2 border-slate-200 p-4 cursor-pointer hover:border-primary-container transition-colors">
+<div class="flex justify-between items-end mb-2">
+<div>
+<span class="text-h3 font-black block text-on-surface">ZONE S</span>
+<span class="text-label-caps text-on-surface-variant uppercase">Service &amp; Logistics</span>
+</div>
+<span class="text-h3 font-bold text-secondary">12%</span>
+</div>
+<div class="w-full bg-surface-container-high h-4 rounded-none overflow-hidden border border-slate-300">
+<div class="bg-secondary-container h-full" style="width: 12%"></div>
+</div>
+<p class="mt-2 text-xs font-bold text-secondary uppercase">Action: Vacant</p>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar from JSON -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center bg-white dark:bg-slate-950 h-20 px-2 border-t-2 border-slate-200 dark:border-slate-800">
+<a class="flex flex-col items-center justify-center text-slate-600 dark:text-slate-400 p-2 min-h-[48px] active:opacity-80 transition-opacity duration-100" href="#">
+<span class="material-symbols-outlined" data-icon="storefront">storefront</span>
+<span class="font-['Inter'] text-[12px] font-bold uppercase">Bazaar</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-[#0056B3] text-white rounded-none p-2 min-h-[48px] active:opacity-80 transition-opacity duration-100" href="#">
+<span class="material-symbols-outlined" data-icon="door_front">door_front</span>
+<span class="font-['Inter'] text-[12px] font-bold uppercase">Gate</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-600 dark:text-slate-400 p-2 min-h-[48px] active:opacity-80 transition-opacity duration-100" href="#">
+<span class="material-symbols-outlined" data-icon="forum">forum</span>
+<span class="font-['Inter'] text-[12px] font-bold uppercase">Chat</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-600 dark:text-slate-400 p-2 min-h-[48px] active:opacity-80 transition-opacity duration-100" href="#">
+<span class="material-symbols-outlined" data-icon="security">security</span>
+<span class="font-['Inter'] text-[12px] font-bold uppercase">Exit</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-600 dark:text-slate-400 p-2 min-h-[48px] active:opacity-80 transition-opacity duration-100" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-['Inter'] text-[12px] font-bold uppercase">Admin</span>
+</a>
+</nav>
+<!-- FAB for quick entry confirmation -->
+<button class="fixed bottom-24 right-6 w-14 h-14 bg-primary text-white rounded-full shadow-[0px_4px_12px_rgba(0,0,0,0.2)] flex items-center justify-center active:scale-95 transition-transform z-50">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</button>
+</body></html>

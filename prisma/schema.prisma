@@ -1,0 +1,214 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// A. Identity & Core Users
+model Profile {
+  id           String    @id @default(uuid())
+  phone        String    @unique
+  fullName     String?
+  idNumber     String?   @unique
+  role         String    @default("buyer") // admin, staff, vendor, buyer, student
+  avatarUrl    String?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  vehicles     Vehicle[]
+  bookings     Booking[]
+  offers       Offer[]
+  messages     Message[]
+  transactions Transaction[]
+  auditLogs    AuditLog[]
+  garageJobs   GarageJob[]
+  collegeLeads CollegeLead[]
+  cashLogs     CashLog[]
+  reports      StolenVehicle[] @relation("Reporter")
+  tickets      SupportTicket[]
+}
+
+// B. Bazaar & Spatial Operations
+model Event {
+  id        String   @id @default(uuid())
+  date      DateTime @unique
+  isActive  Boolean  @default(true)
+  zones     Zone[]
+}
+
+model Zone {
+  id        String   @id @default(uuid())
+  eventId   String?
+  event     Event?   @relation(fields: [eventId], references: [id])
+  name      String   @unique
+  capacity  Int
+  occupancy Int      @default(0)
+  price     Float
+  
+  bookings  Booking[]
+  vehicles  Vehicle[]
+}
+
+model Booking {
+  id            String    @id @default(uuid())
+  vehicleId     String?
+  vehicle       Vehicle?  @relation(fields: [vehicleId], references: [id])
+  zoneId        String?
+  zone          Zone?     @relation(fields: [zoneId], references: [id])
+  agentId       String?
+  agent         Profile?  @relation(fields: [agentId], references: [id])
+  paymentStatus String    @default("pending") // paid, pending, failed
+  checkInAt     DateTime  @default(now())
+  exitAt        DateTime?
+  
+  exitPass      ExitPass?
+}
+
+model ExitPass {
+  id        String   @id @default(uuid())
+  bookingId String   @unique
+  booking   Booking  @relation(fields: [bookingId], references: [id])
+  qrJwtHash String   @unique
+  isUsed    Boolean  @default(false)
+}
+
+// C. The Vehicle Asset
+model Vehicle {
+  id                String    @id @default(uuid())
+  ownerId           String?
+  owner             Profile?  @relation(fields: [ownerId], references: [id])
+  regNumber         String    @unique
+  make              String?
+  model             String?
+  year              Int?
+  price             Float?
+  status            String    @default("draft") // draft, active, sold, in_garage
+  isVerified        Boolean   @default(false)
+  isComplete        Boolean   @default(false)
+  images            String?   // JSON string of URLs
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  zoneId            String?
+  zone              Zone?     @relation(fields: [zoneId], references: [id])
+
+  bookings          Booking[]
+  offers            Offer[]
+  garageJobs        GarageJob[]
+  views             VehicleView[]
+}
+
+model StolenVehicle {
+  regNumber   String   @id
+  reportedById String?
+  reportedBy  Profile? @relation("Reporter", fields: [reportedById], references: [id])
+  reportDate  DateTime @default(now())
+}
+
+// D. Real-Time Bargaining Engine
+model Offer {
+  id        String    @id @default(uuid())
+  vehicleId String?
+  vehicle   Vehicle?  @relation(fields: [vehicleId], references: [id])
+  buyerId   String?
+  buyer     Profile?  @relation(fields: [buyerId], references: [id])
+  amount    Float
+  status    String    @default("pending") // pending, consideration, rejected, sold
+  createdAt DateTime  @default(now())
+  
+  messages  Message[]
+}
+
+model Message {
+  id        String   @id @default(uuid())
+  offerId   String?
+  offer     Offer?   @relation(fields: [offerId], references: [id])
+  senderId  String?
+  sender    Profile? @relation(fields: [senderId], references: [id])
+  content   String
+  mediaUrl  String?
+  createdAt DateTime @default(now())
+}
+
+// E. Financial Engine (Daraja & Cash)
+model Transaction {
+  id          String   @id @default(uuid())
+  userId      String?
+  user        Profile? @relation(fields: [userId], references: [id])
+  amount      Float
+  method      String   // mpesa, cash
+  reference   String   @unique
+  agentId     String?
+  createdAt   DateTime @default(now())
+}
+
+model CashLog {
+  id          String   @id @default(uuid())
+  agentId     String?
+  agent       Profile? @relation(fields: [agentId], references: [id])
+  openingBal  Float
+  closingBal  Float
+  handoverTo  String?
+}
+
+// F. Analytics & Growth Hub
+model VehicleView {
+  id        String   @id @default(uuid())
+  vehicleId String?
+  vehicle   Vehicle? @relation(fields: [vehicleId], references: [id])
+  viewerId  String?
+  viewedAt  DateTime @default(now())
+}
+
+model NewsletterSub {
+  email      String   @id
+  isVerified Boolean  @default(false)
+  createdAt  DateTime @default(now())
+}
+
+model CollegeLead {
+  id         String   @id @default(uuid())
+  userId     String?
+  user       Profile? @relation(fields: [userId], references: [id])
+  coursePref String?
+  createdAt  DateTime @default(now())
+}
+
+model GarageJob {
+  id        String   @id @default(uuid())
+  vehicleId String?
+  vehicle   Vehicle? @relation(fields: [vehicleId], references: [id])
+  ownerId   String?
+  owner     Profile? @relation(fields: [ownerId], references: [id])
+  status    String   @default("pending") // pending, working, ready
+  cost      Float?
+  createdAt DateTime @default(now())
+}
+
+// G. System Operations
+model SystemSetting {
+  key         String   @id
+  value       String
+  description String?
+  updatedAt   DateTime @updatedAt
+}
+
+model SupportTicket {
+  id         String   @id @default(uuid())
+  userId     String?
+  user       Profile? @relation(fields: [userId], references: [id])
+  issueType  String
+  isResolved Boolean  @default(false)
+  createdAt  DateTime @default(now())
+}
+
+model AuditLog {
+  id        String   @id @default(uuid())
+  adminId   String?
+  admin     Profile? @relation(fields: [adminId], references: [id])
+  action    String
+  createdAt DateTime @default(now())
+}

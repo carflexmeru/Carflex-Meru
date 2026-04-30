@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 48;
+    }
+  </style>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "secondary-fixed-dim": "#ffb77d",
+            "secondary": "#904d00",
+            "on-tertiary": "#ffffff",
+            "primary-container": "#0056b3",
+            "primary": "#003f87",
+            "on-primary-fixed-variant": "#004491",
+            "surface": "#f9f9ff",
+            "on-secondary-container": "#603100",
+            "inverse-primary": "#acc7ff",
+            "on-tertiary-container": "#91e38b",
+            "surface-container-high": "#dee8ff",
+            "on-primary-fixed": "#001a40",
+            "on-primary": "#ffffff",
+            "surface-variant": "#d8e3fb",
+            "tertiary-fixed-dim": "#88d982",
+            "inverse-on-surface": "#ecf1ff",
+            "outline": "#727784",
+            "surface-container": "#e7eeff",
+            "on-surface-variant": "#424752",
+            "on-tertiary-fixed-variant": "#005312",
+            "surface-container-low": "#f0f3ff",
+            "background": "#f9f9ff",
+            "surface-container-lowest": "#ffffff",
+            "surface-container-highest": "#d8e3fb",
+            "on-surface": "#111c2d",
+            "secondary-fixed": "#ffdcc3",
+            "on-secondary-fixed": "#2f1500",
+            "tertiary-container": "#13671f",
+            "surface-dim": "#cfdaf2",
+            "on-error-container": "#93000a",
+            "on-primary-container": "#bbd0ff",
+            "primary-fixed-dim": "#acc7ff",
+            "tertiary": "#004d10",
+            "on-secondary-fixed-variant": "#6e3900",
+            "surface-tint": "#115cb9",
+            "error": "#ba1a1a",
+            "on-tertiary-fixed": "#002204",
+            "surface-bright": "#f9f9ff",
+            "secondary-container": "#fd8b00",
+            "tertiary-fixed": "#a3f69c",
+            "primary-fixed": "#d7e2ff",
+            "on-error": "#ffffff",
+            "inverse-surface": "#263143",
+            "error-container": "#ffdad6",
+            "on-secondary": "#ffffff",
+            "outline-variant": "#c2c6d4",
+            "on-background": "#111c2d"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.125rem",
+            "lg": "0.25rem",
+            "xl": "0.5rem",
+            "full": "0.75rem"
+          },
+          "spacing": {
+            "stack-md": "24px",
+            "stack-lg": "48px",
+            "gutter": "16px",
+            "margin-mobile": "20px",
+            "touch-target-min": "48px",
+            "margin-desktop": "40px",
+            "stack-sm": "12px",
+            "unit": "8px"
+          },
+          "fontFamily": {
+            "button": ["Inter"],
+            "h1": ["Inter"],
+            "label-caps": ["Inter"],
+            "h2": ["Inter"],
+            "body-md": ["Inter"],
+            "body-lg": ["Inter"],
+            "h3": ["Inter"]
+          },
+          "fontSize": {
+            "button": ["16px", {"lineHeight": "1.0", "fontWeight": "600"}],
+            "h1": ["40px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+            "label-caps": ["14px", {"lineHeight": "1.2", "letterSpacing": "0.05em", "fontWeight": "700"}],
+            "h2": ["32px", {"lineHeight": "1.2", "fontWeight": "700"}],
+            "body-md": ["16px", {"lineHeight": "1.5", "fontWeight": "400"}],
+            "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+            "h3": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body-md min-h-screen pb-20 md:pb-0">
+<!-- TopAppBar Navigation Shell -->
+<header class="bg-white dark:bg-slate-950 flex justify-between items-center w-full px-5 h-16 border-b-2 border-slate-200 dark:border-slate-800 sticky top-0 z-50">
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-slate-600 dark:text-slate-400 active:scale-95 transition-transform duration-75" data-icon="menu">menu</button>
+<h1 class="text-[#0056B3] dark:text-blue-500 font-['Inter'] font-black tracking-tight uppercase text-xl">CARFLEX BAZAAR</h1>
+</div>
+<div class="flex items-center gap-3">
+<span class="hidden md:flex gap-4 mr-6">
+<a class="text-slate-600 dark:text-slate-400 font-bold uppercase text-[12px] hover:text-[#0056B3]" href="#">Bazaar</a>
+<a class="text-[#0056B3] dark:text-blue-400 font-bold uppercase text-[12px]" href="#">Gate</a>
+<a class="text-slate-600 dark:text-slate-400 font-bold uppercase text-[12px]" href="#">Chat</a>
+</span>
+<button class="material-symbols-outlined text-slate-600 dark:text-slate-400 active:scale-95 transition-transform duration-75" data-icon="sync">sync</button>
+</div>
+</header>
+<main class="p-5 md:p-10 max-w-7xl mx-auto">
+<!-- Header/Identity Section -->
+<div class="mb-stack-md border-l-8 border-secondary p-4 bg-surface-container-low">
+<h2 class="font-h2 text-h2 text-on-surface">Gate Exit Authorization</h2>
+<p class="font-body-md text-on-surface-variant flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary" data-icon="security">security</span>
+        Staff Mode: Agent 004 | Sector A-East
+      </p>
+</div>
+<!-- Active Scan Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter">
+<!-- Primary Identification Card (Bento Style) -->
+<div class="lg:col-span-8 space-y-gutter">
+<div class="bg-surface-container-lowest border-2 border-outline-variant p-6 flex flex-col md:flex-row gap-8 relative">
+<!-- Status Badge -->
+<div class="absolute top-4 right-4 px-3 py-1 bg-tertiary-fixed text-tertiary font-label-caps text-label-caps border-2 border-tertiary">
+            MATCH VERIFIED
+          </div>
+<!-- Original Entrant Photo -->
+<div class="w-full md:w-1/3 aspect-square bg-slate-200 border-2 border-slate-900 overflow-hidden">
+<img alt="Entrant Photo" class="w-full h-full object-cover grayscale" data-alt="Professional portrait of a middle-aged man with short hair, wearing a high-visibility vest, neutral expression, outdoor daylight lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA76qVtuYw8hfmlh-oQZME0ZDyMluTJk1GmfXRUzg7eEYEjufNlXy9EKa8aaV4SZRzKEcqjPPNVCvZ9CzUhThGX083Kwn0RoFPeU_X5s6W3E9yTwTnuUoJDn9xb-Z-nXkLWTXbJcOoOsQHZWQoj1-VP6Togx9pr3uWsT_LvywD3RrT4ASxvMp1LopTXRpWLzt86FDX1LJUo0UGfZHSWXS0t9eHV9oHxoMKXuwXuJlHDlg0oCrTn6mmf_Ylyrmr43kXKPC5QGndr2hg"/>
+</div>
+<!-- Identity Details -->
+<div class="flex-1 flex flex-col justify-between">
+<div>
+<span class="font-label-caps text-label-caps text-secondary mb-1 block">VEHICLE OWNER</span>
+<h3 class="font-h1 text-h1 uppercase mb-4">SAMUEL NJOROGE</h3>
+<div class="grid grid-cols-2 gap-4">
+<div class="bg-surface-container p-3 border-2 border-slate-200">
+<span class="font-label-caps text-[10px] text-on-surface-variant block uppercase">Plate Number</span>
+<p class="font-h3 text-h3 font-black text-on-surface">KDG 442X</p>
+</div>
+<div class="bg-surface-container p-3 border-2 border-slate-200">
+<span class="font-label-caps text-[10px] text-on-surface-variant block uppercase">Entry Time</span>
+<p class="font-h3 text-h3 font-black text-on-surface">08:42 AM</p>
+</div>
+</div>
+</div>
+<div class="mt-6 flex flex-col sm:flex-row gap-4">
+<button class="flex-1 min-h-[56px] bg-secondary-container text-on-secondary-container border-2 border-on-secondary-container font-button text-button flex items-center justify-center gap-2 active:scale-[0.98] transition-all">
+<span class="material-symbols-outlined" data-icon="check_circle">check_circle</span>
+                AUTHORIZE EXIT
+              </button>
+<button class="flex-1 min-h-[56px] bg-error text-on-error border-2 border-on-error-container font-button text-button flex items-center justify-center gap-2 active:scale-[0.98] transition-all">
+<span class="material-symbols-outlined" data-icon="gpp_maybe">gpp_maybe</span>
+                LOCK EXIT
+              </button>
+</div>
+</div>
+</div>
+<!-- Vehicle Verification Image -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-gutter">
+<div class="bg-surface-container border-2 border-slate-200 aspect-video relative overflow-hidden group">
+<img alt="Vehicle Front View" class="w-full h-full object-cover" data-alt="Modern silver SUV parked at a security gate, license plate visible, sharp details, bright midday sun" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAImrwkRu0f_l8RpbwMlb_5m_hLsOZWrm-Obez2G4EgeZCee3k3PPrn9iQSp4UE9_Y3ZAV1QdPoGxqwqkqf1i8EaQNauWoEOUNIL8RlJhN8nHCJbrFu2jwaTxOomk48I4UP8XFZDFVXS20wFOjbVnYl4NthPVbwKBpa7DBThz2_Nnx4gaV-xvFDyCqAKhPjObbf48swQldWidcY-PEcg0yaSxEr4Jd7mBuCUrIUob-UD4kAvQVmMR92PbtzrNxMWELkUxOwMe4egCI"/>
+<div class="absolute bottom-0 left-0 right-0 bg-slate-900/80 text-white p-2 font-label-caps text-[10px]">CURRENT SCAN: FRONT ASPECT</div>
+</div>
+<div class="bg-surface-container border-2 border-slate-200 aspect-video relative overflow-hidden group">
+<img alt="Entry Log View" class="w-full h-full object-cover opacity-60 grayscale" data-alt="Security camera footage from high angle showing the same silver SUV entering a compound at 08:42AM, timestamp overlay" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAKZa7_0a-FGvM5ivNpxklY8bbSbvsNLmn0tKnokgVwT5ltPTk4OSOEJ0hruoVx_dxHlrzD1Mz0qx5TkGhCJeRolUkdXym4TMogR9t9m7bkMbCNTwA_D7v2AsehKCwYZepPzhoCkIV_Bp44veiK9_obEih18yMRp5ikN5yAhk3m-HRErO7TtdW_RoJcWAlFgTjoPenNArxo9k0a9828Z7A32ICsFhyr4t_Pbn_z4sqY7adEutYHdaGh492Oy8z-H4Da_An_WRLh2m8"/>
+<div class="absolute bottom-0 left-0 right-0 bg-slate-900/80 text-white p-2 font-label-caps text-[10px]">ENTRY LOG ARCHIVE (08:42)</div>
+</div>
+</div>
+</div>
+<!-- Quick Audit Sidebar -->
+<div class="lg:col-span-4 flex flex-col gap-gutter">
+<div class="bg-white border-2 border-slate-200 h-full flex flex-col">
+<div class="p-4 bg-slate-900 text-white font-label-caps flex justify-between items-center">
+<span>RECENTLY EXITED</span>
+<span class="material-symbols-outlined text-[20px]" data-icon="history">history</span>
+</div>
+<div class="flex-1 overflow-y-auto">
+<!-- Audit Item 1 -->
+<div class="p-4 border-b-2 border-slate-100 flex items-center justify-between hover:bg-slate-50 transition-colors">
+<div class="flex items-center gap-3">
+<div class="w-12 h-12 bg-slate-200 rounded-none border border-slate-300 flex items-center justify-center font-black text-slate-500">KBA</div>
+<div>
+<p class="font-bold text-on-surface">KBA 121L</p>
+<p class="text-[12px] text-on-surface-variant">Auth by Agent 004</p>
+</div>
+</div>
+<div class="text-right">
+<p class="font-bold text-secondary">09:12</p>
+<p class="text-[10px] uppercase font-bold text-tertiary">Success</p>
+</div>
+</div>
+<!-- Audit Item 2 -->
+<div class="p-4 border-b-2 border-slate-100 flex items-center justify-between hover:bg-slate-50 transition-colors">
+<div class="flex items-center gap-3">
+<div class="w-12 h-12 bg-slate-200 rounded-none border border-slate-300 flex items-center justify-center font-black text-slate-500">KCT</div>
+<div>
+<p class="font-bold text-on-surface">KCT 889J</p>
+<p class="text-[12px] text-on-surface-variant">Auth by Agent 004</p>
+</div>
+</div>
+<div class="text-right">
+<p class="font-bold text-secondary">08:55</p>
+<p class="text-[10px] uppercase font-bold text-tertiary">Success</p>
+</div>
+</div>
+<!-- Audit Item 3 -->
+<div class="p-4 border-b-2 border-slate-100 flex items-center justify-between hover:bg-slate-50 transition-colors bg-error-container/20">
+<div class="flex items-center gap-3">
+<div class="w-12 h-12 bg-error-container rounded-none border border-error flex items-center justify-center font-black text-error">KDD</div>
+<div>
+<p class="font-bold text-on-surface">KDD 001M</p>
+<p class="text-[12px] text-on-surface-variant">DENIED - NO QR</p>
+</div>
+</div>
+<div class="text-right">
+<p class="font-bold text-error">08:30</p>
+<p class="text-[10px] uppercase font-bold text-error">Locked</p>
+</div>
+</div>
+</div>
+<button class="m-4 min-h-touch-target-min border-2 border-primary text-primary font-button hover:bg-primary hover:text-white transition-all uppercase">
+            View Full Gate Log
+          </button>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar Shell (Mobile Only) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center bg-white dark:bg-slate-950 h-20 px-2 border-t-2 border-slate-200 dark:border-slate-800">
+<div class="flex flex-col items-center justify-center text-slate-600 dark:text-slate-400 p-2 min-h-[48px] active:opacity-80">
+<span class="material-symbols-outlined" data-icon="storefront">storefront</span>
+<span class="font-['Inter'] text-[12px] font-bold uppercase">Bazaar</span>
+</div>
+<div class="flex flex-col items-center justify-center bg-[#0056B3] text-white rounded-none p-2 min-h-[48px] active:opacity-80">
+<span class="material-symbols-outlined" data-icon="door_front">door_front</span>
+<span class="font-['Inter'] text-[12px] font-bold uppercase">Gate</span>
+</div>
+<div class="flex flex-col items-center justify-center text-slate-600 dark:text-slate-400 p-2 min-h-[48px] active:opacity-80">
+<span class="material-symbols-outlined" data-icon="forum">forum</span>
+<span class="font-['Inter'] text-[12px] font-bold uppercase">Chat</span>
+</div>
+<div class="flex flex-col items-center justify-center text-slate-600 dark:text-slate-400 p-2 min-h-[48px] active:opacity-80">
+<span class="material-symbols-outlined" data-icon="security">security</span>
+<span class="font-['Inter'] text-[12px] font-bold uppercase">Exit</span>
+</div>
+<div class="flex flex-col items-center justify-center text-slate-600 dark:text-slate-400 p-2 min-h-[48px] active:opacity-80">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-['Inter'] text-[12px] font-bold uppercase">Admin</span>
+</div>
+</nav>
+<!-- FAB - Quick Scan -->
+<button class="fixed bottom-24 right-6 md:bottom-10 md:right-10 w-14 h-14 bg-secondary text-white rounded-full flex items-center justify-center shadow-[0px_4px_12px_rgba(0,0,0,0.2)] active:scale-90 transition-transform z-40">
+<span class="material-symbols-outlined text-[32px]" data-icon="qr_code_scanner" data-weight="fill" style="font-variation-settings: 'FILL' 1;">qr_code_scanner</span>
+</button>
+</body></html>
