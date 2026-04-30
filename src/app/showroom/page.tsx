@@ -59,116 +59,120 @@ export default function MyShowroom() {
   if (loading) return <div className="min-h-screen bg-white flex items-center justify-center"><div className="animate-spin h-8 w-8 border-2 border-primary border-t-transparent rounded-full"></div></div>;
 
   return (
-    <div className="min-h-screen bg-[#F8F8F8] text-[#0A0A0A] font-sans pb-32">
+    <div className="min-h-screen bg-[#080808] text-white font-sans pb-32 relative overflow-hidden">
+      {/* Liquid Background */}
+      <div className="liquid-bg opacity-30">
+        <div className="liquid-blob" style={{ top: '20%', left: '10%' }}></div>
+      </div>
+
       {/* Header */}
-      <div className="bg-[#0A0A0A] text-white pt-32 pb-24 px-8">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-end gap-8">
-          <div>
-            <h1 className="text-6xl font-black uppercase tracking-tighter mb-4">My <span className="text-primary italic">Showroom</span></h1>
-            <p className="text-zinc-500 font-bold uppercase tracking-widest text-xs">Manage your bazaar assets and live offers.</p>
+      <div className="relative pt-40 pb-24 px-8 z-10">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-end gap-12">
+          <div className="space-y-4">
+            <h1 className="text-6xl md:text-8xl font-black uppercase tracking-tighter leading-[0.8]">Vendor <br/> <span className="text-stroke italic text-primary">Vault.</span></h1>
+            <div className="nm-inset inline-flex items-center gap-2 px-4 py-1.5">
+              <span className="w-1.5 h-1.5 bg-primary rounded-full animate-pulse shadow-[0_0_10px_#E60000]"></span>
+              <p className="text-zinc-500 font-bold uppercase tracking-widest text-[9px]">Live Asset Management • Showground Terminal</p>
+            </div>
           </div>
-          <Link href="/gate/check-in" className="bg-primary text-white px-10 py-4 font-black uppercase text-sm tracking-widest hover:bg-white hover:text-black transition-all">
-            Add New Vehicle
+          <Link href="/gate/check-in" className="nm-card bg-primary text-white px-12 py-5 font-black uppercase text-xs tracking-[0.2em] hover:scale-105 transition-all border-none">
+            Deploy New Asset
           </Link>
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-8 py-20">
+      <div className="max-w-7xl mx-auto px-8 py-20 relative z-10">
         {error ? (
-          <div className="bg-primary/10 border-4 border-primary p-12 text-center shadow-2xl">
-            <h3 className="text-2xl font-black text-primary uppercase mb-2">System Interruption</h3>
-            <p className="text-zinc-500 font-bold mb-8 uppercase text-[10px] tracking-widest">
-              The bazaar mainframe is currently unreachable. Error: {error}
+          <div className="nm-card p-16 text-center border-primary/20">
+            <h3 className="text-3xl font-black text-primary uppercase tracking-tighter mb-4">SYSTEM INTERRUPTION</h3>
+            <p className="text-zinc-500 font-bold mb-10 uppercase text-[10px] tracking-widest leading-relaxed">
+              The bazaar mainframe uplink has been severed. <br/> Error Log: {error}
             </p>
             <button 
               onClick={() => fetchVehicles(phone)}
-              className="bg-primary text-white px-8 py-3 font-black uppercase text-[10px] tracking-widest hover:bg-black transition-all"
+              className="nm-card bg-primary text-white px-10 py-4 font-black uppercase text-[10px] tracking-widest hover:scale-105 transition-all border-none"
             >
-              Re-Establish Connection
+              Re-Sync Mainframe
             </button>
           </div>
         ) : !phone ? (
-          <div className="bg-white border-4 border-primary p-12 text-center shadow-2xl">
-            <h3 className="text-2xl font-black text-primary uppercase mb-4">Identity Verification Required</h3>
-            <p className="text-zinc-500 font-bold mb-8 uppercase text-[10px] tracking-widest">Please enter your phone number in the Inbox to access your showroom.</p>
+          <div className="nm-card p-16 text-center">
+            <h3 className="text-3xl font-black text-primary uppercase tracking-tighter mb-4">UPLINK REQUIRED</h3>
+            <p className="text-zinc-500 font-bold mb-8 uppercase text-[10px] tracking-widest">Connect your mobile node in the Inbox to access your private vault.</p>
           </div>
         ) : vehicles.length === 0 ? (
-          <div className="text-center py-32 border-4 border-dashed border-zinc-200">
-            <span className="material-symbols-outlined text-6xl text-zinc-200 mb-4">directions_car</span>
-            <p className="text-zinc-400 font-black uppercase tracking-widest text-sm">You have no vehicles in the bazaar.</p>
+          <div className="nm-card p-24 text-center border-dashed border-zinc-900">
+            <span className="material-symbols-outlined text-7xl text-zinc-800 mb-8">inventory_2</span>
+            <p className="text-zinc-500 font-black uppercase tracking-widest text-sm">Your private vault is currently empty.</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
             {vehicles.map((v) => (
-              <div key={v.id} className="bg-white border-4 border-black relative group shadow-[10px_10px_0px_rgba(0,0,0,0.05)] hover:shadow-[15px_15px_0px_#E60000] transition-all">
-                <div className="p-8 space-y-6">
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <p className="text-primary text-[10px] font-black uppercase tracking-widest mb-1">{v.zone?.name || "UNZONED"}</p>
-                      <h3 className="text-3xl font-black uppercase tracking-tighter">{v.regNumber}</h3>
-                    </div>
-                    <div className="flex flex-col items-end gap-2">
-                      <div className={`px-3 py-1 text-[8px] font-black uppercase tracking-widest ${
-                        v.status === 'active' ? 'bg-green-100 text-green-600' : 'bg-zinc-100 text-zinc-500'
-                      }`}>
-                        {v.status}
-                      </div>
-                      <button 
-                        onClick={() => {
-                          setSelectedVehicleForExit(v);
-                          setShowExitModal(true);
-                        }}
-                        className="text-[8px] font-black uppercase tracking-widest text-zinc-400 hover:text-primary transition-all"
-                      >
-                        Exit Bazaar
-                      </button>
-                    </div>
+              <div key={v.id} className="nm-card group p-8 space-y-8 hover:scale-[1.02] transition-transform duration-500">
+                <div className="flex justify-between items-start">
+                  <div>
+                    <p className="text-primary text-[10px] font-black uppercase tracking-widest mb-2">{v.zone?.name || "RESERVED"}</p>
+                    <h3 className="text-4xl font-black uppercase tracking-tighter leading-none">{v.regNumber}</h3>
                   </div>
-
-                  <div className="space-y-4">
-                    <div className="flex justify-between items-center py-3 border-b border-zinc-100">
-                      <span className="text-[10px] font-black text-zinc-400 uppercase tracking-widest">Ground Verification</span>
-                      <span className={`material-symbols-outlined text-sm ${v.isVerified ? 'text-green-500' : 'text-zinc-300'}`}>
-                        {v.isVerified ? 'verified' : 'pending_actions'}
-                      </span>
+                  <div className="flex flex-col items-end gap-3">
+                    <div className="nm-inset px-4 py-1.5 text-[9px] font-black uppercase tracking-widest text-zinc-400">
+                      {v.status}
                     </div>
-                    <div className="flex justify-between items-center py-3 border-b border-zinc-100">
-                      <span className="text-[10px] font-black text-zinc-400 uppercase tracking-widest">Listing Details</span>
-                      <span className={`material-symbols-outlined text-sm ${v.isComplete ? 'text-green-500' : 'text-zinc-300'}`}>
-                        {v.isComplete ? 'check_circle' : 'error'}
-                      </span>
-                    </div>
-                    <div className="flex justify-between items-center py-3">
-                      <span className="text-[10px] font-black text-zinc-400 uppercase tracking-widest">Active Offers</span>
-                      <span className="font-black text-primary">{v.offers.length}</span>
-                    </div>
+                    <button 
+                      onClick={() => {
+                        setSelectedVehicleForExit(v);
+                        setShowExitModal(true);
+                      }}
+                      className="text-[9px] font-black uppercase tracking-widest text-zinc-600 hover:text-primary transition-all"
+                    >
+                      Evacuate
+                    </button>
                   </div>
+                </div>
 
-                  <div className="grid grid-cols-2 gap-4 pt-4">
-                    {!v.isComplete ? (
+                <div className="space-y-4">
+                  <div className="flex justify-between items-center p-4 nm-inset">
+                    <span className="text-[10px] font-black text-zinc-500 uppercase tracking-widest">Ground Verification</span>
+                    <span className={`material-symbols-outlined text-sm ${v.isVerified ? 'text-green-500' : 'text-zinc-700'}`}>
+                      {v.isVerified ? 'verified' : 'pending_actions'}
+                    </span>
+                  </div>
+                  <div className="flex justify-between items-center p-4 nm-inset">
+                    <span className="text-[10px] font-black text-zinc-500 uppercase tracking-widest">Metadata Sync</span>
+                    <span className={`material-symbols-outlined text-sm ${v.isComplete ? 'text-primary' : 'text-zinc-700'}`}>
+                      {v.isComplete ? 'check_circle' : 'error'}
+                    </span>
+                  </div>
+                  <div className="flex justify-between items-center px-4 pt-2">
+                    <span className="text-[10px] font-black text-zinc-500 uppercase tracking-widest">Live Offers</span>
+                    <span className="font-black text-white text-xl tracking-tighter">{v.offers.length}</span>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-6 pt-4">
+                  {!v.isComplete ? (
+                    <Link 
+                      href={`/showroom/complete/${v.id}`}
+                      className="col-span-2 nm-card bg-white text-black py-5 text-center font-black uppercase text-[10px] tracking-widest hover:bg-primary hover:text-white transition-all border-none"
+                    >
+                      Sync Specifications
+                    </Link>
+                  ) : (
+                    <>
                       <Link 
-                        href={`/showroom/complete/${v.id}`}
-                        className="col-span-2 bg-[#0A0A0A] text-white py-4 text-center font-black uppercase text-[10px] tracking-widest hover:bg-primary transition-all"
+                        href={`/vehicles/${v.id}`}
+                        className="nm-card bg-zinc-900/50 text-zinc-400 py-5 text-center font-black uppercase text-[9px] tracking-widest hover:text-white transition-all border-none"
                       >
-                        Complete Listing
+                        Public Feed
                       </Link>
-                    ) : (
-                      <>
-                        <Link 
-                          href={`/vehicles/${v.id}`}
-                          className="bg-zinc-100 text-black py-4 text-center font-black uppercase text-[10px] tracking-widest hover:bg-zinc-200 transition-all"
-                        >
-                          View Public
-                        </Link>
-                        <Link 
-                          href={`/showroom/offers/${v.id}`}
-                          className="bg-black text-white py-4 font-black uppercase text-[10px] tracking-widest hover:bg-primary transition-all text-center"
-                        >
-                          Manage Offers
-                        </Link>
-                      </>
-                    )}
-                  </div>
+                      <Link 
+                        href={`/showroom/offers/${v.id}`}
+                        className="nm-card bg-zinc-900/50 text-primary py-5 font-black uppercase text-[9px] tracking-widest hover:bg-primary hover:text-white transition-all text-center border-none"
+                      >
+                        Offers Hub
+                      </Link>
+                    </>
+                  )}
                 </div>
               </div>
             ))}

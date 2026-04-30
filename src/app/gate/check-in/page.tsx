@@ -163,140 +163,156 @@ export default function GateCheckIn() {
   return (
     <AgentLayout
       agentName="Agent 1 (Gate)"
-      primaryAction={status === "pushing" ? "SENDING PUSH..." : status === "waiting" ? "WAITING FOR PIN..." : "TRIGGER M-PESA"}
+      primaryAction={status === "pushing" ? "INITIATING UPLINK..." : status === "waiting" ? "WAITING FOR PIN..." : "AUTHORIZE ENTRY"}
       onAction={() => handleSubmit({ preventDefault: () => {} } as React.FormEvent)}
     >
-      <div className="space-y-12 animate-fade-in max-w-5xl mx-auto p-8 pt-12 pb-32">
+      <div className="space-y-16 animate-fade-in max-w-5xl mx-auto py-12 pb-40">
         {/* Page Header */}
-        <div className="flex flex-col gap-2">
-          <h2 className="text-4xl font-black text-white tracking-tight uppercase">FAST-GATE <span className="text-primary italic">CHECK-IN</span></h2>
-          <p className="text-zinc-500 text-[10px] font-black uppercase tracking-[0.2em]">Epoch 2: 30-Second Entry Protocol</p>
+        <div className="flex flex-col gap-3 px-4">
+          <h2 className="text-5xl md:text-7xl font-black text-white tracking-tighter uppercase leading-none">FAST-GATE <br/> <span className="text-primary italic">PROTOCOL.</span></h2>
+          <div className="nm-inset inline-flex items-center gap-2 px-4 py-1.5 w-fit mt-4">
+            <span className="w-2 h-2 bg-primary rounded-full animate-pulse shadow-[0_0_10px_#E60000]"></span>
+            <span className="text-zinc-500 text-[10px] font-black uppercase tracking-[0.3em]">Phase 2: Active Synchronization</span>
+          </div>
         </div>
 
         {status === "success" ? (
-          <div className="bg-green-500/10 border border-green-500/20 rounded-none p-12 text-center animate-scale-up text-white">
-            <div className="w-20 h-20 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-[0_0_40px_rgba(34,197,94,0.4)]">
-              <span className="material-symbols-outlined text-white text-4xl">check_circle</span>
+          <div className="nm-card p-16 text-center animate-scale-up text-white border-green-500/10">
+            <div className="w-24 h-24 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-8 shadow-[0_0_50px_rgba(34,197,94,0.4)]">
+              <span className="material-symbols-outlined text-white text-5xl">check_circle</span>
             </div>
-            <h3 className="text-3xl font-black uppercase mb-2">ENTRY GRANTED</h3>
-            <p className="font-bold mb-8">Vehicle {formData.plate.toUpperCase()} registered in {selectedZone?.name}.</p>
+            <h3 className="text-4xl font-black uppercase tracking-tighter mb-4">ENTRY AUTHORIZED</h3>
+            <p className="text-zinc-400 font-bold mb-12 uppercase tracking-widest text-xs">Vehicle {formData.plate.toUpperCase()} deployed to {selectedZone?.name}.</p>
             <button 
               onClick={() => {
                 setFormData({ plate: "", idNumber: "", phone: "", zone: zones[0]?.id || "" });
                 setStatus("idle");
               }}
-              className="bg-white text-black px-10 py-4 rounded-none font-black tracking-widest uppercase hover:bg-zinc-200 transition-all"
+              className="nm-card bg-white text-black px-12 py-5 font-black tracking-widest uppercase hover:bg-primary hover:text-white transition-all border-none"
             >
-              NEXT VEHICLE
+              NEXT SUBJECT
             </button>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
             {/* Registration Details */}
-            <div className="space-y-6">
-              <div className="bg-white/5 backdrop-blur-xl p-8 space-y-6 border border-white/10 relative overflow-hidden group shadow-2xl">
-                <div className="absolute top-0 left-0 w-1 h-full bg-primary"></div>
-                <h3 className="text-zinc-500 text-[10px] font-black uppercase tracking-[0.2em]">Vehicle Identity</h3>
+            <div className="space-y-8">
+              <div className="nm-card p-10 space-y-8 relative overflow-hidden group">
+                <div className="flex items-center gap-4 mb-2">
+                   <span className="material-symbols-outlined text-primary text-xl">fingerprint</span>
+                   <h3 className="text-zinc-500 text-[10px] font-black uppercase tracking-[0.2em]">Subject Identity</h3>
+                </div>
                 
-                <div className="space-y-6">
-                  <div className="flex flex-col gap-2">
-                    <label className="text-white text-[10px] font-black uppercase tracking-widest">Plate Number</label>
-                    <input
-                      required
-                      type="text"
-                      placeholder="KCX 123A"
-                      className="w-full bg-white/5 border border-white/10 p-5 text-white font-mono text-2xl uppercase tracking-[0.2em] focus:border-primary outline-none transition-all placeholder:text-white/10"
-                      value={formData.plate}
-                      onChange={(e) => setFormData({ ...formData, plate: e.target.value })}
-                    />
+                <div className="space-y-8">
+                  <div className="flex flex-col gap-3">
+                    <label className="text-zinc-400 text-[10px] font-black uppercase tracking-widest px-2">Plate Identification</label>
+                    <div className="nm-inset">
+                      <input
+                        required
+                        type="text"
+                        placeholder="KCX 123A"
+                        className="w-full bg-transparent p-6 text-white font-mono text-3xl uppercase tracking-[0.3em] focus:text-primary outline-none transition-all placeholder:text-white/5 border-none"
+                        value={formData.plate}
+                        onChange={(e) => setFormData({ ...formData, plate: e.target.value })}
+                      />
+                    </div>
                   </div>
 
-                  <div className="flex flex-col gap-2">
-                    <label className="text-white text-[10px] font-black uppercase tracking-widest">ID Number (Owner)</label>
-                    <input
-                      required
-                      type="text"
-                      placeholder="12345678"
-                      className="w-full bg-white/5 border border-white/10 p-5 text-white font-bold focus:border-primary outline-none transition-all placeholder:text-white/10"
-                      value={formData.idNumber}
-                      onChange={(e) => setFormData({ ...formData, idNumber: e.target.value })}
-                    />
+                  <div className="flex flex-col gap-3">
+                    <label className="text-zinc-400 text-[10px] font-black uppercase tracking-widest px-2">National ID Archive</label>
+                    <div className="nm-inset">
+                      <input
+                        required
+                        type="text"
+                        placeholder="12345678"
+                        className="w-full bg-transparent p-6 text-white font-bold tracking-[0.1em] focus:text-primary outline-none transition-all placeholder:text-white/5 border-none"
+                        value={formData.idNumber}
+                        onChange={(e) => setFormData({ ...formData, idNumber: e.target.value })}
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
 
-              <div className="bg-white/5 backdrop-blur-xl p-8 space-y-6 border border-white/10 relative overflow-hidden group shadow-2xl">
-                <div className="absolute top-0 left-0 w-1 h-full bg-primary"></div>
-                <h3 className="text-zinc-500 text-[10px] font-black uppercase tracking-[0.2em]">Payment Target</h3>
+              <div className="nm-card p-10 space-y-8 relative overflow-hidden group">
+                <div className="flex items-center gap-4 mb-2">
+                   <span className="material-symbols-outlined text-primary text-xl">payments</span>
+                   <h3 className="text-zinc-500 text-[10px] font-black uppercase tracking-[0.2em]">Financial Node</h3>
+                </div>
                 
-                <div className="flex flex-col gap-2">
-                  <label className="text-white text-[10px] font-black uppercase tracking-widest">M-Pesa Number</label>
-                  <input
-                    required
-                    type="tel"
-                    placeholder="0712345678"
-                    className="w-full bg-white/5 border border-white/10 p-5 text-white font-bold tracking-widest focus:border-primary outline-none transition-all placeholder:text-white/10"
-                    value={formData.phone}
-                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                  />
+                <div className="flex flex-col gap-3">
+                  <label className="text-zinc-400 text-[10px] font-black uppercase tracking-widest px-2">M-Pesa Link Number</label>
+                  <div className="nm-inset">
+                    <input
+                      required
+                      type="tel"
+                      placeholder="0712345678"
+                      className="w-full bg-transparent p-6 text-white font-bold tracking-[0.4em] focus:text-primary outline-none transition-all placeholder:text-white/5 border-none"
+                      value={formData.phone}
+                      onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                    />
+                  </div>
                 </div>
               </div>
 
               {/* DEFER BUTTON */}
               <button 
                 onClick={handleDefer}
-                className="w-full border-2 border-white/10 p-5 text-[10px] font-black uppercase tracking-[0.2em] text-white hover:bg-white hover:text-black transition-all flex items-center justify-center gap-2"
+                className="nm-card w-full p-6 text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500 hover:text-white hover:bg-white/5 transition-all flex items-center justify-center gap-3 border-none"
               >
-                <span className="material-symbols-outlined text-sm">schedule</span>
+                <span className="material-symbols-outlined text-lg">history_toggle_off</span>
                 Defer to Ground Waitlist
               </button>
             </div>
 
             {/* Zone Selection & Summary */}
-            <div className="space-y-6">
-              <div className="bg-white/5 backdrop-blur-xl p-8 space-y-6 border border-white/10 shadow-2xl">
-                <h3 className="text-zinc-500 text-[10px] font-black uppercase tracking-[0.2em]">Deployment Zone</h3>
+            <div className="space-y-8">
+              <div className="nm-card p-10 space-y-8">
+                <div className="flex items-center gap-4 mb-2">
+                   <span className="material-symbols-outlined text-primary text-xl">grid_view</span>
+                   <h3 className="text-zinc-500 text-[10px] font-black uppercase tracking-[0.2em]">Deployment Sectors</h3>
+                </div>
                 
-                <div className="grid grid-cols-1 gap-4">
+                <div className="grid grid-cols-1 gap-6">
                   {zones.map((zone) => (
                     <button
                       key={zone.id}
                       type="button"
                       onClick={() => setFormData({ ...formData, zone: zone.id })}
-                      className={`flex justify-between items-center p-6 border-2 transition-all ${
+                      className={`flex justify-between items-center p-8 transition-all relative overflow-hidden border-none ${
                         formData.zone === zone.id
-                          ? "bg-primary/20 border-primary text-white shadow-[0_0_20px_rgba(230,0,0,0.2)]"
-                          : "bg-white/5 border-white/5 text-zinc-400 hover:border-white/10"
+                          ? "nm-inset text-white"
+                          : "nm-card opacity-60 hover:opacity-100"
                       }`}
                     >
+                      {formData.zone === zone.id && <div className="absolute top-0 left-0 w-1 h-full bg-primary shadow-[0_0_15px_#E60000]"></div>}
                       <div className="text-left">
-                        <p className="font-black text-sm uppercase tracking-tight text-white">{zone.name}</p>
-                        <p className="text-[9px] uppercase tracking-widest opacity-50 mt-1">
-                          Occupancy: {Math.round((zone.occupancy / zone.capacity) * 100)}%
+                        <p className={`font-black text-lg uppercase tracking-tight ${formData.zone === zone.id ? "text-primary" : "text-white"}`}>{zone.name}</p>
+                        <p className="text-[9px] uppercase tracking-[0.2em] opacity-40 mt-1 font-bold">
+                          Cap: {zone.occupancy}/{zone.capacity} Units
                         </p>
                       </div>
-                      <p className="font-black text-lg text-white">KES {zone.price}</p>
+                      <p className="font-black text-xl text-white tracking-tighter">KES {zone.price}</p>
                     </button>
                   ))}
                 </div>
               </div>
 
-              <div className="bg-primary p-8 space-y-6 text-white shadow-[0_20px_50px_rgba(230,0,0,0.3)] relative overflow-hidden">
-                <div className="flex justify-between items-end relative z-10">
-                  <div>
-                    <p className="text-[10px] font-black uppercase tracking-[0.2em] opacity-60">Entry Fee Total</p>
-                    <p className="text-5xl font-black tracking-tighter">KES {selectedZone?.price || 0}</p>
-                  </div>
-                  <div className="text-right">
-                    <span className="material-symbols-outlined text-4xl opacity-40">nfc</span>
-                  </div>
+              <div className="nm-card bg-primary p-12 text-white relative overflow-hidden group border-none">
+                <div className="absolute -right-10 -bottom-10 opacity-10 group-hover:rotate-12 transition-transform duration-700">
+                   <span className="material-symbols-outlined text-[180px]">contactless</span>
                 </div>
-
-                {errorMessage && (
-                  <div className="bg-black/40 border border-black/20 p-4 text-white text-[10px] font-black uppercase tracking-widest text-center">
-                    {errorMessage}
-                  </div>
-                )}
+                
+                <div className="relative z-10">
+                  <p className="text-[10px] font-black uppercase tracking-[0.3em] opacity-50 mb-2">Final Node Authorization</p>
+                  <p className="text-6xl font-black tracking-tighter mb-8">KES {selectedZone?.price || 0}</p>
+                  
+                  {errorMessage && (
+                    <div className="nm-inset bg-black/20 p-4 text-white text-[9px] font-black uppercase tracking-widest text-center">
+                      CRITICAL ERROR: {errorMessage}
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           </div>
@@ -304,27 +320,37 @@ export default function GateCheckIn() {
 
         {/* Waitlist Section */}
         {waitlist.length > 0 && (
-          <div className="bg-white/5 backdrop-blur-xl p-8 border border-white/10">
-             <h3 className="text-xl font-black uppercase tracking-tight mb-6 flex items-center gap-2 text-white">
-                <span className="material-symbols-outlined text-primary">group</span>
-                Ground Waitlist ({waitlist.length})
-             </h3>
-             <div className="space-y-4">
+          <div className="nm-card p-10 mt-12">
+             <div className="flex items-center gap-4 mb-10">
+                <span className="material-symbols-outlined text-primary text-2xl">pending</span>
+                <h3 className="text-2xl font-black uppercase tracking-tighter text-white">
+                   Ground Waitlist <span className="text-zinc-600">[{waitlist.length}]</span>
+                </h3>
+             </div>
+             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {waitlist.map((item) => (
-                  <div key={item.id} className="bg-black/50 p-6 flex justify-between items-center border-l-8 border-primary shadow-2xl">
+                  <div key={item.id} className="nm-inset p-8 flex justify-between items-center group hover:bg-white/5 transition-all">
                      <div>
-                        <p className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Waitlist Entry</p>
-                        <p className="text-lg font-black text-white">{item.vehicle?.regNumber}</p>
-                        <p className="text-[9px] font-bold text-zinc-400 uppercase">{item.zone?.name} — Pending KES {item.zone?.price}</p>
+                        <p className="text-[9px] font-black uppercase tracking-[0.2em] text-zinc-600 mb-1">Deferred Protocol</p>
+                        <p className="text-2xl font-black text-white tracking-tighter mb-1">{item.vehicle?.regNumber}</p>
+                        <p className="text-[10px] font-bold text-primary uppercase tracking-widest">{item.zone?.name} • KES {item.zone?.price}</p>
                      </div>
-                     <button className="bg-white text-black px-6 py-2 text-[9px] font-black uppercase tracking-widest hover:bg-primary hover:text-white transition-all">
-                        Resolve Payment
+                     <button className="nm-card bg-white text-black px-6 py-3 text-[10px] font-black uppercase tracking-widest hover:bg-primary hover:text-white transition-all border-none">
+                        Resolve
                      </button>
                   </div>
                 ))}
              </div>
           </div>
         )}
+
+        <SecurityAlertModal 
+          isOpen={showSecurityAlert} 
+          onClose={() => setShowSecurityAlert(false)} 
+          regNumber={formData.plate} 
+        />
+      </div>
+    </AgentLayout>
 
         <SecurityAlertModal 
           isOpen={showSecurityAlert} 
