@@ -1,97 +1,124 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import LiveGallery from "@/components/LiveGallery";
-import NewsletterForm from "@/components/NewsletterForm";
 import CollegeWaitlistModal from "@/components/CollegeWaitlistModal";
 
 export default function LandingPage() {
   const [isWaitlistOpen, setIsWaitlistOpen] = useState(false);
+  const [scrollY, setScrollY] = useState(0);
+
+  useEffect(() => {
+    const handleScroll = () => setScrollY(window.scrollY);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   return (
-    <div className="min-h-screen bg-black text-white selection:bg-primary selection:text-white">
+    <div className="min-h-screen bg-[#080808] text-white selection:bg-primary selection:text-white">
+      
+      {/* Liquid Background */}
+      <div className="liquid-bg">
+        <div className="liquid-blob" style={{ top: '10%', left: '10%', animationDelay: '0s' }}></div>
+        <div className="liquid-blob" style={{ bottom: '10%', right: '10%', animationDelay: '-5s', background: 'rgba(255,255,255,0.05)' }}></div>
+      </div>
 
       {/* Hero Section */}
-      <section className="relative min-h-screen flex flex-col items-center justify-center pt-20 overflow-hidden">
-        {/* Background Elements */}
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(239,68,68,0.15)_0%,transparent_70%)]"></div>
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full max-w-[1200px] opacity-10 blur-3xl animate-pulse">
-           <div className="w-full h-full bg-primary rounded-full"></div>
-        </div>
-
-        <div className="relative z-10 text-center px-6 max-w-5xl">
-          <div className="inline-flex items-center gap-3 px-4 py-1.5 rounded-full bg-white/5 border border-white/10 mb-8 animate-fade-in">
-            <span className="w-2 h-2 bg-primary rounded-full animate-pulse"></span>
-            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-zinc-400">Meru Showground — Live Operations</span>
+      <section className="relative h-screen flex flex-col items-center justify-center pt-20 overflow-hidden">
+        <div 
+          className="relative z-10 text-center px-6 max-w-6xl transition-transform duration-75"
+          style={{ transform: `translateY(${scrollY * 0.2}px)` }}
+        >
+          <div className="nm-inset inline-flex items-center gap-3 px-6 py-2 mb-12">
+            <span className="w-2 h-2 bg-primary rounded-full animate-pulse shadow-[0_0_10px_#E60000]"></span>
+            <span className="text-[10px] font-black uppercase tracking-[0.4em] text-zinc-500">Live Bazaar Operations • Meru</span>
           </div>
 
-          <h1 className="text-[12vw] md:text-[10vw] font-black leading-[0.8] uppercase tracking-tighter mb-12 animate-scale-up">
-            The Carflex <br/>
-            <span className="text-primary italic">Bazaar.</span>
+          <h1 className="text-[14vw] md:text-[11vw] font-black leading-[0.75] uppercase tracking-tighter mb-12">
+            Elevated <br/>
+            <span className="text-stroke italic">Mobility.</span>
           </h1>
 
-          <div className="flex flex-col md:flex-row items-center justify-center gap-6">
+          <div className="flex flex-col md:flex-row items-center justify-center gap-8 mt-8">
             <button 
               onClick={() => document.getElementById("gallery")?.scrollIntoView({ behavior: "smooth" })}
-              className="w-full md:w-auto bg-white text-black px-12 py-6 font-black uppercase text-sm tracking-widest hover:bg-primary hover:text-white transition-all shadow-[0_20px_50px_rgba(255,255,255,0.1)]"
+              className="w-full md:w-auto nm-card bg-primary text-white px-14 py-6 font-black uppercase text-xs tracking-[0.2em] hover:scale-105 transition-transform"
             >
-              Browse Inventory
+              Explore Inventory
             </button>
-            <Link href="/import-tracker" className="w-full md:w-auto px-12 py-6 font-black uppercase text-sm tracking-widest border-2 border-white/10 hover:border-primary transition-all">
+            <Link href="/import-tracker" className="w-full md:w-auto nm-card bg-transparent border border-white/5 px-14 py-6 font-black uppercase text-xs tracking-[0.2em] hover:bg-white/5 transition-all">
               Track Import
             </Link>
           </div>
         </div>
 
-        {/* Floating Marquee Stats */}
-        <div className="absolute bottom-12 w-full overflow-hidden whitespace-nowrap opacity-20 border-y border-white/5 py-4">
-          <div className="flex animate-marquee gap-24">
-            {[1, 2, 3, 4].map((i) => (
-              <div key={i} className="flex gap-24 font-black uppercase italic tracking-[0.5em] text-4xl">
-                <span>95% verified inventory</span>
-                <span className="text-primary">Live Auction Bidding</span>
-                <span>Japan Direct Sourcing</span>
-              </div>
-            ))}
-          </div>
+        {/* Scroll Indicator */}
+        <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-4 opacity-30">
+          <div className="w-[1px] h-20 bg-gradient-to-b from-transparent via-white to-transparent"></div>
+          <span className="text-[8px] uppercase tracking-[0.5em] font-bold">Scroll</span>
         </div>
       </section>
 
+      {/* Stats Loop */}
+      <div className="py-20 border-y border-white/5 bg-black/20 backdrop-blur-sm overflow-hidden">
+        <div className="flex animate-marquee whitespace-nowrap gap-20">
+          {[1, 2, 3].map((i) => (
+            <div key={i} className="flex gap-20 items-center text-4xl md:text-6xl font-black uppercase italic opacity-20">
+              <span className="text-stroke">95% Verified</span>
+              <span className="text-primary">Direct Japan Sourcing</span>
+              <span className="text-stroke">Live Auction Access</span>
+              <span className="text-white">Meru Showground</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
       {/* Main Bazaar Hub */}
-      <main id="gallery" className="bg-[#0a0a0a] border-t border-white/10">
+      <main id="gallery" className="relative py-32">
         <LiveGallery />
       </main>
 
       {/* Training Pillar Section */}
-      <section className="py-32 px-8 bg-white text-black relative overflow-hidden">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-24 items-center">
-          <div className="space-y-8">
-            <div className="inline-block bg-black text-white px-6 py-2 font-black uppercase text-[10px] tracking-widest">Carflex College</div>
-            <h2 className="text-6xl md:text-8xl font-black uppercase tracking-tighter leading-none">
-              Master the <br/> <span className="text-primary italic">Trade.</span>
+      <section className="py-40 px-8 relative">
+        <div className="max-w-7xl mx-auto nm-card p-12 md:p-24 grid grid-cols-1 md:grid-cols-2 gap-20 items-center overflow-hidden">
+          <div className="space-y-10 relative z-10">
+            <div className="nm-inset inline-block px-6 py-2 text-primary font-black uppercase text-[10px] tracking-widest">Carflex College</div>
+            <h2 className="text-6xl md:text-8xl font-black uppercase tracking-tighter leading-[0.8]">
+              The Art of <br/> <span className="text-stroke italic">Trading.</span>
             </h2>
-            <p className="text-xl font-bold text-zinc-500 max-w-md leading-tight">
-              Certified training in Vehicle Inspection, Digital Sales, and Export Logistics. Become a Carflex Agent.
+            <p className="text-lg font-medium text-zinc-500 max-w-md leading-relaxed">
+              Master vehicle inspection, digital sales, and global logistics. Join the elite network of Carflex Agents.
             </p>
             <button 
               onClick={() => setIsWaitlistOpen(true)}
-              className="bg-[#0a0a0a] text-white px-10 py-5 font-black uppercase text-xs tracking-widest hover:bg-primary transition-all"
+              className="nm-card bg-white text-black px-12 py-5 font-black uppercase text-xs tracking-widest hover:bg-primary hover:text-white transition-all"
             >
-              Join Training Waitlist
+              Request Enrollment
             </button>
           </div>
-          <div className="aspect-square bg-zinc-100 border-4 border-black relative overflow-hidden group">
-            <div className="absolute inset-0 bg-primary opacity-0 group-hover:opacity-10 transition-opacity"></div>
-            <span className="material-symbols-outlined text-[200px] absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-5">school</span>
+          <div className="relative">
+             <div className="aspect-square nm-inset flex items-center justify-center">
+                <span className="material-symbols-outlined text-[120px] md:text-[200px] opacity-10 animate-pulse">school</span>
+             </div>
+             {/* Decorative Accents */}
+             <div className="absolute -top-10 -right-10 w-40 h-40 bg-primary/20 blur-3xl rounded-full"></div>
           </div>
         </div>
       </section>
 
+      {/* Footer / Contact */}
+      <footer className="py-20 text-center opacity-30 hover:opacity-100 transition-opacity">
+        <p className="text-[10px] font-black uppercase tracking-[0.5em] mb-4">Carflex Ecosystem © 2026</p>
+        <div className="flex justify-center gap-8 text-[8px] font-bold uppercase tracking-widest">
+           <Link href="/support" className="hover:text-primary transition-colors">Support</Link>
+           <Link href="/terms" className="hover:text-primary transition-colors">Terms</Link>
+           <Link href="/privacy" className="hover:text-primary transition-colors">Privacy</Link>
+        </div>
+      </footer>
 
       {/* Modals */}
       <CollegeWaitlistModal isOpen={isWaitlistOpen} onClose={() => setIsWaitlistOpen(false)} />
-
     </div>
   );
 }
