@@ -13,11 +13,19 @@ export default function GateDashboard() {
 
   const fetchGateTransactions = async () => {
     try {
-      const res = await fetch("/api/dashboard/transactions"); // I'll check if this exists or create it
+      setLoading(true);
+      const res = await fetch("/api/dashboard/transactions");
       const data = await res.json();
-      setTransactions(data);
+      
+      if (Array.isArray(data)) {
+        setTransactions(data);
+      } else {
+        setTransactions([]);
+        console.error("API Error:", data.error);
+      }
     } catch (err) {
       console.error(err);
+      setTransactions([]);
     } finally {
       setLoading(false);
     }

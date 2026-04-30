@@ -9,13 +9,13 @@ export default function MobileNav() {
   const tabs = [
     { icon: "home", href: "/", label: "Home" },
     { icon: "chat_bubble", href: "/inbox", label: "Inbox" },
-    { icon: "qr_code_scanner", href: "/scan", label: "Scan", isFab: true },
+    { icon: "qr_code_scanner", href: "/gate/check-in", label: "Scan", isFab: true },
     { icon: "garage", href: "/showroom", label: "Garage" },
     { icon: "person", href: "/dashboard", label: "Profile" },
   ];
 
   return (
-    <nav className="md:hidden fixed bottom-0 left-0 right-0 z-[100] bg-white border-t-2 border-black h-20 px-4">
+    <nav className="md:hidden fixed bottom-0 left-0 right-0 z-[100] bg-black/60 backdrop-blur-2xl border-t border-white/5 h-20 px-4">
       <div className="flex items-center justify-between h-full max-w-lg mx-auto relative">
         {tabs.map((tab) => {
           const isActive = pathname === tab.href;
@@ -39,12 +39,12 @@ export default function MobileNav() {
               className="flex flex-col items-center gap-1 group"
             >
               <span className={`material-symbols-outlined text-2xl transition-all duration-300 ${
-                isActive ? "text-primary scale-110" : "text-black group-active:scale-90"
+                isActive ? "text-primary scale-110" : "text-zinc-400 group-active:scale-90"
               }`}>
                 {tab.icon}
               </span>
               <span className={`text-[8px] font-black uppercase tracking-widest ${
-                isActive ? "text-primary" : "text-black"
+                isActive ? "text-primary" : "text-zinc-400"
               }`}>
                 {tab.label}
               </span>

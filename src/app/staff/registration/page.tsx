@@ -13,11 +13,19 @@ export default function RegistrationDashboard() {
 
   const fetchPendingVehicles = async () => {
     try {
-      const res = await fetch("/api/vehicles/pending"); // I'll need to create this API
+      setLoading(true);
+      const res = await fetch("/api/vehicles/pending");
       const data = await res.json();
-      setVehicles(data);
+      
+      if (Array.isArray(data)) {
+        setVehicles(data);
+      } else {
+        setVehicles([]);
+        console.error("API Error:", data.error);
+      }
     } catch (err) {
       console.error(err);
+      setVehicles([]);
     } finally {
       setLoading(false);
     }

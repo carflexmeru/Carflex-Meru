@@ -13,11 +13,19 @@ export default function GroundDashboard() {
 
   const fetchUnverifiedVehicles = async () => {
     try {
-      const res = await fetch("/api/vehicles/pending"); // Same as registration for now
+      setLoading(true);
+      const res = await fetch("/api/vehicles/pending");
       const data = await res.json();
-      setVehicles(data.filter((v: any) => !v.isVerified));
+      
+      if (Array.isArray(data)) {
+        setVehicles(data.filter((v: any) => !v.isVerified));
+      } else {
+        setVehicles([]);
+        console.error("API Error:", data.error);
+      }
     } catch (err) {
       console.error(err);
+      setVehicles([]);
     } finally {
       setLoading(false);
     }
