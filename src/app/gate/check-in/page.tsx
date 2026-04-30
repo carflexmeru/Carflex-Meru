@@ -351,13 +351,5 @@ export default function GateCheckIn() {
         />
       </div>
     </AgentLayout>
-
-        <SecurityAlertModal 
-          isOpen={showSecurityAlert} 
-          onClose={() => setShowSecurityAlert(false)} 
-          regNumber={formData.plate} 
-        />
-      </div>
-    </AgentLayout>
   );
 }

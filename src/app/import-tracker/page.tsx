@@ -15,7 +15,6 @@ export default function ImportTracker() {
   const [activeShipment, setActiveShipment] = useState(false);
 
   return (
-  return (
     <div className="min-h-screen bg-[#080808] text-white font-sans pb-32 relative overflow-hidden">
       {/* Liquid Background */}
       <div className="liquid-bg opacity-30">
