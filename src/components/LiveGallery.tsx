@@ -19,14 +19,24 @@ export default function LiveGallery() {
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
   const [loading, setLoading] = useState(true);
 
+  const [error, setError] = useState<string | null>(null);
+
   useEffect(() => {
     async function fetchVehicles() {
       try {
+        setError(null);
         const response = await fetch("/api/vehicles?status=active");
         const data = await response.json();
-        setVehicles(data);
-      } catch (error) {
+        
+        if (response.ok && Array.isArray(data)) {
+          setVehicles(data);
+        } else {
+          throw new Error(data.error || "Bazaar Offline");
+        }
+      } catch (error: any) {
         console.error("Failed to fetch vehicles:", error);
+        setError(error.message);
+        setVehicles([]);
       } finally {
         setLoading(false);
       }
@@ -55,12 +65,18 @@ export default function LiveGallery() {
         </div>
       </div>
 
-      {vehicles.length === 0 ? (
-        <div className="text-center py-20 bg-white/5 rounded-3xl border border-white/10">
-          <span className="material-symbols-outlined text-6xl text-white/20 mb-4">no_cars</span>
-          <p className="text-gray-500 font-bold uppercase tracking-widest">No active vehicles found in the bazaar.</p>
+      {error ? (
+        <div className="text-center py-20 bg-primary/5 rounded-3xl border border-primary/20">
+          <span className="material-symbols-outlined text-6xl text-primary/40 mb-4">cloud_off</span>
+          <p className="text-primary/60 font-black uppercase tracking-widest text-sm mb-4">The bazaar mainframe is currently offline</p>
+          <button 
+            onClick={() => window.location.reload()}
+            className="bg-primary text-white px-8 py-3 rounded-full font-black uppercase text-[10px] tracking-widest hover:bg-white hover:text-black transition-all"
+          >
+            Attempt Re-Connection
+          </button>
         </div>
-      ) : (
+      ) : vehicles.length === 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {vehicles.map((vehicle) => (
             <div key={vehicle.id} className="bg-[#0a0a0a] border border-white/10 rounded-2xl overflow-hidden hover:border-primary/50 transition-all group shadow-2xl">

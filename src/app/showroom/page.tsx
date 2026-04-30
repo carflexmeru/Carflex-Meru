@@ -34,13 +34,23 @@ export default function MyShowroom() {
     }
   }, []);
 
+  const [error, setError] = useState<string | null>(null);
+
   async function fetchVehicles(phoneNum: string) {
     try {
+      setError(null);
       const res = await fetch(`/api/vendor/vehicles?phone=${phoneNum}`);
       const data = await res.json();
-      setVehicles(data);
-    } catch (error) {
+      
+      if (res.ok && Array.isArray(data)) {
+        setVehicles(data);
+      } else {
+        throw new Error(data.error || "SERVER_OFFLINE");
+      }
+    } catch (error: any) {
       console.error(error);
+      setError(error.message);
+      setVehicles([]); // Reset to empty array on error to prevent .map crashes
     } finally {
       setLoading(false);
     }
@@ -64,7 +74,20 @@ export default function MyShowroom() {
       </div>
 
       <div className="max-w-7xl mx-auto px-8 py-20">
-        {!phone ? (
+        {error ? (
+          <div className="bg-primary/10 border-4 border-primary p-12 text-center shadow-2xl">
+            <h3 className="text-2xl font-black text-primary uppercase mb-2">System Interruption</h3>
+            <p className="text-zinc-500 font-bold mb-8 uppercase text-[10px] tracking-widest">
+              The bazaar mainframe is currently unreachable. Error: {error}
+            </p>
+            <button 
+              onClick={() => fetchVehicles(phone)}
+              className="bg-primary text-white px-8 py-3 font-black uppercase text-[10px] tracking-widest hover:bg-black transition-all"
+            >
+              Re-Establish Connection
+            </button>
+          </div>
+        ) : !phone ? (
           <div className="bg-white border-4 border-primary p-12 text-center shadow-2xl">
             <h3 className="text-2xl font-black text-primary uppercase mb-4">Identity Verification Required</h3>
             <p className="text-zinc-500 font-bold mb-8 uppercase text-[10px] tracking-widest">Please enter your phone number in the Inbox to access your showroom.</p>
