@@ -286,7 +286,16 @@ export default function GateCheckIn() {
                 </div>
                 
                 <div className="grid grid-cols-1 gap-6">
-                  {zones.map((zone) => (
+                  {zones.length === 0 ? (
+                    <div className="nm-inset p-10 text-center">
+                       <p className="text-zinc-600 text-[10px] font-black uppercase tracking-widest">
+                          [ SYSTEM ERROR: SECTOR DATA MISSING ]
+                       </p>
+                       <p className="text-[8px] text-zinc-500 mt-2">
+                          Synchronize your Supabase Mainframe using the Tactical SQL script.
+                       </p>
+                    </div>
+                  ) : zones.map((zone) => (
                     <button
                       key={zone.id}
                       type="button"
