@@ -77,6 +77,11 @@ export default function LiveGallery() {
           </button>
         </div>
       ) : vehicles.length === 0 ? (
+        <div className="text-center py-20 bg-white/5 rounded-3xl border border-white/10">
+          <span className="material-symbols-outlined text-6xl text-white/20 mb-4">no_cars</span>
+          <p className="text-gray-500 font-bold uppercase tracking-widest">No active vehicles found in the bazaar.</p>
+        </div>
+      ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {vehicles.map((vehicle) => (
             <div key={vehicle.id} className="bg-[#0a0a0a] border border-white/10 rounded-2xl overflow-hidden hover:border-primary/50 transition-all group shadow-2xl">
