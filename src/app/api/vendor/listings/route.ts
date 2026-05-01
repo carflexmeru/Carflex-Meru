@@ -6,6 +6,10 @@ export async function GET(request: Request) {
     const { searchParams } = new URL(request.url);
     const phone = searchParams.get("phone");
 
+    if (!phone) {
+      return NextResponse.json([], { status: 200 });
+    }
+
     // NORMALIZE PHONE
     let normalizedPhone = phone.replace(/\s+/g, "");
     if (normalizedPhone.startsWith("0")) {
