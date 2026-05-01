@@ -158,7 +158,7 @@ export default function GateCheckIn() {
       });
 
       if (res.ok) {
-        setFormData({ plate: "", idNumber: "", phone: "", zone: zones[0]?.id || "" });
+        setFormData({ plate: "", idNumber: "", phone: "", zone: zones[0]?.id || "", name: "" });
         setStatus("idle");
         fetchWaitlist();
       } else {
@@ -218,7 +218,7 @@ export default function GateCheckIn() {
             <p className="text-zinc-400 font-bold mb-12 uppercase tracking-widest text-xs">Vehicle {formData.plate.toUpperCase()} deployed to {selectedZone?.name}.</p>
             <button 
               onClick={() => {
-                setFormData({ plate: "", idNumber: "", phone: "", zone: zones[0]?.id || "" });
+                setFormData({ plate: "", idNumber: "", phone: "", zone: zones[0]?.id || "", name: "" });
                 setStatus("idle");
               }}
               className="nm-card bg-white text-black px-12 py-5 font-black tracking-widest uppercase hover:bg-primary hover:text-white transition-all border-none"
