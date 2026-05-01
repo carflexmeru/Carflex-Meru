@@ -323,22 +323,24 @@ export default function GateCheckIn() {
                   </div>
                 </div>
 
-                {paymentMethod === "mpesa" && (
-                  <div className="flex flex-col gap-6 animate-fade-in">
-                    <div className="flex flex-col gap-3">
-                      <label className="text-zinc-400 text-[10px] font-black uppercase tracking-widest px-2">M-Pesa Link Number</label>
-                      <div className="nm-inset">
-                        <input
-                          required
-                          type="tel"
-                          placeholder="0712345678"
-                          className="w-full bg-transparent p-6 text-white font-bold tracking-[0.4em] focus:text-primary outline-none transition-all placeholder:text-white/5 border-none"
-                          value={formData.phone}
-                          onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                        />
-                      </div>
+                <div className="flex flex-col gap-6">
+                  <div className="flex flex-col gap-3">
+                    <label className="text-zinc-400 text-[10px] font-black uppercase tracking-widest px-2">Primary Contact Number</label>
+                    <div className="nm-inset">
+                      <input
+                        required
+                        type="tel"
+                        placeholder="0712345678"
+                        className="w-full bg-transparent p-6 text-white font-bold tracking-[0.4em] focus:text-primary outline-none transition-all placeholder:text-white/5 border-none"
+                        value={formData.phone}
+                        onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                      />
                     </div>
-                    
+                  </div>
+                </div>
+
+                {paymentMethod === "mpesa" && (
+                  <div className="flex flex-col gap-6 animate-fade-in mt-6">
                     <button
                       onClick={() => handleSubmit({ preventDefault: () => {} } as React.FormEvent)}
                       className="nm-card w-full bg-primary text-white py-6 font-black uppercase tracking-widest text-[10px] shadow-[0_10px_30px_rgba(230,0,0,0.3)] hover:scale-[1.02] active:scale-95 transition-all border-none"
