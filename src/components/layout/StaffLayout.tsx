@@ -73,6 +73,15 @@ export default function StaffLayout({ children }: StaffLayoutProps) {
           { label: "Logs", href: "/staff/ground/logs", icon: "history" },
           { label: "Transactions", href: "/staff/ground/transactions", icon: "account_balance_wallet" },
         ];
+      case "EXIT_COMMAND_AGENT":
+        return [
+          { label: "Main Site", href: "/", icon: "home" },
+          { label: "Exit Command", href: "/staff/exit", icon: "door_open" },
+          { label: "Inside Manifest", href: "/staff/exit/manifest", icon: "format_list_bulleted" },
+          { label: "Overtime Reconciliation", href: "/staff/exit/overtime", icon: "history_toggle_off" },
+          { label: "Departure Logs", href: "/staff/exit/logs", icon: "history" },
+          { label: "Exit Transactions", href: "/staff/exit/transactions", icon: "receipt_long" },
+        ];
       default:
         return [
           { label: "Main Site", href: "/", icon: "home" },
