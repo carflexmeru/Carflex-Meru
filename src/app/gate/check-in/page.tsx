@@ -206,15 +206,7 @@ export default function GateCheckIn() {
   }, []);
 
   return (
-    <AgentLayout
-      agentName="Agent 1 (Gate)"
-      primaryAction={
-        status === "pushing" ? "INITIATING UPLINK..." : 
-        status === "waiting" ? "WAITING FOR PIN..." : 
-        paymentMethod === "cash" ? "AUTHORIZE ENTRY (CASH)" : "INITIATE M-PESA LINK"
-      }
-      onAction={() => handleSubmit({ preventDefault: () => {} } as React.FormEvent)}
-    >
+    <StaffLayout>
       <div className="space-y-16 animate-fade-in max-w-5xl mx-auto py-12 pb-40">
         {/* Page Header */}
         <div className="flex flex-col gap-3 px-4">
