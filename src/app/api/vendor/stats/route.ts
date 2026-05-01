@@ -10,6 +10,7 @@ export async function GET(request: Request) {
       return NextResponse.json({ error: "Missing identity node." }, { status: 400 });
     }
 
+    // 1. Fetch Core Profile with Resilient Includes
     const vendor = await prisma.profile.findUnique({
       where: { phone },
       include: {
@@ -17,10 +18,6 @@ export async function GET(request: Request) {
           include: { views: true }
         },
         bookings: true,
-        receivedMessages: {
-          take: 5,
-          orderBy: { createdAt: "desc" }
-        }
       }
     });
 
@@ -28,20 +25,32 @@ export async function GET(request: Request) {
       return NextResponse.json({ error: "Vendor not found." }, { status: 404 });
     }
 
-    // 1. Calculate Analytics
+    // 2. Fetch Messages Separately to avoid relation-drift crashes
+    let receivedMessages: any[] = [];
+    try {
+       receivedMessages = await prisma.message.findMany({
+          where: { receiverId: vendor.id },
+          take: 5,
+          orderBy: { createdAt: "desc" }
+       });
+    } catch (mErr) {
+       console.warn("Message relation sync error:", mErr);
+    }
+
+    // 3. Calculate Analytics
     const totalAssets = vendor.vehicles.length;
     const activeListings = vendor.vehicles.filter(v => v.status === "active").length;
-    const totalViews = vendor.vehicles.reduce((sum, v) => sum + v.views.length, 0);
+    const totalViews = vendor.vehicles.reduce((sum, v) => sum + (v.views?.length || 0), 0);
     const totalValue = vendor.vehicles.reduce((sum, v) => sum + (v.price || 0), 0);
 
-    // 2. Recent History (Combined logs)
+    // 4. Recent History (Combined logs)
     const recentActivity = [
       ...vendor.vehicles.slice(0, 3).map(v => ({
         type: "ASSET_UPDATE",
         message: `${v.make} ${v.model} (${v.regNumber}) status changed to ${v.status}`,
         time: v.updatedAt
       })),
-      ...vendor.receivedMessages.map(m => ({
+      ...receivedMessages.map(m => ({
         type: "MESSAGE",
         message: `New communication received: ${m.content.substring(0, 30)}...`,
         time: m.createdAt

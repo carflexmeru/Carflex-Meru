@@ -10,9 +10,19 @@ export async function GET(request: Request) {
       return NextResponse.json({ error: "Missing identity node." }, { status: 400 });
     }
 
+    // 1. Resolve Profile First
+    const vendor = await prisma.profile.findUnique({
+       where: { phone }
+    });
+
+    if (!vendor) {
+       return NextResponse.json([], { status: 200 }); // Return empty array if no vendor
+    }
+
+    // 2. Fetch Vehicles with Direct ID link
     const vehicles = await prisma.vehicle.findMany({
       where: {
-        owner: { phone }
+        ownerId: vendor.id
       },
       include: {
         zone: true,
@@ -23,9 +33,10 @@ export async function GET(request: Request) {
       }
     });
 
-    return NextResponse.json(vehicles);
+    return NextResponse.json(Array.isArray(vehicles) ? vehicles : []);
   } catch (error: any) {
     console.error("Vendor listings fetch error:", error);
-    return NextResponse.json({ error: "FAILED_TO_SYNC_INVENTORY" }, { status: 500 });
+    // CRITICAL: Always return an array to prevent frontend crashes
+    return NextResponse.json([], { status: 200 }); 
   }
 }

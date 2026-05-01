@@ -16,7 +16,8 @@ export default function VendorListings() {
       try {
         const res = await fetch(`/api/vendor/listings?phone=${phone}`);
         const result = await res.json();
-        setVehicles(result);
+        // Ensure result is an array before setting state
+        setVehicles(Array.isArray(result) ? result : []);
       } catch (err) {
         console.error("Listings fetch error:", err);
       } finally {
