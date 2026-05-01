@@ -38,9 +38,8 @@ export default function StaffLayout({ children }: StaffLayoutProps) {
     }
   }, [pathname, router]);
 
-  // Sync theme to DOM
+  // Sync theme to local persistence
   useEffect(() => {
-    document.documentElement.setAttribute("data-theme", theme);
     localStorage.setItem("staff_theme", theme);
   }, [theme]);
 
@@ -85,7 +84,7 @@ export default function StaffLayout({ children }: StaffLayoutProps) {
   const navLinks = getNavLinks();
 
   return (
-    <div className="min-h-screen bg-[var(--background)] flex">
+    <div data-theme={theme} className="min-h-screen bg-[var(--background)] flex">
       {/* Desktop Command Rail */}
       <aside 
         onMouseEnter={() => setIsExpanded(true)}
