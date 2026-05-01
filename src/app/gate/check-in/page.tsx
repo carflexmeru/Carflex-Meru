@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import SecurityAlertModal from "@/components/SecurityAlertModal";
-import AgentLayout from "@/components/layout/AgentLayout";
+import StaffLayout from "@/components/layout/StaffLayout";
 
 interface Zone {
   id: string;
@@ -487,6 +487,6 @@ export default function GateCheckIn() {
           regNumber={formData.plate} 
         />
       </div>
-    </AgentLayout>
+    </StaffLayout>
   );
 }

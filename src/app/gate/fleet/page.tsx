@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import AgentLayout from "@/components/layout/AgentLayout";
+import StaffLayout from "@/components/layout/StaffLayout";
 
 interface Zone {
   id: string;
@@ -124,11 +124,7 @@ export default function FleetIntake() {
   };
 
   return (
-    <AgentLayout
-      agentName="Fleet Command Unit"
-      primaryAction={status === "success" ? "MANIFEST DEPLOYED" : "AUTHORIZE FLEET ENTRY"}
-      onAction={handleSubmit}
-    >
+    <StaffLayout>
       <div className="space-y-12 py-12 max-w-6xl mx-auto pb-40">
         <div className="flex flex-col gap-4">
           <h1 className="text-6xl font-black uppercase tracking-tighter leading-none">FLEET <br/> <span className="text-primary italic">MANIFEST.</span></h1>
@@ -332,6 +328,6 @@ export default function FleetIntake() {
           </div>
         )}
       </div>
-    </AgentLayout>
+    </StaffLayout>
   );
 }

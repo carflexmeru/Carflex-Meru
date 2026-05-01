@@ -1,6 +1,6 @@
 "use client";
 
-import AgentLayout from "@/components/layout/AgentLayout";
+import StaffLayout from "@/components/layout/StaffLayout";
 import { useState, useEffect } from "react";
 
 export default function GroundDashboard() {
@@ -50,12 +50,8 @@ export default function GroundDashboard() {
   };
 
   return (
-    <AgentLayout
-      agentName="Ground Intelligence Unit"
-      primaryAction="INITIATE PHYSICAL SCAN"
-      onAction={() => alert("Scanner Uplink Active. Move to vehicle node.")}
-    >
-      <div className="space-y-12 py-12">
+    <StaffLayout>
+      <div className="space-y-12">
         <div className="flex flex-col gap-4">
           <h1 className="text-6xl font-black uppercase tracking-tighter leading-none">GROUND <br/> <span className="text-stroke italic">INTEL.</span></h1>
           <p className="text-zinc-500 font-bold uppercase tracking-widest text-[10px]">Verifying asset specifications and marking physical verification nodes.</p>
@@ -140,6 +136,6 @@ export default function GroundDashboard() {
            </div>
         </div>
       </div>
-    </AgentLayout>
+    </StaffLayout>
   );
 }
