@@ -9,11 +9,12 @@ export async function GET() {
         paymentAmount: { gt: 0 }
       },
       include: {
-        vehicle: true,
-        user: true
+        vehicle: {
+          include: { owner: true }
+        }
       },
       orderBy: {
-        createdAt: "desc"
+        checkInAt: "desc"
       },
       take: 50
     });

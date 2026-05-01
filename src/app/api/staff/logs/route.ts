@@ -11,8 +11,12 @@ export async function GET() {
     });
 
     const bookings = await prisma.booking.findMany({
-      include: { vehicle: true, user: true },
-      orderBy: { updatedAt: "desc" },
+      include: { 
+        vehicle: {
+          include: { owner: true }
+        }
+      },
+      orderBy: { checkInAt: "desc" },
       take: 20
     });
 
@@ -29,9 +33,9 @@ export async function GET() {
     const bookingLogs = bookings.map(b => ({
       id: `b-${b.id}`,
       type: "PAYMENT_SIGNAL",
-      description: `Payment of KES ${b.paymentAmount} processed for ${b.vehicle?.regNumber || 'Unknown'}`,
-      user: b.user?.name || "System",
-      timestamp: b.updatedAt,
+      description: `Payment of KES ${b.paymentAmount || 0} processed for ${b.vehicle?.regNumber || 'Unknown'}`,
+      user: b.vehicle?.owner?.name || "System",
+      timestamp: b.checkInAt,
       status: "COMPLETED"
     }));
 

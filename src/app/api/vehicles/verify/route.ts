@@ -19,6 +19,15 @@ export async function POST(request: Request) {
       }
     });
 
+    // RECORD TO ACTION REGISTRY
+    await (prisma as any).actionLog.create({
+      data: {
+        actionType: "AUTHORIZE_ENTRY",
+        description: `Asset ${updatedVehicle.regNumber} was authorized for entry into ${status || 'active'} status.`,
+        metadata: { vehicleId: id, plate: updatedVehicle.regNumber }
+      }
+    });
+
     return NextResponse.json({ 
       success: true, 
       message: "Vehicle verified successfully", 
