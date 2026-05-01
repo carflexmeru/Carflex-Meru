@@ -218,7 +218,7 @@ export default function FleetIntake() {
                     paymentMethod === "mpesa" ? "bg-primary text-white shadow-[0_10px_30px_rgba(230,0,0,0.3)]" : "bg-white text-black shadow-[0_10px_30px_rgba(255,255,255,0.1)]"
                   }`}
                 >
-                  {status === "processing" ? "DEPLOYING MANIFEST..." : status === "success" ? "MANIFEST DEPLOYED" : `AUTHORIZE ${paymentMethod.toUpperCase()} PAYMENT`}
+                  {status === "processing" ? "DEPLOYING MANIFEST..." : `AUTHORIZE ${paymentMethod.toUpperCase()} PAYMENT`}
                 </button>
               </div>
             </div>
