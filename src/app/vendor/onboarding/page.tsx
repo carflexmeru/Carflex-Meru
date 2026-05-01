@@ -75,7 +75,7 @@ export default function VendorOnboardingPage() {
                           type="email"
                           required
                           placeholder="e.g. sales@diamondmotors.com"
-                          className="w-full bg-transparent p-6 text-white font-black uppercase text-xl tracking-tighter outline-none placeholder:text-zinc-800 border-none"
+                          className="w-full bg-transparent p-6 text-white font-black text-xl tracking-tighter outline-none placeholder:text-zinc-800 border-none"
                           value={formData.email}
                           onChange={(e) => setFormData({...formData, email: e.target.value})}
                         />
@@ -88,7 +88,7 @@ export default function VendorOnboardingPage() {
                           type="text"
                           required
                           placeholder="e.g. 5th Ave, Nairobi, Kenya"
-                          className="w-full bg-transparent p-6 text-white font-black uppercase text-xl tracking-tighter outline-none placeholder:text-zinc-800 border-none"
+                          className="w-full bg-transparent p-6 text-white font-black text-xl tracking-tighter outline-none placeholder:text-zinc-800 border-none"
                           value={formData.businessAddress}
                           onChange={(e) => setFormData({...formData, businessAddress: e.target.value})}
                         />
@@ -101,7 +101,7 @@ export default function VendorOnboardingPage() {
                           type="text"
                           required
                           placeholder="e.g. Diamond Motors"
-                          className="w-full bg-transparent p-6 text-white font-black uppercase text-xl tracking-tighter outline-none placeholder:text-zinc-800 border-none"
+                          className="w-full bg-transparent p-6 text-white font-black text-xl tracking-tighter outline-none placeholder:text-zinc-800 border-none"
                           value={formData.name}
                           onChange={(e) => setFormData({...formData, name: e.target.value})}
                         />
@@ -114,7 +114,7 @@ export default function VendorOnboardingPage() {
                           type="text"
                           required
                           placeholder="e.g. diamond_alpha"
-                          className="w-full bg-transparent p-6 text-white font-black uppercase text-xl tracking-tighter outline-none placeholder:text-zinc-800 border-none"
+                          className="w-full bg-transparent p-6 text-white font-black text-xl tracking-tighter outline-none placeholder:text-zinc-800 border-none"
                           value={formData.username}
                           onChange={(e) => setFormData({...formData, username: e.target.value.toLowerCase()})}
                         />
@@ -139,7 +139,7 @@ export default function VendorOnboardingPage() {
                         <input
                           type="password"
                           required
-                          className="w-full bg-transparent p-6 text-white font-black uppercase text-xl tracking-[0.3em] outline-none border-none"
+                          className="w-full bg-transparent p-6 text-white font-black text-xl tracking-[0.3em] outline-none border-none"
                           value={formData.password}
                           onChange={(e) => setFormData({...formData, password: e.target.value})}
                         />
@@ -151,7 +151,7 @@ export default function VendorOnboardingPage() {
                         <input
                           type="password"
                           required
-                          className="w-full bg-transparent p-6 text-white font-black uppercase text-xl tracking-[0.3em] outline-none border-none"
+                          className="w-full bg-transparent p-6 text-white font-black text-xl tracking-[0.3em] outline-none border-none"
                           value={formData.confirmPassword}
                           onChange={(e) => setFormData({...formData, confirmPassword: e.target.value})}
                         />
