@@ -1,6 +1,6 @@
 "use client";
 
-import AgentLayout from "@/components/layout/AgentLayout";
+import StaffLayout from "@/components/layout/StaffLayout";
 import { useState, useEffect } from "react";
 
 export default function RegistrationDashboard() {
@@ -32,12 +32,8 @@ export default function RegistrationDashboard() {
   };
 
   return (
-    <AgentLayout
-      agentName="Lead Intake Officer"
-      primaryAction="REGISTER NEW ASSET"
-      onAction={() => window.location.href = "/gate/check-in"}
-    >
-      <div className="space-y-12 py-12">
+    <StaffLayout>
+      <div className="space-y-12">
         <div className="flex flex-col gap-4">
           <h1 className="text-6xl font-black uppercase tracking-tighter leading-none">REGISTRATION <br/> <span className="text-stroke italic">VAULT.</span></h1>
           <p className="text-zinc-500 font-bold uppercase tracking-widest text-[10px]">Processing new entries into the bazaar mainframe.</p>
@@ -99,6 +95,6 @@ export default function RegistrationDashboard() {
            </div>
         </div>
       </div>
-    </AgentLayout>
+    </StaffLayout>
   );
 }
