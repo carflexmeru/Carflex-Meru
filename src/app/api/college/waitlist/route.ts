@@ -17,6 +17,7 @@ export async function POST(request: Request) {
       create: {
         phone: phone || `COLLEGE-${email}`,
         name,
+        email,
         role: "student",
       }
     });

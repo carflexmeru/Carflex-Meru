@@ -12,6 +12,7 @@ datasource db {
 model Profile {
   id           String    @id @default(uuid())
   phone        String    @unique
+  email        String?   @unique
   name         String?
   idNumber     String?   @unique
   role         String    @default("buyer") // admin, staff, vendor, buyer, student
