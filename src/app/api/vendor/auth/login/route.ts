@@ -23,19 +23,13 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "ASSET_IDENTITY_NOT_FOUND: Profile not registered." }, { status: 404 });
     }
 
-    // 2. Dual-State Validation
-    let isValid = false;
-
-    if (!vendor.onboardingCompleted) {
-      // INITIAL STATE: Compare with ID Number
-      isValid = vendor.idNumber === password;
-    } else {
-      // PERMANENT STATE: Compare with Custom Password
-      isValid = vendor.password === password;
-    }
+    // 2. Resilient Validation (Checks both Initial and Permanent Keys)
+    const isInitialMatch = vendor.idNumber === password;
+    const isPermanentMatch = vendor.password && vendor.password === password;
+    const isValid = isInitialMatch || isPermanentMatch;
 
     if (!isValid) {
-      return NextResponse.json({ error: "AUTHORIZATION_DENIED: Invalid credentials for this identity node." }, { status: 401 });
+      return NextResponse.json({ error: "AUTHORIZATION_DENIED: Invalid credentials." }, { status: 401 });
     }
 
     // 3. Return Vendor Context
