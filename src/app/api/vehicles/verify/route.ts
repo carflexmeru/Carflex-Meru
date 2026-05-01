@@ -1,6 +1,28 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
+// SEARCH BY PLATE (Handles Collisions like 'CARFLEX')
+export async function GET(request: Request) {
+  const { searchParams } = new URL(request.url);
+  const plate = searchParams.get("plate");
+
+  if (!plate) {
+    return NextResponse.json({ error: "Missing plate" }, { status: 400 });
+  }
+
+  try {
+    const vehicles = await prisma.vehicle.findMany({
+      where: { regNumber: plate.toUpperCase() },
+      include: { owner: true, zone: true }
+    });
+
+    return NextResponse.json(vehicles);
+  } catch (error) {
+    return NextResponse.json({ error: "Search failed" }, { status: 500 });
+  }
+}
+
+// AUTHORIZE SPECIFIC ASSET
 export async function POST(request: Request) {
   try {
     const body = await request.json();
@@ -20,26 +42,18 @@ export async function POST(request: Request) {
     });
 
     // RECORD TO ACTION REGISTRY
-    await (prisma as any).actionLog.create({
+    await prisma.actionLog.create({
       data: {
         actionType: "AUTHORIZE_ENTRY",
-        description: `Asset ${updatedVehicle.regNumber} was authorized for entry into ${status || 'active'} status.`,
+        agentName: "GATE_TERMINAL",
+        description: `Asset ${updatedVehicle.regNumber} (ID: ${id}) was authorized for entry.`,
         metadata: { vehicleId: id, plate: updatedVehicle.regNumber }
       }
     });
 
-    return NextResponse.json({ 
-      success: true, 
-      message: "Vehicle verified successfully", 
-      data: updatedVehicle 
-    });
+    return NextResponse.json(updatedVehicle);
   } catch (error: any) {
     console.error("Verification error:", error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
-}
-
-export async function PATCH(request: Request) {
-  // Existing PATCH logic for backward compatibility
-  return POST(request);
 }

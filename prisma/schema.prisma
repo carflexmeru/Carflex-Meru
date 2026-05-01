@@ -88,7 +88,8 @@ model Vehicle {
   owner             Profile?  @relation(fields: [ownerId], references: [id])
   organizationId    String?
   organization      Organization? @relation(fields: [organizationId], references: [id])
-  regNumber         String    @unique
+  regNumber         String
+  chassisNumber     String?   @unique
   make              String?
   model             String?
   year              Int?
