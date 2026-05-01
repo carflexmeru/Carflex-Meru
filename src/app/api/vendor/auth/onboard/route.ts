@@ -3,7 +3,7 @@ import { prisma } from "@/lib/prisma";
 
 export async function POST(request: Request) {
   try {
-    const { phone, name, username, password } = await request.json();
+    const { phone, name, email, businessAddress, username, password } = await request.json();
 
     if (!phone) {
       return NextResponse.json({ error: "IDENTITY_NOT_FOUND: Session timeout or invalid entry." }, { status: 400 });
