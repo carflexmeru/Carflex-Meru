@@ -16,7 +16,7 @@ interface Zone {
 export default function GateCheckIn() {
   const [zones, setZones] = useState<Zone[]>([]);
   const [showSecurityAlert, setShowSecurityAlert] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     plate: "",
     idNumber: "",
