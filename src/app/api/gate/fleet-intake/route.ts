@@ -10,11 +10,10 @@ export async function POST(req: Request) {
     const result = await prisma.$transaction(async (tx) => {
       // Create/Update Org Representative Profile
       const repProfile = await tx.profile.upsert({
-        where: { phone: organization.repPhone || `FLEET-${organization.repId}` },
+        where: { phone: organization.repPhone },
         update: { name: organization.repName, idNumber: organization.repId },
         create: {
-          id: `profile-${Date.now()}`,
-          phone: organization.repPhone || `FLEET-${organization.repId}`,
+          phone: organization.repPhone,
           name: organization.repName,
           idNumber: organization.repId,
           role: "vendor"
@@ -42,7 +41,6 @@ export async function POST(req: Request) {
             isVerified: false 
           },
           create: {
-            id: `fleet-v-${v.plate.toUpperCase()}-${Date.now()}`,
             regNumber: v.plate.toUpperCase(),
             make: "FLEET_ASSET",
             model: organization.name,
@@ -52,7 +50,8 @@ export async function POST(req: Request) {
             organizationId: org.id,
             zoneId: v.zoneId,
             status: "draft",
-            isVerified: false
+            isVerified: false,
+            images: [] // Mandatory field synchronization
           }
         });
 
@@ -60,7 +59,7 @@ export async function POST(req: Request) {
           data: {
             vehicleId: vehicle.id,
             zoneId: v.zoneId,
-            paymentStatus: "paid", // Assuming payment handled at gate
+            paymentStatus: "paid",
             paymentMethod: paymentMethod,
           }
         });
