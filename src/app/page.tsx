@@ -82,8 +82,8 @@ export default function LandingPage() {
                     </text>
                  </mask>
               </defs>
-              {/* Reduced Opacity Grey Overlay (85% Opacity) */}
-              <rect width="1000" height="500" fill="#121212" fillOpacity="0.85" mask="url(#heroInversionMask)" />
+              {/* Darkened Tactical Grey Overlay (92% Opacity) */}
+              <rect width="1000" height="500" fill="#121212" fillOpacity="0.92" mask="url(#heroInversionMask)" />
            </svg>
         </div>
 
