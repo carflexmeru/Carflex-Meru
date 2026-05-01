@@ -46,19 +46,19 @@ export async function POST(req: Request) {
         update: { 
           ownerId: owner.id, 
           zoneId,
-          status: "verified", // Immediate verification for Cash/Paid
-          isVerified: true 
+          status: "draft", // Still draft until Ground verifies
+          isVerified: false 
         },
         create: {
           regNumber: cleanPlate,
-          make: "Unknown", // To be filled by Ground Agent
+          make: "Unknown",
           model: "Pending",
           year: 2024,
           price: 0,
           ownerId: owner.id,
           zoneId,
-          status: "verified",
-          isVerified: true
+          status: "draft",
+          isVerified: false
         }
       });
 
