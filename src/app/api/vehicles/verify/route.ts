@@ -1,37 +1,21 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
-export async function PATCH(request: Request) {
+export async function POST(request: Request) {
   try {
-    const { vehicleId, idNumber } = await request.json();
+    const body = await request.json();
+    const id = body.id || body.vehicleId;
+    const { status } = body;
 
-    if (!vehicleId || !idNumber) {
-      return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
+    if (!id) {
+      return NextResponse.json({ error: "Missing vehicle ID" }, { status: 400 });
     }
 
-    const vehicle = await prisma.vehicle.findUnique({
-      where: { id: vehicleId },
-      include: { owner: true }
-    });
-
-    if (!vehicle) {
-      return NextResponse.json({ error: "Vehicle not found" }, { status: 404 });
-    }
-
-    // Update Profile with ID Number if not set
-    if (vehicle.ownerId) {
-      await prisma.profile.update({
-        where: { id: vehicle.ownerId },
-        data: { idNumber }
-      });
-    }
-
-    // Mark Vehicle as Verified
     const updatedVehicle = await prisma.vehicle.update({
-      where: { id: vehicleId },
+      where: { id },
       data: {
         isVerified: true,
-        // Status remains draft until listing is complete (Phase 3)
+        status: status || "active"
       }
     });
 
@@ -40,8 +24,13 @@ export async function PATCH(request: Request) {
       message: "Vehicle verified successfully", 
       data: updatedVehicle 
     });
-  } catch (error) {
+  } catch (error: any) {
     console.error("Verification error:", error);
-    return NextResponse.json({ error: "Failed to verify vehicle" }, { status: 500 });
+    return NextResponse.json({ error: error.message }, { status: 500 });
   }
+}
+
+export async function PATCH(request: Request) {
+  // Existing PATCH logic for backward compatibility
+  return POST(request);
 }
