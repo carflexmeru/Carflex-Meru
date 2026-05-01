@@ -119,6 +119,7 @@ model Vehicle {
   offers            Offer[]
   garageJobs        GarageJob[]
   views             VehicleView[]
+  messages          Message[]
 }
 
 model Organization {
