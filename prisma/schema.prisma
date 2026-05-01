@@ -35,9 +35,11 @@ model Profile {
 // B. Bazaar & Spatial Operations
 model Event {
   id        String   @id @default(uuid())
-  date      DateTime @unique
+  name      String
+  location  String
   isActive  Boolean  @default(true)
   zones     Zone[]
+  createdAt DateTime @default(now())
 }
 
 model Zone {
@@ -62,6 +64,8 @@ model Booking {
   agentId       String?
   agent         Profile?  @relation(fields: [agentId], references: [id])
   paymentStatus String    @default("pending") // paid, pending, failed
+  paymentMethod String?   // cash, mpesa
+  paymentAmount Float?
   checkInAt     DateTime  @default(now())
   exitAt        DateTime?
   
@@ -81,6 +85,8 @@ model Vehicle {
   id                String    @id @default(uuid())
   ownerId           String?
   owner             Profile?  @relation(fields: [ownerId], references: [id])
+  organizationId    String?
+  organization      Organization? @relation(fields: [organizationId], references: [id])
   regNumber         String    @unique
   make              String?
   model             String?
@@ -100,6 +106,15 @@ model Vehicle {
   offers            Offer[]
   garageJobs        GarageJob[]
   views             VehicleView[]
+}
+
+model Organization {
+  id        String    @id @default(uuid())
+  name      String
+  repName   String
+  repId     String
+  createdAt DateTime  @default(now())
+  vehicles  Vehicle[]
 }
 
 model StolenVehicle {
