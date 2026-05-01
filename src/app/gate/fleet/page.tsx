@@ -16,7 +16,7 @@ interface FleetVehicle {
 
 export default function FleetIntake() {
   const [zones, setZones] = useState<Zone[]>([]);
-  const [orgData, setOrgData] = useState({ name: "", repName: "", repId: "" });
+  const [orgData, setOrgData] = useState({ name: "", repName: "", repId: "", repPhone: "" });
   const [fleet, setFleet] = useState<FleetVehicle[]>([{ plate: "", zoneId: "" }]);
   const [paymentMethod, setPaymentMethod] = useState<"cash" | "mpesa">("mpesa");
   const [isLoading, setIsLoading] = useState(false);
@@ -153,6 +153,18 @@ export default function FleetIntake() {
                         className="w-full bg-transparent p-4 text-white font-bold outline-none border-none"
                         value={orgData.repId}
                         onChange={(e) => setOrgData({...orgData, repId: e.target.value})}
+                      />
+                    </div>
+                  </div>
+                  <div className="flex flex-col gap-2">
+                    <label className="text-zinc-400 text-[9px] font-black uppercase tracking-widest">Rep Phone Number</label>
+                    <div className="nm-inset">
+                      <input 
+                        type="tel" 
+                        placeholder="0712345678"
+                        className="w-full bg-transparent p-4 text-white font-bold outline-none border-none"
+                        value={orgData.repPhone}
+                        onChange={(e) => setOrgData({...orgData, repPhone: e.target.value})}
                       />
                     </div>
                   </div>

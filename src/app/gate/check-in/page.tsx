@@ -21,6 +21,9 @@ export default function GateCheckIn() {
     plate: "",
     idNumber: "",
     phone: "",
+    zone: "",
+    name: "",
+  });
   const [status, setStatus] = useState<"idle" | "pushing" | "waiting" | "success" | "error">("idle");
   const [errorMessage, setErrorMessage] = useState("");
   const [paymentMethod, setPaymentMethod] = useState<"cash" | "mpesa">("mpesa");
@@ -244,6 +247,20 @@ export default function GateCheckIn() {
                         className="w-full bg-transparent p-6 text-white font-mono text-3xl uppercase tracking-[0.3em] focus:text-primary outline-none transition-all placeholder:text-white/5 border-none"
                         value={formData.plate}
                         onChange={(e) => setFormData({ ...formData, plate: e.target.value })}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="flex flex-col gap-3">
+                    <label className="text-zinc-400 text-[10px] font-black uppercase tracking-widest px-2">Official Name (As in ID)</label>
+                    <div className="nm-inset">
+                      <input
+                        required
+                        type="text"
+                        placeholder="e.g. John Doe"
+                        className="w-full bg-transparent p-6 text-white font-bold tracking-[0.1em] focus:text-primary outline-none transition-all placeholder:text-white/5 border-none"
+                        value={formData.name || ""}
+                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                       />
                     </div>
                   </div>
