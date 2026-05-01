@@ -25,6 +25,21 @@ export default function GateCheckIn() {
     zone: "",
     name: "",
   });
+
+  // Tactical Memory: Restore from LocalStorage
+  const restoreSession = () => {
+    const saved = localStorage.getItem("gate_checkin_cache");
+    if (saved) {
+      setFormData(JSON.parse(saved));
+    }
+  };
+
+  // Tactical Memory: Auto-Save
+  useEffect(() => {
+    if (formData.plate || formData.phone) {
+      localStorage.setItem("gate_checkin_cache", JSON.stringify(formData));
+    }
+  }, [formData]);
   const [status, setStatus] = useState<"idle" | "pushing" | "waiting" | "success" | "error">("idle");
   const [errorMessage, setErrorMessage] = useState("");
   const [paymentMethod, setPaymentMethod] = useState<"cash" | "mpesa">("mpesa");
@@ -217,6 +232,14 @@ export default function GateCheckIn() {
             >
               <span className="material-symbols-outlined text-sm">group_work</span>
               Switch to Fleet Manifest
+            </button>
+
+            <button 
+              onClick={restoreSession}
+              className="nm-card px-6 py-2 text-[10px] font-black text-zinc-500 uppercase tracking-widest hover:text-white transition-all flex items-center gap-2 border-none"
+            >
+              <span className="material-symbols-outlined text-sm">history</span>
+              Reload Last Data
             </button>
           </div>
         </div>
