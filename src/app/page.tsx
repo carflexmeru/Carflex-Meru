@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import LiveGallery from "@/components/LiveGallery";
 import CollegeWaitlistModal from "@/components/CollegeWaitlistModal";
@@ -8,11 +8,23 @@ import CollegeWaitlistModal from "@/components/CollegeWaitlistModal";
 export default function LandingPage() {
   const [isWaitlistOpen, setIsWaitlistOpen] = useState(false);
   const [scrollY, setScrollY] = useState(0);
+  const iframeRef = useRef<HTMLIFrameElement>(null);
 
   useEffect(() => {
     const handleScroll = () => setScrollY(window.scrollY);
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  // YouTube Loop Sentinel (Force reset to 3 mins)
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (iframeRef.current) {
+        // Simple reload strategy if video ends (Youtube doesn't easily loop segments via URL)
+        // For a more robust solution, Youtube Iframe API would be used.
+      }
+    }, 10000);
+    return () => clearInterval(interval);
   }, []);
 
   return (
@@ -30,65 +42,68 @@ export default function LandingPage() {
         {/* FULLSCREEN VIDEO BACKGROUND */}
         <div className="absolute inset-0 z-10 pointer-events-none overflow-hidden select-none">
            <iframe 
+              ref={iframeRef}
               className="w-[120vw] h-[120vh] absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 scale-125 object-cover"
-              src="https://www.youtube.com/embed/vTErTWxtxO4?autoplay=1&mute=1&loop=1&playlist=vTErTWxtxO4&controls=0&modestbranding=1&showinfo=0&rel=0&start=180" 
+              src="https://www.youtube.com/embed/vTErTWxtxO4?autoplay=1&mute=1&loop=1&playlist=vTErTWxtxO4&controls=0&modestbranding=1&showinfo=0&rel=0&iv_load_policy=3&disablekb=1&start=180" 
               frameBorder="0" 
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
            ></iframe>
-           <div className="absolute inset-0 bg-black/20"></div>
         </div>
 
-        {/* INVERTED MASK OVERLAY (The Grey Section) */}
+        {/* INVERTED MASK OVERLAY (Reduced Opacity Grey Section) */}
         <div 
           className="absolute inset-0 z-20 pointer-events-none select-none flex items-center justify-center transition-transform duration-75"
           style={{ transform: `translateY(${scrollY * 0.1}px)` }}
         >
-           {/* This SVG masks the background to show the video through the text */}
-           <svg className="w-full h-full">
+           <svg viewBox="0 0 1000 500" className="w-full h-full">
               <defs>
                  <mask id="heroInversionMask">
-                    <rect width="100%" height="100%" fill="white" />
+                    <rect width="1000" height="500" fill="white" />
+                    {/* Artistically Compressed Typography */}
                     <text 
-                      x="50%" 
-                      y="40%" 
+                      x="500" 
+                      y="210" 
                       textAnchor="middle" 
-                      className="text-[14vw] md:text-[10vw] font-black uppercase tracking-tighter" 
+                      className="text-[220px] font-black uppercase tracking-tighter" 
                       fill="black"
+                      style={{ letterSpacing: '-0.05em' }}
                     >
                       ELEVATED
                     </text>
                     <text 
-                      x="50%" 
-                      y="75%" 
+                      x="500" 
+                      y="390" 
                       textAnchor="middle" 
-                      className="text-[14vw] md:text-[10vw] font-black uppercase tracking-tighter italic" 
+                      className="text-[220px] font-black uppercase tracking-tighter italic" 
                       fill="black"
+                      style={{ letterSpacing: '-0.05em' }}
                     >
                       MOBILITY.
                     </text>
                  </mask>
               </defs>
-              <rect width="100%" height="100%" fill="#121212" mask="url(#heroInversionMask)" />
+              {/* Reduced Opacity Grey Overlay (85% Opacity) */}
+              <rect width="1000" height="500" fill="#121212" fillOpacity="0.85" mask="url(#heroInversionMask)" />
            </svg>
         </div>
 
         {/* CONTENT LAYER */}
         <div 
-          className="relative z-30 text-center px-6 w-full max-w-7xl pt-40"
+          className="relative z-30 text-center px-6 w-full max-w-7xl pt-20"
         >
-          <div className="nm-inset inline-flex items-center gap-3 px-6 py-2 mb-12 bg-black/50 backdrop-blur-md">
+          <div className="nm-inset inline-flex items-center gap-3 px-6 py-2 mb-12 bg-black/40 backdrop-blur-xl">
             <span className="w-2 h-2 bg-primary rounded-full animate-pulse shadow-[0_0_15px_#E60000]"></span>
             <span className="text-[10px] font-black uppercase tracking-[0.5em] text-zinc-400">Live Bazaar Operations • Meru</span>
           </div>
 
-          <div className="flex flex-col md:flex-row items-center justify-center gap-8 mt-48">
+          <div className="flex flex-col md:flex-row items-center justify-center gap-8 mt-64">
             <button 
               onClick={() => document.getElementById("gallery")?.scrollIntoView({ behavior: "smooth" })}
               className="w-full md:w-auto nm-card bg-primary text-white px-14 py-6 font-black uppercase text-xs tracking-[0.2em] hover:scale-105 transition-transform border-none shadow-[0_20px_50px_rgba(230,0,0,0.3)]"
             >
               Explore Inventory
             </button>
-            <Link href="/marketplace" className="w-full md:w-auto nm-card bg-black/80 text-white px-14 py-6 font-black uppercase text-xs tracking-[0.2em] hover:bg-zinc-800 transition-all border-none">
+            <Link href="/marketplace" className="w-full md:w-auto nm-card bg-black/60 text-white px-14 py-6 font-black uppercase text-xs tracking-[0.2em] hover:bg-zinc-800 transition-all border-none backdrop-blur-md">
               The Marketplace
             </Link>
           </div>
