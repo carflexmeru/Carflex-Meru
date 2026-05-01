@@ -4,7 +4,7 @@ import { prisma } from "@/lib/prisma";
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { plate, idNumber, phone, zoneId, paymentMethod, paymentStatus } = body;
+    const { plate, idNumber, phone, zoneId, paymentMethod, paymentStatus, name } = body;
 
     const cleanPlate = plate.toUpperCase();
 
@@ -23,8 +23,14 @@ export async function POST(req: Request) {
         data: {
           phone,
           idNumber,
+          name,
           role: "vendor",
         }
+      });
+    } else if (name && !owner.name) {
+      owner = await prisma.profile.update({
+        where: { id: owner.id },
+        data: { name }
       });
     }
 
