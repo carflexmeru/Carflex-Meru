@@ -18,13 +18,15 @@ export default function GroundDashboard() {
       const data = await res.json();
       
       if (Array.isArray(data)) {
-        setVehicles(data.filter((v: any) => !v.isVerified));
+        // Sort fleet vehicles to the top
+        const sorted = data
+          .filter((v: any) => !v.isVerified)
+          .sort((a: any, b: any) => (a.organizationId ? -1 : 1));
+        setVehicles(sorted);
       } else {
         setVehicles([]);
-        console.error("API Error:", data.error);
       }
     } catch (err) {
-      console.error(err);
       setVehicles([]);
     } finally {
       setLoading(false);
@@ -76,11 +78,16 @@ export default function GroundDashboard() {
                      <div key={v.id} className="nm-inset p-8 space-y-6">
                         <div className="flex justify-between items-start">
                            <div>
+                              {v.organization && (
+                                <p className="text-primary text-[8px] font-black uppercase tracking-widest mb-1 nm-inset w-fit px-2 py-0.5">
+                                  FLEET: {v.organization.name}
+                                </p>
+                              )}
                               <p className="text-[10px] font-black uppercase text-zinc-500 mb-1">{v.make} {v.model}</p>
                               <p className="text-3xl font-black text-white tracking-tighter">{v.regNumber}</p>
                            </div>
                            <div className="px-3 py-1 nm-card bg-primary/20 border-none text-[8px] font-black text-primary uppercase">
-                              Pending
+                              {v.organization ? "Fleet Pending" : "Pending"}
                            </div>
                         </div>
                         <div className="grid grid-cols-2 gap-4">

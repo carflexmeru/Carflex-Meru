@@ -11,6 +11,7 @@ export async function GET() {
       include: {
         owner: true,
         zone: true,
+        organization: true,
       },
       orderBy: {
         createdAt: "desc",
