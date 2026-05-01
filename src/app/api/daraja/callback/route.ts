@@ -16,17 +16,26 @@ export async function POST(request: Request) {
 
     // 2. Perform Atomic Transaction (Supabase/Prisma level)
     const result = await prisma.$transaction(async (tx) => {
-      // Create Vehicle
-      const vehicle = await tx.vehicle.upsert({
-        where: { regNumber },
-        update: { ownerId: owner.id, zoneId: zoneId, status: "draft" },
-        create: {
-          regNumber,
-          ownerId: owner.id,
-          zoneId: zoneId,
-          status: "draft",
-        }
+      // Find or Create Vehicle (Manual Upsert due to non-unique regNumber)
+      let vehicle = await tx.vehicle.findFirst({
+        where: { regNumber, ownerId: owner.id }
       });
+
+      if (vehicle) {
+        vehicle = await tx.vehicle.update({
+          where: { id: vehicle.id },
+          data: { zoneId: zoneId, status: "draft" }
+        });
+      } else {
+        vehicle = await tx.vehicle.create({
+          data: {
+            regNumber,
+            ownerId: owner.id,
+            zoneId: zoneId,
+            status: "draft",
+          }
+        });
+      }
 
       // Create Booking
       const booking = await tx.booking.create({

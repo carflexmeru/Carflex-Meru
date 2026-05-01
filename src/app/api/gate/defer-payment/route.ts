@@ -49,16 +49,25 @@ export async function POST(request: Request) {
 
     // 3. Create Deferred Booking
     await prisma.$transaction(async (tx) => {
-      const vehicle = await tx.vehicle.upsert({
-        where: { regNumber: cleanPlate },
-        update: { ownerId: owner.id, zoneId: targetZoneId },
-        create: {
-          regNumber: cleanPlate,
-          ownerId: owner.id,
-          zoneId: targetZoneId,
-          status: "draft",
-        }
+      let vehicle = await tx.vehicle.findFirst({
+        where: { regNumber: cleanPlate, ownerId: owner.id }
       });
+
+      if (vehicle) {
+        vehicle = await tx.vehicle.update({
+          where: { id: vehicle.id },
+          data: { zoneId: targetZoneId }
+        });
+      } else {
+        vehicle = await tx.vehicle.create({
+          data: {
+            regNumber: cleanPlate,
+            ownerId: owner.id,
+            zoneId: targetZoneId,
+            status: "draft",
+          }
+        });
+      }
 
       await tx.booking.create({
         data: {

@@ -45,28 +45,36 @@ export async function POST(req: Request) {
       }
     });
 
-    // 3. Upsert Vehicle and Create Booking
+    // 3. Find or Create Vehicle (Manual Upsert due to non-unique regNumber)
     const result = await prisma.$transaction(async (tx) => {
-      const vehicle = await tx.vehicle.upsert({
-        where: { regNumber: cleanPlate },
-        update: { 
-          ownerId: owner.id, 
-          zoneId,
-          status: "draft", // Still draft until Ground verifies
-          isVerified: false 
-        },
-        create: {
-          regNumber: cleanPlate,
-          make: "Unknown",
-          model: "Pending",
-          year: 2024,
-          price: 0,
-          ownerId: owner.id,
-          zoneId,
-          status: "draft",
-          isVerified: false
-        }
+      let vehicle = await tx.vehicle.findFirst({
+        where: { regNumber: cleanPlate, ownerId: owner.id }
       });
+
+      if (vehicle) {
+        vehicle = await tx.vehicle.update({
+          where: { id: vehicle.id },
+          data: { 
+            zoneId,
+            status: "draft",
+            isVerified: false 
+          }
+        });
+      } else {
+        vehicle = await tx.vehicle.create({
+          data: {
+            regNumber: cleanPlate,
+            make: "Unknown",
+            model: "Pending",
+            year: 2024,
+            price: 0,
+            ownerId: owner.id,
+            zoneId,
+            status: "draft",
+            isVerified: false
+          }
+        });
+      }
 
       const booking = await tx.booking.create({
         data: {

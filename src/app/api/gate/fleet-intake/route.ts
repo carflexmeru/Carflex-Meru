@@ -31,29 +31,38 @@ export async function POST(req: Request) {
 
       // 2. Batch Vehicle & Booking Creation
       const createdVehicles = await Promise.all(vehicles.map(async (v: any) => {
-        const vehicle = await tx.vehicle.upsert({
-          where: { regNumber: v.plate.toUpperCase() },
-          update: { 
-            organizationId: org.id, 
-            ownerId: repProfile.id,
-            zoneId: v.zoneId,
-            status: "draft",
-            isVerified: false 
-          },
-          create: {
-            regNumber: v.plate.toUpperCase(),
-            make: "FLEET_ASSET",
-            model: organization.name,
-            year: 2024,
-            price: 0,
-            ownerId: repProfile.id,
-            organizationId: org.id,
-            zoneId: v.zoneId,
-            status: "draft",
-            isVerified: false,
-            images: [] // Mandatory field synchronization
-          }
+        const cleanPlate = v.plate.toUpperCase();
+        let vehicle = await tx.vehicle.findFirst({
+          where: { regNumber: cleanPlate, organizationId: org.id }
         });
+
+        if (vehicle) {
+          vehicle = await tx.vehicle.update({
+            where: { id: vehicle.id },
+            data: { 
+              ownerId: repProfile.id,
+              zoneId: v.zoneId,
+              status: "draft",
+              isVerified: false 
+            }
+          });
+        } else {
+          vehicle = await tx.vehicle.create({
+            data: {
+              regNumber: cleanPlate,
+              make: "FLEET_ASSET",
+              model: organization.name,
+              year: 2024,
+              price: 0,
+              ownerId: repProfile.id,
+              organizationId: org.id,
+              zoneId: v.zoneId,
+              status: "draft",
+              isVerified: false,
+              images: []
+            }
+          });
+        }
 
         await tx.booking.create({
           data: {
