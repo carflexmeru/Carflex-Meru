@@ -9,13 +9,18 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Phone and Password are required." }, { status: 400 });
     }
 
-    // 1. Find the Vendor Profile
-    const vendor = await prisma.profile.findUnique({
-      where: { phone }
+    // 1. Find the Vendor Profile (Phone or Username)
+    const vendor = await prisma.profile.findFirst({
+      where: {
+        OR: [
+          { phone: phone },
+          { username: phone }
+        ]
+      }
     });
 
     if (!vendor) {
-      return NextResponse.json({ error: "ASSET_IDENTITY_NOT_FOUND: Please register at the gate first." }, { status: 404 });
+      return NextResponse.json({ error: "ASSET_IDENTITY_NOT_FOUND: Profile not registered." }, { status: 404 });
     }
 
     // 2. Dual-State Validation
