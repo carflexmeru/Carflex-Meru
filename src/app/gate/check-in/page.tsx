@@ -206,7 +206,7 @@ export default function GateCheckIn() {
       <div className="space-y-16 animate-fade-in max-w-5xl mx-auto py-12 pb-40">
         {/* Page Header */}
         <div className="flex flex-col gap-3 px-4">
-          <h2 className="text-5xl md:text-7xl font-black text-white tracking-tighter uppercase leading-none">FAST-GATE <br/> <span className="text-primary italic">PROTOCOL.</span></h2>
+          <h2 className="text-5xl md:text-7xl font-black text-foreground tracking-tighter uppercase leading-none">FAST-GATE <br/> <span className="text-primary italic">PROTOCOL.</span></h2>
           
           <div className="flex flex-wrap gap-4 mt-8">
             <div className="nm-inset inline-flex items-center gap-2 px-4 py-1.5 w-fit">
@@ -216,7 +216,7 @@ export default function GateCheckIn() {
             
             <button 
               onClick={() => router.push("/gate/fleet")}
-              className="nm-card px-6 py-2 text-[10px] font-black text-white uppercase tracking-widest hover:text-primary transition-all flex items-center gap-2 border-none"
+              className="nm-card px-6 py-2 text-[10px] font-black text-foreground uppercase tracking-widest hover:text-primary transition-all flex items-center gap-2 border-none"
             >
               <span className="material-symbols-outlined text-sm">group_work</span>
               Switch to Fleet Manifest
@@ -233,7 +233,7 @@ export default function GateCheckIn() {
         </div>
 
         {status === "success" ? (
-          <div className="nm-card p-16 text-center animate-scale-up text-white border-green-500/10">
+          <div className="nm-card p-16 text-center animate-scale-up text-foreground border-green-500/10">
             <div className="w-24 h-24 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-8 shadow-[0_0_50px_rgba(34,197,94,0.4)]">
               <span className="material-symbols-outlined text-white text-5xl">check_circle</span>
             </div>
@@ -267,7 +267,7 @@ export default function GateCheckIn() {
                         required
                         type="text"
                         placeholder="KCX 123A"
-                        className="w-full bg-transparent p-6 text-white font-mono text-3xl uppercase tracking-[0.3em] focus:text-primary outline-none transition-all placeholder:text-white/5 border-none"
+                        className="w-full bg-transparent p-6 text-foreground font-mono text-3xl uppercase tracking-[0.3em] focus:text-primary outline-none transition-all placeholder:text-foreground/20 border-none"
                         value={formData.plate}
                         onChange={(e) => setFormData({ ...formData, plate: e.target.value })}
                       />
@@ -281,7 +281,7 @@ export default function GateCheckIn() {
                         required
                         type="text"
                         placeholder="e.g. John Doe"
-                        className="w-full bg-transparent p-6 text-white font-bold tracking-[0.1em] focus:text-primary outline-none transition-all placeholder:text-white/5 border-none"
+                        className="w-full bg-transparent p-6 text-foreground font-bold tracking-[0.1em] focus:text-primary outline-none transition-all placeholder:text-foreground/20 border-none"
                         value={formData.name || ""}
                         onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                       />
@@ -295,7 +295,7 @@ export default function GateCheckIn() {
                         required
                         type="text"
                         placeholder="12345678"
-                        className="w-full bg-transparent p-6 text-white font-bold tracking-[0.1em] focus:text-primary outline-none transition-all placeholder:text-white/5 border-none"
+                        className="w-full bg-transparent p-6 text-foreground font-bold tracking-[0.1em] focus:text-primary outline-none transition-all placeholder:text-foreground/20 border-none"
                         value={formData.idNumber}
                         onChange={(e) => setFormData({ ...formData, idNumber: e.target.value })}
                       />
@@ -427,12 +427,12 @@ export default function GateCheckIn() {
                     >
                       {formData.zone === zone.id && <div className="absolute top-0 left-0 w-1 h-full bg-primary shadow-[0_0_15px_#E60000]"></div>}
                       <div className="text-left">
-                        <p className={`font-black text-lg uppercase tracking-tight ${formData.zone === zone.id ? "text-primary" : "text-white"}`}>{zone.name}</p>
+                        <p className={`font-black text-lg uppercase tracking-tight ${formData.zone === zone.id ? "text-primary" : "text-foreground"}`}>{zone.name}</p>
                         <p className="text-[9px] uppercase tracking-[0.2em] opacity-40 mt-1 font-bold">
                           Cap: {zone.occupancy}/{zone.capacity} Units
                         </p>
                       </div>
-                      <p className="font-black text-xl text-white tracking-tighter">KES {zone.price}</p>
+                      <p className="font-black text-xl text-foreground tracking-tighter">KES {zone.price}</p>
                     </button>
                   ))}
                 </div>
@@ -463,7 +463,7 @@ export default function GateCheckIn() {
           <div className="nm-card p-10 mt-12">
              <div className="flex items-center gap-4 mb-10">
                 <span className="material-symbols-outlined text-primary text-2xl">pending</span>
-                <h3 className="text-2xl font-black uppercase tracking-tighter text-white">
+                <h3 className="text-2xl font-black uppercase tracking-tighter text-foreground">
                    Ground Waitlist <span className="text-zinc-600">[{waitlist.length}]</span>
                 </h3>
              </div>
@@ -472,7 +472,7 @@ export default function GateCheckIn() {
                   <div key={item.id} className="nm-inset p-8 flex justify-between items-center group hover:bg-white/5 transition-all">
                      <div>
                         <p className="text-[9px] font-black uppercase tracking-[0.2em] text-zinc-600 mb-1">Deferred Protocol</p>
-                        <p className="text-2xl font-black text-white tracking-tighter mb-1">{item.vehicle?.regNumber}</p>
+                        <p className="text-2xl font-black text-foreground tracking-tighter mb-1">{item.vehicle?.regNumber}</p>
                         <p className="text-[10px] font-bold text-primary uppercase tracking-widest">{item.zone?.name} • KES {item.zone?.price}</p>
                      </div>
                      <button className="nm-card bg-white text-black px-6 py-3 text-[10px] font-black uppercase tracking-widest hover:bg-primary hover:text-white transition-all border-none">

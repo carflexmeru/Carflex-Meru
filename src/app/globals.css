@@ -6,6 +6,7 @@
   --color-accent: var(--accent);
   --color-surface: var(--background);
   --color-surface-soft: var(--surface-soft);
+  --color-foreground: var(--foreground);
 }
 
 :root {

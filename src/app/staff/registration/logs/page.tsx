@@ -74,7 +74,7 @@ export default function LogsPage() {
                             {new Date(log.timestamp).toLocaleTimeString()} • {new Date(log.timestamp).toLocaleDateString()}
                           </span>
                         </div>
-                        <p className="text-sm font-black text-white uppercase tracking-tight">{log.description}</p>
+                        <p className="text-sm font-black text-foreground uppercase tracking-tight">{log.description}</p>
                         <p className="text-[8px] text-zinc-600 font-black uppercase mt-1">Authorized by: {log.user}</p>
                       </div>
                     </div>

@@ -35,7 +35,7 @@ export default function RegistrationDashboard() {
     <StaffLayout>
       <div className="space-y-12">
         <div className="flex flex-col gap-4">
-          <h1 className="text-6xl font-black uppercase tracking-tighter leading-none">REGISTRATION <br/> <span className="text-stroke italic">VAULT.</span></h1>
+          <h1 className="text-6xl font-black uppercase tracking-tighter leading-none text-foreground">REGISTRATION <br/> <span className="text-stroke italic">VAULT.</span></h1>
           <p className="text-zinc-500 font-bold uppercase tracking-widest text-[10px]">Processing new entries into the bazaar mainframe.</p>
         </div>
 
@@ -55,7 +55,7 @@ export default function RegistrationDashboard() {
                      <div key={v.id} className="nm-inset p-6 flex justify-between items-center">
                         <div>
                            <p className="text-[9px] font-black uppercase text-zinc-500 mb-1">{v.make} {v.model}</p>
-                           <p className="text-xl font-black text-white">{v.regNumber}</p>
+                           <p className="text-xl font-black text-foreground">{v.regNumber}</p>
                         </div>
                         <div className="text-right">
                            <p className="text-[9px] font-black text-primary uppercase">{v.status}</p>
@@ -74,7 +74,7 @@ export default function RegistrationDashboard() {
                  </div>
                  <h3 className="text-zinc-500 text-[10px] font-black uppercase tracking-widest mb-4">Division Stats</h3>
                  <div className="relative z-10">
-                    <p className="text-6xl font-black text-white tracking-tighter">{vehicles.length}</p>
+                    <p className="text-6xl font-black text-foreground tracking-tighter">{vehicles.length}</p>
                     <p className="text-zinc-400 font-bold uppercase tracking-widest text-[10px] mt-2">Active Intake Files</p>
                  </div>
               </div>

@@ -37,7 +37,7 @@ export default function SecurityPage() {
     <StaffLayout>
       <div className="space-y-12">
         <div className="flex flex-col gap-4">
-          <h1 className="text-6xl font-black uppercase tracking-tighter leading-none text-primary">SECURITY <br/> <span className="text-white italic text-stroke">VERIFICATION.</span></h1>
+          <h1 className="text-6xl font-black uppercase tracking-tighter leading-none text-primary">SECURITY <br/> <span className="text-foreground italic text-stroke">VERIFICATION.</span></h1>
           <p className="text-zinc-500 font-bold uppercase tracking-widest text-[10px]">Verifying asset integrity and checking against global security blacklists.</p>
         </div>
 
@@ -56,7 +56,7 @@ export default function SecurityPage() {
                              value={plate}
                              onChange={(e) => setPlate(e.target.value.toUpperCase())}
                              placeholder="KCX 123A"
-                             className="w-full bg-transparent p-6 text-white font-black uppercase text-xl tracking-tighter outline-none placeholder:text-zinc-800"
+                             className="w-full bg-transparent p-6 text-foreground font-black uppercase text-xl tracking-tighter outline-none placeholder:text-foreground/20 border-none"
                           />
                        </div>
                     </div>
@@ -107,7 +107,7 @@ export default function SecurityPage() {
                          <h2 className={`text-6xl font-black uppercase tracking-tighter ${result.isStolen ? 'text-primary' : 'text-green-500'}`}>
                             {result.isStolen ? 'ASSET_FLAGGED' : 'CLEAR_TO_ENTRY'}
                          </h2>
-                         <p className="text-white font-bold uppercase tracking-widest text-[10px] mt-4">
+                         <p className="text-foreground font-bold uppercase tracking-widest text-[10px] mt-4">
                             Status: {result.vehicle.isVerified ? 'VERIFIED_BAZAAR_NODE' : 'PENDING_REGISTRATION'}
                          </p>
                       </div>
@@ -119,15 +119,15 @@ export default function SecurityPage() {
                          <div className="space-y-4">
                             <div className="flex justify-between border-b border-white/5 pb-2">
                                <span className="text-[10px] text-zinc-500 font-black uppercase">Make/Model</span>
-                               <span className="text-[10px] text-white font-black uppercase">{result.vehicle.make} {result.vehicle.model}</span>
+                               <span className="text-[10px] text-foreground font-black uppercase">{result.vehicle.make} {result.vehicle.model}</span>
                             </div>
                             <div className="flex justify-between border-b border-white/5 pb-2">
                                <span className="text-[10px] text-zinc-500 font-black uppercase">Plate</span>
-                               <span className="text-[10px] text-white font-black uppercase">{result.vehicle.regNumber}</span>
+                               <span className="text-[10px] text-foreground font-black uppercase">{result.vehicle.regNumber}</span>
                             </div>
                             <div className="flex justify-between">
                                <span className="text-[10px] text-zinc-500 font-black uppercase">Color</span>
-                               <span className="text-[10px] text-white font-black uppercase">{result.vehicle.color}</span>
+                               <span className="text-[10px] text-foreground font-black uppercase">{result.vehicle.color}</span>
                             </div>
                          </div>
                       </div>
@@ -137,15 +137,15 @@ export default function SecurityPage() {
                          <div className="space-y-4">
                             <div className="flex justify-between border-b border-white/5 pb-2">
                                <span className="text-[10px] text-zinc-500 font-black uppercase">Owner</span>
-                               <span className="text-[10px] text-white font-black uppercase">{result.vehicle.owner?.name || "INDIVIDUAL"}</span>
+                               <span className="text-[10px] text-foreground font-black uppercase">{result.vehicle.owner?.name || "INDIVIDUAL"}</span>
                             </div>
                             <div className="flex justify-between border-b border-white/5 pb-2">
                                <span className="text-[10px] text-zinc-500 font-black uppercase">Phone</span>
-                               <span className="text-[10px] text-white font-black uppercase">{result.vehicle.owner?.phone || "N/A"}</span>
+                               <span className="text-[10px] text-foreground font-black uppercase">{result.vehicle.owner?.phone || "N/A"}</span>
                             </div>
                             <div className="flex justify-between">
                                <span className="text-[10px] text-zinc-500 font-black uppercase">Sector</span>
-                               <span className="text-[10px] text-white font-black uppercase">{result.vehicle.zone?.name || "UNASSIGNED"}</span>
+                               <span className="text-[10px] text-foreground font-black uppercase">{result.vehicle.zone?.name || "UNASSIGNED"}</span>
                             </div>
                          </div>
                       </div>

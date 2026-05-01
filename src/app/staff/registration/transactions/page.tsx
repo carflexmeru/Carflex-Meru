@@ -39,7 +39,7 @@ export default function TransactionsPage() {
           
           <div className="nm-card p-8 bg-primary/5 border-none">
             <p className="text-[8px] font-black uppercase text-zinc-500 tracking-[0.3em] mb-2">Total Daily Revenue</p>
-            <p className="text-4xl font-black text-white tracking-tighter">KES {totalRevenue.toLocaleString()}</p>
+            <p className="text-4xl font-black text-foreground tracking-tighter">KES {totalRevenue.toLocaleString()}</p>
           </div>
         </div>
 
@@ -69,14 +69,14 @@ export default function TransactionsPage() {
                     {data.map((t) => (
                       <tr key={t.id} className="group">
                         <td className="px-6 py-5 nm-inset bg-zinc-900 rounded-l-2xl border-none">
-                          <p className="text-[10px] font-bold text-white uppercase">{new Date(t.createdAt).toLocaleTimeString()}</p>
+                          <p className="text-[10px] font-bold text-foreground uppercase">{new Date(t.createdAt).toLocaleTimeString()}</p>
                           <p className="text-[8px] text-zinc-600">{new Date(t.createdAt).toLocaleDateString()}</p>
                         </td>
                         <td className="px-6 py-5 nm-inset border-none">
                           <span className="text-[10px] font-black text-zinc-400 uppercase tracking-widest">{t.id.split('-')[0]}</span>
                         </td>
                         <td className="px-6 py-5 nm-inset border-none">
-                          <p className="text-white font-bold text-xs uppercase">{t.vehicle?.regNumber || "GENERIC_ENTRY"}</p>
+                          <p className="text-foreground font-bold text-xs uppercase">{t.vehicle?.regNumber || "GENERIC_ENTRY"}</p>
                           <p className="text-[8px] text-zinc-500 uppercase">{t.user?.phone || "ANON_PAYER"}</p>
                         </td>
                         <td className="px-6 py-5 nm-inset border-none">
@@ -87,7 +87,7 @@ export default function TransactionsPage() {
                           </span>
                         </td>
                         <td className="px-6 py-5 nm-inset rounded-r-2xl border-none text-right">
-                          <span className="text-xl font-black text-white tracking-tighter">KES {t.paymentAmount.toLocaleString()}</span>
+                          <span className="text-xl font-black text-foreground tracking-tighter">KES {t.paymentAmount.toLocaleString()}</span>
                         </td>
                       </tr>
                     ))}

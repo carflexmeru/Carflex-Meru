@@ -46,7 +46,7 @@ export default function GroundLogsPage() {
                       <span className="material-symbols-outlined text-primary text-xl">location_searching</span>
                     </div>
                     <div>
-                      <p className="text-sm font-black text-white uppercase tracking-tight">{log.description}</p>
+                      <p className="text-sm font-black text-foreground uppercase tracking-tight">{log.description}</p>
                       <p className="text-[8px] text-zinc-600 font-black uppercase mt-1">Ground Intel Node: {log.user}</p>
                     </div>
                   </div>

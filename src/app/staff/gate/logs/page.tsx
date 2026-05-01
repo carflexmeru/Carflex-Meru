@@ -60,7 +60,7 @@ export default function GateLogsPage() {
                     </div>
                     <div>
                       <p className="text-[9px] text-zinc-500 font-bold mb-1 uppercase tracking-widest">{log.type}</p>
-                      <p className="text-sm font-black text-white uppercase tracking-tight">{log.description}</p>
+                      <p className="text-sm font-black text-foreground uppercase tracking-tight">{log.description}</p>
                       <p className="text-[8px] text-zinc-600 font-black uppercase mt-1">Operator: {log.user}</p>
                     </div>
                   </div>

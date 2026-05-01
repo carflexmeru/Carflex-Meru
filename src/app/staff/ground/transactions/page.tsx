@@ -62,7 +62,7 @@ export default function GroundTransactionsPage() {
                           <span className="text-[10px] font-black text-zinc-500 uppercase tracking-widest">{t.id.split('-')[0]}</span>
                         </td>
                         <td className="px-6 py-5 nm-inset border-none">
-                          <p className="text-white font-black text-xl tracking-tighter uppercase">{t.vehicle?.regNumber || "ENTRY"}</p>
+                          <p className="text-foreground font-black text-xl tracking-tighter uppercase">{t.vehicle?.regNumber || "ENTRY"}</p>
                         </td>
                         <td className="px-6 py-5 nm-inset border-none">
                            <span className="nm-card px-3 py-1 text-[8px] font-black text-primary border-none">
@@ -70,7 +70,7 @@ export default function GroundTransactionsPage() {
                            </span>
                         </td>
                         <td className="px-6 py-5 nm-inset rounded-r-2xl border-none text-right">
-                          <span className="text-2xl font-black text-white tracking-tighter">KES {t.paymentAmount.toLocaleString()}</span>
+                          <span className="text-2xl font-black text-foreground tracking-tighter">KES {t.paymentAmount.toLocaleString()}</span>
                         </td>
                       </tr>
                     ))}

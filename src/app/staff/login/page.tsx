@@ -59,35 +59,34 @@ export default function StaffLogin() {
           <div className="space-y-3">
             <label className="text-zinc-500 text-[9px] font-black uppercase tracking-widest px-2">Operational Division</label>
             <div className="nm-inset">
-              <select
+              <select 
+                className="w-full bg-transparent p-6 text-foreground font-black uppercase text-xl tracking-tighter outline-none cursor-pointer border-none"
                 value={type}
                 onChange={(e) => setType(e.target.value)}
-                className="w-full bg-transparent p-5 text-white font-black uppercase text-xs tracking-widest outline-none border-none appearance-none"
               >
-                <option value="REGISTRATION_AGENT" className="bg-black">Registration Division</option>
-                <option value="GATE_VERIFICATION_AGENT" className="bg-black">Gate Command</option>
-                <option value="GROUND_VERIFICATION_AGENT" className="bg-black">Ground Intel</option>
+                <option value="REGISTRATION_AGENT" className="bg-black text-white">REGISTRATION_AGENT</option>
+                <option value="GATE_VERIFICATION_AGENT" className="bg-black text-white">GATE_VERIFICATION_AGENT</option>
+                <option value="GROUND_VERIFICATION_AGENT" className="bg-black text-white">GROUND_VERIFICATION_AGENT</option>
               </select>
             </div>
           </div>
 
           <div className="space-y-3">
             <label className="text-zinc-500 text-[9px] font-black uppercase tracking-widest px-2">Access Frequency Code</label>
-            <div className="nm-inset flex items-center pr-4">
+            <div className="nm-inset flex items-center pr-4 relative">
               <input
                 type={showPassword ? "text" : "password"}
-                required
+                placeholder="PASSWORD_REQUIRED"
+                className="w-full bg-transparent p-6 text-foreground font-black uppercase text-xl tracking-[0.3em] outline-none placeholder:text-foreground/20 border-none"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="••••••••"
-                className="flex-1 bg-transparent p-5 text-white font-mono tracking-[0.5em] outline-none border-none placeholder:text-zinc-800"
               />
-              <button
+              <button 
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="text-zinc-500 hover:text-primary transition-colors focus:outline-none"
+                className="absolute right-6 top-1/2 -translate-y-1/2 text-foreground/50 hover:text-primary transition-colors"
               >
-                <span className="material-symbols-outlined text-xl">
+                <span className="material-symbols-outlined">
                   {showPassword ? "visibility_off" : "visibility"}
                 </span>
               </button>
