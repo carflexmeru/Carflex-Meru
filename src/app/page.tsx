@@ -27,7 +27,7 @@ export default function LandingPage() {
       {/* Hero Section */}
       <section className="relative h-screen flex flex-col items-center justify-center pt-20 overflow-hidden">
         <div 
-          className="relative z-10 text-center px-6 max-w-6xl transition-transform duration-75"
+          className="relative z-10 text-center px-6 max-w-7xl transition-transform duration-75"
           style={{ transform: `translateY(${scrollY * 0.2}px)` }}
         >
           <div className="nm-inset inline-flex items-center gap-3 px-6 py-2 mb-12">
@@ -35,10 +35,51 @@ export default function LandingPage() {
             <span className="text-[10px] font-black uppercase tracking-[0.4em] text-zinc-500">Live Bazaar Operations • Meru</span>
           </div>
 
-          <h1 className="text-[14vw] md:text-[11vw] font-black leading-[0.75] uppercase tracking-tighter mb-12">
-            Elevated <br/>
-            <span className="text-stroke italic">Mobility.</span>
-          </h1>
+          {/* Cinematic Video Mask Headline */}
+          <div className="relative">
+             <h1 className="text-[14vw] md:text-[11vw] font-black leading-[0.75] uppercase tracking-tighter mb-12 text-zinc-800">
+               Elevated <br/>
+               <span className="italic">Mobility.</span>
+             </h1>
+             
+             {/* The Video Mask Layer */}
+             <div className="absolute inset-0 z-20 mix-blend-screen pointer-events-none overflow-hidden select-none">
+                <svg className="w-full h-full">
+                  <defs>
+                    <mask id="heroMask" x="0" y="0" width="100%" height="100%">
+                      <rect width="100%" height="100%" fill="black" />
+                      <text 
+                        x="50%" 
+                        y="35%" 
+                        textAnchor="middle" 
+                        className="text-[14vw] md:text-[11vw] font-black uppercase tracking-tighter" 
+                        fill="white"
+                      >
+                        Elevated
+                      </text>
+                      <text 
+                        x="50%" 
+                        y="70%" 
+                        textAnchor="middle" 
+                        className="text-[14vw] md:text-[11vw] font-black uppercase tracking-tighter italic" 
+                        fill="white"
+                      >
+                        Mobility.
+                      </text>
+                    </mask>
+                  </defs>
+                </svg>
+                
+                <div className="absolute inset-0" style={{ maskImage: 'url(#heroMask)', WebkitMaskImage: 'url(#heroMask)' }}>
+                   <iframe 
+                      className="w-[120%] h-[120%] absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 scale-150 grayscale brightness-125 contrast-125"
+                      src="https://www.youtube.com/embed/vTErTWxtxO4?autoplay=1&mute=1&loop=1&playlist=vTErTWxtxO4&controls=0&modestbranding=1&showinfo=0&rel=0&start=180" 
+                      frameBorder="0" 
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                   ></iframe>
+                </div>
+             </div>
+          </div>
 
           <div className="flex flex-col md:flex-row items-center justify-center gap-8 mt-8">
             <button 
