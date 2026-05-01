@@ -12,7 +12,7 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
   // Define route patterns
   const isAdmin = pathname.startsWith("/admin");
   const isVendor = pathname.startsWith("/showroom") || pathname.startsWith("/dashboard");
-  const isStaff = pathname.startsWith("/agent") || pathname.startsWith("/gate");
+  const isStaff = pathname.startsWith("/agent") || pathname.startsWith("/gate") || pathname.startsWith("/staff");
   const isChat = pathname.startsWith("/inbox/");
 
   // Pages that should NOT have the public header/footer
