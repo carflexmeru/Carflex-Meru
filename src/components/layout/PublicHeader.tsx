@@ -59,7 +59,7 @@ export default function PublicHeader() {
         {/* Identity Sentinels */}
         <div className="flex items-center gap-6">
            <button 
-             onClick={() => (window as any).toggleRoleModal?.()}
+             onClick={() => window.dispatchEvent(new CustomEvent('toggle-login-modal'))}
              className="nm-card bg-primary text-white px-8 py-3 font-black uppercase tracking-widest text-[9px] hover:scale-105 transition-all border-none shadow-[0_10px_30px_rgba(230,0,0,0.3)]"
            >
              Login / Guest

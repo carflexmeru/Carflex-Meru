@@ -24,6 +24,7 @@ export async function POST(req: Request) {
     let redirectPath = "/staff/registration";
     if (type === "GATE_VERIFICATION_AGENT") redirectPath = "/staff/gate";
     if (type === "GROUND_VERIFICATION_AGENT") redirectPath = "/staff/ground";
+    if (type === "EXIT_COMMAND_AGENT") redirectPath = "/staff/exit";
 
     return NextResponse.json({ 
       success: true, 

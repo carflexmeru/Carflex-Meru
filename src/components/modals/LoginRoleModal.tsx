@@ -20,8 +20,17 @@ export default function LoginRoleModal() {
 
   useEffect(() => {
     const handleToggle = () => setIsOpen(prev => !prev);
+    
+    // Primary Event Listener
     window.addEventListener('toggle-login-modal', handleToggle);
-    return () => window.removeEventListener('toggle-login-modal', handleToggle);
+    
+    // Redundant Global Function
+    (window as any).toggleRoleModal = handleToggle;
+
+    return () => {
+      window.removeEventListener('toggle-login-modal', handleToggle);
+      delete (window as any).toggleRoleModal;
+    };
   }, []);
 
   const handleLogin = async (e: React.FormEvent) => {
