@@ -4,7 +4,7 @@ import { useState } from "react";
 
 export default function CollegeWaitlistModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
   const [formData, setFormData] = useState({
-    fullName: "",
+    name: "",
     email: "",
     phone: "",
     coursePref: "Mechanical Engineering",

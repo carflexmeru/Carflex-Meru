@@ -8,7 +8,7 @@ interface Vehicle {
   make: string;
   model: string;
   year: number;
-  owner: { fullName: string; phone: string; idNumber: string | null } | null;
+  owner: { name: string; phone: string; idNumber: string | null } | null;
   zone: { name: string } | null;
   createdAt: string;
 }

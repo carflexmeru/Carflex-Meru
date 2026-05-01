@@ -12,7 +12,7 @@ interface Vehicle {
   year: number;
   price: number;
   isVerified: boolean;
-  owner: { fullName: string; phone: string } | null;
+  owner: { name: string; phone: string } | null;
   zone: { name: string } | null;
 }
 
