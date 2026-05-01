@@ -81,6 +81,24 @@ export default function FleetIntake() {
     setStatus("processing");
 
     try {
+      // 1. If M-Pesa, initiate STK Push first
+      if (paymentMethod === "mpesa") {
+        const stkRes = await fetch("/api/daraja/stk-push", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            phone: orgData.repPhone,
+            amount: totalAmount,
+            regNumber: `FLEET-${orgData.name.substring(0, 5)}`,
+            idNumber: orgData.repId
+          }),
+        });
+        
+        const stkData = await stkRes.json();
+        if (!stkRes.ok) throw new Error(stkData.error || "STK Push failed");
+      }
+
+      // 2. Save Manifest to Database
       const res = await fetch("/api/gate/fleet-intake", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -97,7 +115,8 @@ export default function FleetIntake() {
       } else {
         throw new Error("Fleet registration failed");
       }
-    } catch (err) {
+    } catch (err: any) {
+      alert(`FLEET ERROR: ${err.message}`);
       setStatus("error");
     } finally {
       setIsLoading(false);
