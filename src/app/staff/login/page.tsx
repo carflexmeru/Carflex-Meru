@@ -67,6 +67,7 @@ export default function StaffLogin() {
                 <option value="REGISTRATION_AGENT" className="bg-black text-white">REGISTRATION_AGENT</option>
                 <option value="GATE_VERIFICATION_AGENT" className="bg-black text-white">GATE_VERIFICATION_AGENT</option>
                 <option value="GROUND_VERIFICATION_AGENT" className="bg-black text-white">GROUND_VERIFICATION_AGENT</option>
+                <option value="EXIT_COMMAND_AGENT" className="bg-black text-white">EXIT_COMMAND_AGENT</option>
               </select>
             </div>
           </div>
