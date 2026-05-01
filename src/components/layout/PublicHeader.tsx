@@ -15,10 +15,10 @@ export default function PublicHeader() {
   }, []);
 
   const navLinks = [
-    { name: "Bazaar Gallery", href: "/" },
-    { name: "Institute", href: "/college" },
-    { name: "Garage", href: "/garage" },
-    { name: "Imports", href: "/import-tracker" },
+    { name: "Marketplace", href: "/" },
+    { name: "Home", href: "/home" },
+    { name: "About Us", href: "/about" },
+    { name: "Contact", href: "/contact" },
   ];
 
   return (
@@ -46,20 +46,23 @@ export default function PublicHeader() {
           ))}
         </nav>
 
-        {/* Auth Actions */}
+        {/* Tactical Actions */}
         <div className="flex items-center gap-4">
            <Link 
-            href="/dashboard"
-            className="hidden md:block nm-inset px-6 py-2 text-zinc-500 font-black uppercase text-[9px] tracking-widest hover:text-white transition-all"
+            href="/events"
+            className={`nm-card px-8 py-2.5 font-black uppercase text-[9px] tracking-widest hover:scale-105 transition-all shadow-[0_10px_20px_rgba(230,0,0,0.3)] border-none ${
+              pathname.includes('/events') ? 'bg-primary text-white' : 'bg-white text-black'
+            }`}
            >
-            Command
+            Events
            </Link>
-           <Link 
-            href="/showroom"
-            className="nm-card bg-primary text-white px-8 py-2.5 font-black uppercase text-[9px] tracking-widest hover:scale-105 transition-all shadow-[0_10px_20px_rgba(230,0,0,0.3)] border-none"
+           
+           <button 
+            className="nm-inset px-6 py-2.5 text-zinc-400 font-black uppercase text-[9px] tracking-widest hover:text-white transition-all border-none"
+            onClick={() => window.dispatchEvent(new CustomEvent('toggle-login-modal'))}
            >
-            Deploy Asset
-           </Link>
+            Login / Guest
+           </button>
         </div>
     </header>
   );

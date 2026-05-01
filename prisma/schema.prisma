@@ -106,6 +106,8 @@ model Vehicle {
   features          String[]  @default([])
   ownershipProofUrl String?
   images            String[]  @default([])
+  atEvent           Boolean   @default(false)
+  eventName         String?
   createdAt         DateTime  @default(now())
   updatedAt         DateTime  @updatedAt
 

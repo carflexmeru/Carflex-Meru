@@ -5,6 +5,7 @@ import PublicHeader from "./layout/PublicHeader";
 import MobileNav from "./layout/MobileNav";
 import GlobalFooter from "./layout/GlobalFooter";
 import CommandSidebar from "./layout/CommandSidebar";
+import LoginRoleModal from "./modals/LoginRoleModal";
 
 export default function LayoutWrapper({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -38,6 +39,9 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
         {/* 4. Mobile Bottom Navigation */}
         {!isStaff && <MobileNav />}
       </div>
+
+      {/* 5. Tactical Modals */}
+      <LoginRoleModal />
     </div>
   );
 }
