@@ -5,15 +5,66 @@ import Link from "next/link";
 import LiveGallery from "@/components/LiveGallery";
 import CollegeWaitlistModal from "@/components/CollegeWaitlistModal";
 
+declare global {
+  interface Window {
+    onYouTubeIframeAPIReady: () => void;
+    YT: any;
+  }
+}
+
 export default function LandingPage() {
   const [isWaitlistOpen, setIsWaitlistOpen] = useState(false);
   const [scrollY, setScrollY] = useState(0);
-  const iframeRef = useRef<HTMLIFrameElement>(null);
+  const playerRef = useRef<any>(null);
 
   useEffect(() => {
     const handleScroll = () => setScrollY(window.scrollY);
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  // YouTube Segment Loop Logic (3:00 to 4:00)
+  useEffect(() => {
+    // 1. Load the YouTube IFrame API
+    if (!window.YT) {
+      const tag = document.createElement("script");
+      tag.src = "https://www.youtube.com/iframe_api";
+      const firstScriptTag = document.getElementsByTagName("script")[0];
+      firstScriptTag.parentNode?.insertBefore(tag, firstScriptTag);
+    }
+
+    // 2. Initialize Player when API is ready
+    window.onYouTubeIframeAPIReady = () => {
+      playerRef.current = new window.YT.Player("hero-video-frame", {
+        events: {
+          onReady: (event: any) => {
+            event.target.mute();
+            event.target.seekTo(180); // Start at 3 mins
+            event.target.playVideo();
+          },
+          onStateChange: (event: any) => {
+            if (event.data === window.YT.PlayerState.PLAYING) {
+              const checkTime = setInterval(() => {
+                if (playerRef.current && playerRef.current.getCurrentTime) {
+                  const currentTime = playerRef.current.getCurrentTime();
+                  if (currentTime >= 240) { // Loop at 4 mins
+                    playerRef.current.seekTo(180);
+                  }
+                }
+              }, 500);
+              
+              // Clean up interval if player stops
+              return () => clearInterval(checkTime);
+            }
+          },
+        },
+      });
+    };
+
+    // If YT is already loaded, manually trigger the ready function
+    if (window.YT && window.YT.Player) {
+      window.onYouTubeIframeAPIReady();
+    }
   }, []);
 
   return (
@@ -30,16 +81,11 @@ export default function LandingPage() {
         
         {/* FULLSCREEN VIDEO BACKGROUND */}
         <div className="absolute inset-0 z-10 pointer-events-none overflow-hidden select-none">
-           <iframe 
-              ref={iframeRef}
-              className="w-[120vw] h-[120vh] absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 scale-125 object-cover"
-              src="https://www.youtube.com/embed/vTErTWxtxO4?autoplay=1&mute=1&loop=1&playlist=vTErTWxtxO4&controls=0&modestbranding=1&showinfo=0&rel=0&iv_load_policy=3&disablekb=1&start=180" 
-              frameBorder="0" 
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-           ></iframe>
+           <div id="hero-video-frame" className="w-[120vw] h-[120vh] absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 scale-125 object-cover"></div>
+           <div className="absolute inset-0 bg-black/20"></div>
         </div>
 
-        {/* INVERTED MASK OVERLAY (Solid Tactical Grey Section) */}
+        {/* INVERTED MASK OVERLAY */}
         <div 
           className="absolute inset-0 z-20 pointer-events-none select-none flex items-center justify-center transition-transform duration-75"
           style={{ transform: `translateY(${scrollY * 0.1}px)` }}
@@ -143,7 +189,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Stats Loop (As already implemented) */}
+      {/* Stats Loop */}
       <div className="py-20 border-y border-white/5 bg-black/20 backdrop-blur-sm overflow-hidden">
         <div className="flex animate-marquee whitespace-nowrap gap-20">
           {[1, 2, 3].map((i) => (
@@ -157,12 +203,10 @@ export default function LandingPage() {
         </div>
       </div>
 
-      {/* Main Bazaar Hub (As already implemented) */}
       <main id="gallery" className="relative py-32">
         <LiveGallery />
       </main>
 
-      {/* Training Pillar Section (As already implemented) */}
       <section className="py-40 px-8 relative">
         <div className="max-w-7xl mx-auto nm-card p-12 md:p-24 grid grid-cols-1 md:grid-cols-2 gap-20 items-center overflow-hidden">
           <div className="space-y-10 relative z-10">
@@ -184,13 +228,11 @@ export default function LandingPage() {
              <div className="aspect-square nm-inset flex items-center justify-center">
                 <span className="material-symbols-outlined text-[120px] md:text-[200px] opacity-10 animate-pulse">school</span>
              </div>
-             {/* Decorative Accents */}
              <div className="absolute -top-10 -right-10 w-40 h-40 bg-primary/20 blur-3xl rounded-full"></div>
           </div>
         </div>
       </section>
 
-      {/* Footer / Contact (As already implemented) */}
       <footer className="py-20 text-center opacity-30 hover:opacity-100 transition-opacity">
         <p className="text-[10px] font-black uppercase tracking-[0.5em] mb-4">Carflex Ecosystem © 2026</p>
         <div className="flex justify-center gap-8 text-[8px] font-bold uppercase tracking-widest">
@@ -200,7 +242,6 @@ export default function LandingPage() {
         </div>
       </footer>
 
-      {/* Modals */}
       <CollegeWaitlistModal isOpen={isWaitlistOpen} onClose={() => setIsWaitlistOpen(false)} />
     </div>
   );
