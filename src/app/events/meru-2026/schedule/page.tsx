@@ -3,39 +3,16 @@
 export default function MeruEventSchedule() {
   const schedule = [
     {
-      day: "DAY 01 - AUG 14",
-      title: "ASSET DEPLOYMENT",
+      day: "MAY 03, 2026 (SUNDAY)",
+      title: "HIGH-STAKES BAZAAR",
       events: [
-        { time: "08:00", action: "Exhibitor Identity Clearance", zone: "ADMIN GATE" },
-        { time: "10:00", action: "Asset Positioning & Zone Setup", zone: "ALL ZONES" },
-        { time: "16:00", action: "Security Forensic Sweeps", zone: "SHOWGROUND" }
-      ]
-    },
-    {
-      day: "DAY 02 - AUG 15",
-      title: "OFFICIAL OPENING",
-      events: [
-        { time: "09:00", action: "VIP Premiere & VIP Preview", zone: "ZONE A" },
-        { time: "11:00", action: "Bazaar Command Ribbon Cutting", zone: "MAIN STAGE" },
-        { time: "14:00", action: "Exhibitor Networking Node", zone: "VIP LOUNGE" }
-      ]
-    },
-    {
-      day: "DAY 03 - AUG 16",
-      title: "PUBLIC BAZAAR",
-      events: [
-        { time: "09:00", action: "General Public Access", zone: "MAIN GATE" },
-        { time: "12:00", action: "Live Asset Reviews & Spec Talks", zone: "THE YARD" },
-        { time: "15:00", action: "Bazaar Spotlight: Top 10 Picks", zone: "MAIN STAGE" }
-      ]
-    },
-    {
-      day: "DAY 04 - AUG 17",
-      title: "EXTRACTION OPS",
-      events: [
-        { time: "14:00", action: "Final Sales Clearance", zone: "ADMIN GATE" },
-        { time: "16:00", action: "Asset Extraction & Exit Ops", zone: "MAIN GATE" },
-        { time: "18:00", action: "Showground Decommissioning", zone: "GLOBAL" }
+        { time: "07:00", action: "Rapid Asset Deployment & Check-in", zone: "ADMIN GATE" },
+        { time: "08:30", action: "Final Zone Positioning & Forensics", zone: "ALL ZONES" },
+        { time: "09:00", action: "Mission Opening: Public Entrance", zone: "MAIN GATE" },
+        { time: "11:00", action: "VIP Premier Row & Official Ribbon Cut", zone: "ZONE A" },
+        { time: "13:00", action: "Live Asset Reviews & Auctions", zone: "THE YARD" },
+        { time: "16:00", action: "Final Sales Clearance Node", zone: "ADMIN GATE" },
+        { time: "17:30", action: "Asset Extraction & Mission End", zone: "GLOBAL" }
       ]
     }
   ];
@@ -45,7 +22,7 @@ export default function MeruEventSchedule() {
       <div className="flex flex-col gap-2 text-center items-center">
         <p className="text-[10px] font-black uppercase tracking-[0.5em] text-primary">Tactical Timeline</p>
         <h1 className="text-6xl font-black uppercase tracking-tighter leading-none text-foreground">PROGRAM <br/> <span className="text-stroke italic">OF OPS.</span></h1>
-        <p className="text-zinc-500 font-bold uppercase tracking-widest text-[10px] mt-4">Operational schedule for the Meru Car Bazaar mission.</p>
+        <p className="text-zinc-500 font-bold uppercase tracking-widest text-[10px] mt-4">One-day high-intensity schedule for the Meru Car Bazaar mission.</p>
       </div>
 
       <div className="space-y-12">
@@ -56,7 +33,7 @@ export default function MeruEventSchedule() {
                     <p className="text-primary text-[10px] font-black uppercase tracking-widest mb-1">{day.day}</p>
                     <h3 className="text-4xl font-black uppercase tracking-tighter italic">{day.title}</h3>
                  </div>
-                 <span className="nm-inset px-4 py-2 text-[8px] font-black text-zinc-500 uppercase tracking-[0.3em]">Operational Phase {i + 1}</span>
+                 <span className="nm-inset px-4 py-2 text-[8px] font-black text-zinc-500 uppercase tracking-[0.3em]">INTENSIVE_MISSION_PROFILE</span>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">

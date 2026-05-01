@@ -40,12 +40,12 @@ export default function MeruEventOverview() {
             <span className="material-symbols-outlined text-primary text-4xl">calendar_today</span>
             <h3 className="text-2xl font-black uppercase tracking-tighter italic">EVENT TIMELINE</h3>
             <div className="space-y-2">
-               <p className="text-[10px] font-black text-zinc-500 uppercase tracking-widest">Date Range</p>
-               <p className="text-xl font-black text-white">AUGUST 14 - 17, 2026</p>
+               <p className="text-[10px] font-black text-zinc-500 uppercase tracking-widest">Mission Date</p>
+               <p className="text-xl font-black text-white">SUNDAY, MAY 03, 2026</p>
             </div>
             <div className="space-y-2">
                <p className="text-[10px] font-black text-zinc-500 uppercase tracking-widest">Daily Ops</p>
-               <p className="text-xl font-black text-white">08:00 - 18:00 HRS</p>
+               <p className="text-xl font-black text-white">07:00 - 18:00 HRS</p>
             </div>
          </div>
 
