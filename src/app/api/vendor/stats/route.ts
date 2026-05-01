@@ -34,11 +34,22 @@ export async function GET(request: Request) {
       }
     });
 
+    // 2. BASELINE RESPONSE: If vendor not found, return empty stats instead of 404
     if (!vendor) {
-      return NextResponse.json({ error: "Vendor not found." }, { status: 404 });
+      return NextResponse.json({
+        analytics: {
+          totalAssets: 0,
+          activeListings: 0,
+          totalViews: 0,
+          totalValue: 0
+        },
+        recentActivity: [],
+        vendorName: "Pending Activation",
+        isNew: true
+      });
     }
 
-    // 2. Fetch Messages Separately to avoid relation-drift crashes
+    // 3. Fetch Messages Separately to avoid relation-drift crashes
     let receivedMessages: any[] = [];
     try {
        receivedMessages = await prisma.message.findMany({
@@ -50,13 +61,13 @@ export async function GET(request: Request) {
        console.warn("Message relation sync error:", mErr);
     }
 
-    // 3. Calculate Analytics
+    // 4. Calculate Analytics
     const totalAssets = vendor.vehicles.length;
     const activeListings = vendor.vehicles.filter(v => v.status === "active").length;
     const totalViews = vendor.vehicles.reduce((sum, v) => sum + (v.views?.length || 0), 0);
     const totalValue = vendor.vehicles.reduce((sum, v) => sum + (v.price || 0), 0);
 
-    // 4. Recent History (Combined logs)
+    // 5. Recent History (Combined logs)
     const recentActivity = [
       ...vendor.vehicles.slice(0, 3).map(v => ({
         type: "ASSET_UPDATE",

@@ -27,24 +27,25 @@ export async function POST(request: Request) {
       });
 
       if (existingUser) {
-        return NextResponse.json({ error: "USERNAME_TAKEN: This identifier is already claimed." }, { status: 400 });
+        return NextResponse.json({ error: "USERNAME_TAKEN: This handle is already in use." }, { status: 400 });
       }
     }
 
-    // 2. Resolve the Profile Node (Find by phone)
-    const vendor = await prisma.profile.findFirst({
-       where: { phone: normalizedPhone }
-    });
-
-    if (!vendor) {
-       return NextResponse.json({ error: "PROFILE_NOT_FOUND: Please register at the gate first." }, { status: 404 });
-    }
-
-    // 3. Finalize the Profile Upgrade
-    const updatedVendor = await prisma.profile.update({
-      where: { id: vendor.id },
-      data: {
+    // 2. SELF-HEALING UPSERT: Create or Update the profile
+    const updatedVendor = await prisma.profile.upsert({
+      where: { phone: normalizedPhone },
+      update: {
         name: name || undefined,
+        email: email || undefined,
+        businessAddress: businessAddress || undefined,
+        username: username || undefined,
+        password: password || undefined,
+        onboardingCompleted: true,
+        role: "vendor"
+      },
+      create: {
+        phone: normalizedPhone,
+        name: name || "Vendor Agent",
         email: email || undefined,
         businessAddress: businessAddress || undefined,
         username: username || undefined,
@@ -56,12 +57,12 @@ export async function POST(request: Request) {
 
     return NextResponse.json({
       success: true,
-      message: "COMMAND_DECK_INITIALIZED",
+      message: "IDENTITY_AUTHORIZED_AND_SYNCED",
       vendor: updatedVendor
     });
 
   } catch (error: any) {
     console.error("Onboarding API error:", error);
-    return NextResponse.json({ error: "INTERNAL_CORE_FAILURE: " + error.message }, { status: 500 });
+    return NextResponse.json({ error: "IDENTITY_INITIALIZATION_FAILED: " + error.message }, { status: 500 });
   }
 }
