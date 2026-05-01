@@ -210,6 +210,16 @@ export default function FleetIntake() {
                     Cash
                   </button>
                 </div>
+
+                <button
+                  onClick={handleSubmit}
+                  className={`w-full py-6 rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-xl transition-all hover:scale-[1.02] active:scale-95 border-none ${
+                    status === "processing" ? "bg-zinc-800 text-zinc-500 cursor-wait" :
+                    paymentMethod === "mpesa" ? "bg-primary text-white shadow-[0_10px_30px_rgba(230,0,0,0.3)]" : "bg-white text-black shadow-[0_10px_30px_rgba(255,255,255,0.1)]"
+                  }`}
+                >
+                  {status === "processing" ? "DEPLOYING MANIFEST..." : status === "success" ? "MANIFEST DEPLOYED" : `AUTHORIZE ${paymentMethod.toUpperCase()} PAYMENT`}
+                </button>
               </div>
             </div>
 
