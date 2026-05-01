@@ -31,6 +31,20 @@ export async function POST(request: Request) {
       }
     }
 
+    // 1b. Check if Email is available
+    if (email) {
+      const emailCollision = await prisma.profile.findFirst({
+        where: { 
+          email,
+          NOT: { phone: normalizedPhone }
+        }
+      });
+
+      if (emailCollision) {
+        return NextResponse.json({ error: "EMAIL_TAKEN: This trade email is already forensics-linked to another identity." }, { status: 400 });
+      }
+    }
+
     // 2. SELF-HEALING UPSERT: Create or Update the profile
     const updatedVendor = await prisma.profile.upsert({
       where: { phone: normalizedPhone },
