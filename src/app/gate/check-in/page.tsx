@@ -203,9 +203,20 @@ export default function GateCheckIn() {
         {/* Page Header */}
         <div className="flex flex-col gap-3 px-4">
           <h2 className="text-5xl md:text-7xl font-black text-white tracking-tighter uppercase leading-none">FAST-GATE <br/> <span className="text-primary italic">PROTOCOL.</span></h2>
-          <div className="nm-inset inline-flex items-center gap-2 px-4 py-1.5 w-fit mt-4">
-            <span className="w-2 h-2 bg-primary rounded-full animate-pulse shadow-[0_0_10px_#E60000]"></span>
-            <span className="text-zinc-500 text-[10px] font-black uppercase tracking-[0.3em]">Phase 2: Active Synchronization</span>
+          
+          <div className="flex flex-wrap gap-4 mt-8">
+            <div className="nm-inset inline-flex items-center gap-2 px-4 py-1.5 w-fit">
+              <span className="w-2 h-2 bg-primary rounded-full animate-pulse shadow-[0_0_10px_#E60000]"></span>
+              <span className="text-zinc-500 text-[10px] font-black uppercase tracking-[0.3em]">Single Vehicle Mode</span>
+            </div>
+            
+            <button 
+              onClick={() => router.push("/gate/fleet")}
+              className="nm-card px-6 py-2 text-[10px] font-black text-white uppercase tracking-widest hover:text-primary transition-all flex items-center gap-2 border-none"
+            >
+              <span className="material-symbols-outlined text-sm">group_work</span>
+              Switch to Fleet Manifest
+            </button>
           </div>
         </div>
 

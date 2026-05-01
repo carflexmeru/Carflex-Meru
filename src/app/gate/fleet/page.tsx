@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import AgentLayout from "@/components/layout/AgentLayout";
 
 interface Zone {
@@ -15,6 +16,7 @@ interface FleetVehicle {
 }
 
 export default function FleetIntake() {
+  const router = useRouter();
   const [zones, setZones] = useState<Zone[]>([]);
   const [orgData, setOrgData] = useState({ name: "", repName: "", repId: "", repPhone: "" });
   const [fleet, setFleet] = useState<FleetVehicle[]>([{ plate: "", zoneId: "" }]);
@@ -95,7 +97,21 @@ export default function FleetIntake() {
       <div className="space-y-12 py-12 max-w-6xl mx-auto pb-40">
         <div className="flex flex-col gap-4">
           <h1 className="text-6xl font-black uppercase tracking-tighter leading-none">FLEET <br/> <span className="text-primary italic">MANIFEST.</span></h1>
-          <p className="text-zinc-500 font-bold uppercase tracking-widest text-[10px]">Processing multi-asset organization entry with unified financial nodes.</p>
+          
+          <div className="flex flex-wrap gap-4 mt-4">
+            <div className="nm-inset inline-flex items-center gap-2 px-4 py-1.5 w-fit">
+              <span className="w-2 h-2 bg-primary rounded-full animate-pulse shadow-[0_0_10px_#E60000]"></span>
+              <span className="text-zinc-500 text-[10px] font-black uppercase tracking-[0.3em]">Corporate Fleet Mode</span>
+            </div>
+            
+            <button 
+              onClick={() => router.push("/gate/check-in")}
+              className="nm-card px-6 py-2 text-[10px] font-black text-white uppercase tracking-widest hover:text-primary transition-all flex items-center gap-2 border-none"
+            >
+              <span className="material-symbols-outlined text-sm">person</span>
+              Switch to Single Entry
+            </button>
+          </div>
         </div>
 
         {status === "success" ? (
