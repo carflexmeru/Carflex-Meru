@@ -238,3 +238,19 @@ model StaffAgent {
   name      String
   lastLogin DateTime @default(now())
 }
+
+model ActionLog {
+  id          String   @id @default(uuid())
+  timestamp   DateTime @default(now())
+  actionType  String
+  agentName   String?
+  description String
+  metadata    Json?
+}
+
+model StolenVehicle {
+  id          String   @id @default(uuid())
+  regNumber   String   @unique
+  reportedAt  DateTime @default(now())
+  description String?
+}
