@@ -8,6 +8,7 @@ export default function StaffLogin() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -72,15 +73,24 @@ export default function StaffLogin() {
 
           <div className="space-y-3">
             <label className="text-zinc-500 text-[9px] font-black uppercase tracking-widest px-2">Access Frequency Code</label>
-            <div className="nm-inset">
+            <div className="nm-inset flex items-center pr-4">
               <input
-                type="password"
+                type={showPassword ? "text" : "password"}
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
-                className="w-full bg-transparent p-5 text-white font-mono tracking-[0.5em] outline-none border-none placeholder:text-zinc-800"
+                className="flex-1 bg-transparent p-5 text-white font-mono tracking-[0.5em] outline-none border-none placeholder:text-zinc-800"
               />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="text-zinc-500 hover:text-primary transition-colors focus:outline-none"
+              >
+                <span className="material-symbols-outlined text-xl">
+                  {showPassword ? "visibility_off" : "visibility"}
+                </span>
+              </button>
             </div>
           </div>
 
