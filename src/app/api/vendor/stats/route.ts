@@ -17,7 +17,7 @@ export async function GET(request: Request) {
           include: { views: true }
         },
         bookings: true,
-        messages: {
+        receivedMessages: {
           take: 5,
           orderBy: { createdAt: "desc" }
         }
@@ -41,7 +41,7 @@ export async function GET(request: Request) {
         message: `${v.make} ${v.model} (${v.regNumber}) status changed to ${v.status}`,
         time: v.updatedAt
       })),
-      ...vendor.messages.map(m => ({
+      ...vendor.receivedMessages.map(m => ({
         type: "MESSAGE",
         message: `New communication received: ${m.content.substring(0, 30)}...`,
         time: m.createdAt
