@@ -9,11 +9,19 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Phone and Password are required." }, { status: 400 });
     }
 
+    // NORMALIZE PHONE
+    let normalizedPhone = phone.replace(/\s+/g, "");
+    if (normalizedPhone.startsWith("0")) {
+      normalizedPhone = "+254" + normalizedPhone.substring(1);
+    } else if (!normalizedPhone.startsWith("+") && /^\d+$/.test(normalizedPhone)) {
+      normalizedPhone = "+" + normalizedPhone;
+    }
+
     // 1. Find the Vendor Profile (Phone or Username)
     const vendor = await prisma.profile.findFirst({
       where: {
         OR: [
-          { phone: phone },
+          { phone: normalizedPhone },
           { username: phone }
         ]
       }

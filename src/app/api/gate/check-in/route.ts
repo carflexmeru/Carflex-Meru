@@ -7,12 +7,20 @@ export async function POST(req: Request) {
     const { plate, idNumber, phone, zoneId, paymentMethod, paymentStatus, name } = body;
 
     const cleanPlate = plate.toUpperCase();
+    
+    // NORMALIZE PHONE: Ensure consistent format (e.g., 07... becomes +254...)
+    let normalizedPhone = phone.replace(/\s+/g, "");
+    if (normalizedPhone.startsWith("0")) {
+      normalizedPhone = "+254" + normalizedPhone.substring(1);
+    } else if (!normalizedPhone.startsWith("+")) {
+      normalizedPhone = "+" + normalizedPhone;
+    }
 
     // 1. Resolve or Create Profile
     let owner = await prisma.profile.findFirst({
       where: {
         OR: [
-          { phone },
+          { phone: normalizedPhone },
           { idNumber: idNumber || undefined }
         ]
       }
@@ -21,7 +29,7 @@ export async function POST(req: Request) {
     if (!owner) {
       owner = await prisma.profile.create({
         data: {
-          phone,
+          phone: normalizedPhone,
           idNumber,
           name,
           role: "vendor",
