@@ -27,11 +27,19 @@ export async function POST(req: Request) {
           role: "vendor",
         }
       });
-    } else if (name && !owner.name) {
-      owner = await prisma.profile.update({
-        where: { id: owner.id },
-        data: { name }
-      });
+    } else {
+      // UPGRADE: Elevate to vendor role if currently a buyer/guest
+      const updateData: any = {};
+      if (owner.role !== "vendor") updateData.role = "vendor";
+      if (name && !owner.name) updateData.name = name;
+      if (idNumber && !owner.idNumber) updateData.idNumber = idNumber;
+
+      if (Object.keys(updateData).length > 0) {
+        owner = await prisma.profile.update({
+          where: { id: owner.id },
+          data: updateData
+        });
+      }
     }
 
     // 2. Clear previous active bookings for this plate (if any)
