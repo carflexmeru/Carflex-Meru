@@ -51,6 +51,7 @@ export default function StaffLayout({ children }: StaffLayoutProps) {
     switch (agentType) {
       case "REGISTRATION_AGENT":
         return [
+          { label: "Main Site", href: "/", icon: "home" },
           { label: "Check-in", href: "/gate/check-in", icon: "stadium" },
           { label: "Fleet Manifest", href: "/gate/fleet", icon: "group_work" },
           { label: "Waitlist", href: "/staff/registration/waitlist", icon: "pending_actions" },
@@ -59,6 +60,7 @@ export default function StaffLayout({ children }: StaffLayoutProps) {
         ];
       case "GATE_VERIFICATION_AGENT":
         return [
+          { label: "Main Site", href: "/", icon: "home" },
           { label: "Gate Command", href: "/staff/gate", icon: "verified_user" },
           { label: "Ground Intel", href: "/staff/ground", icon: "location_searching" },
           { label: "Logs", href: "/staff/gate/logs", icon: "history" },
@@ -66,6 +68,7 @@ export default function StaffLayout({ children }: StaffLayoutProps) {
         ];
       case "GROUND_VERIFICATION_AGENT":
         return [
+          { label: "Main Site", href: "/", icon: "home" },
           { label: "Ground Intel", href: "/staff/ground", icon: "location_searching" },
           { label: "Security", href: "/staff/security", icon: "security" },
           { label: "Logs", href: "/staff/ground/logs", icon: "history" },
@@ -73,6 +76,7 @@ export default function StaffLayout({ children }: StaffLayoutProps) {
         ];
       default:
         return [
+          { label: "Main Site", href: "/", icon: "home" },
           { label: "Terminal", href: "/staff/login", icon: "terminal" }
         ];
     }
