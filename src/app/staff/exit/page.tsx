@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 
 export default function ExitHubPage() {
   const [query, setQuery] = useState("");
+  const [results, setResults] = useState<any[]>([]);
   const [asset, setAsset] = useState<any>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -18,16 +19,15 @@ export default function ExitHubPage() {
     setLoading(true);
     setError("");
     setAsset(null);
+    setResults([]);
 
     try {
-      // For now, we search by plate
       const res = await fetch(`/api/gate/security-check?plate=${query}`);
       const data = await res.json();
       
       if (Array.isArray(data) && data.length > 0) {
-        // If multiple, for simplicity in exit we take the first active one
-        // In production, we'd show the collision list like in security hub
-        setAsset(data[0].vehicle);
+        setResults(data);
+        if (data.length === 1) setAsset(data[0].vehicle);
       } else {
         setError("ASSET_NOT_FOUND: NO ACTIVE RECORD FOR THIS IDENTIFIER");
       }
@@ -53,6 +53,7 @@ export default function ExitHubPage() {
         setExitStatus("success");
         setTimeout(() => {
           setAsset(null);
+          setResults([]);
           setQuery("");
           setExitStatus("idle");
         }, 3000);
@@ -103,6 +104,30 @@ export default function ExitHubPage() {
                  </form>
               </div>
 
+              {results.length > 1 && !asset && (
+                <div className="nm-card p-8 animate-fade-in border-primary/20 border">
+                  <div className="flex items-center gap-3 mb-6">
+                    <span className="w-2 h-2 bg-primary rounded-full animate-pulse"></span>
+                    <h3 className="text-[10px] font-black uppercase tracking-widest text-primary">EXIT COLLISION DETECTED</h3>
+                  </div>
+                  <div className="space-y-4">
+                    {results.map((r, i) => (
+                      <button 
+                        key={i}
+                        onClick={() => setAsset(r.vehicle)}
+                        className="w-full nm-inset p-4 flex justify-between items-center hover:bg-white/5 transition-all text-left"
+                      >
+                        <div>
+                          <p className="text-[9px] font-black text-zinc-500 uppercase">{r.vehicle.make} {r.vehicle.model}</p>
+                          <p className="text-sm font-black text-foreground">{r.vehicle.regNumber}</p>
+                        </div>
+                        <span className="material-symbols-outlined text-primary text-sm">logout</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
               {error && (
                 <div className="nm-inset bg-primary/10 p-6 text-primary text-[10px] font-black uppercase tracking-widest text-center animate-pulse">
                    {error}
@@ -140,6 +165,14 @@ export default function ExitHubPage() {
                             <p className="text-zinc-500 text-[10px] font-black uppercase tracking-widest mb-4">Departure Manifest</p>
                             <h2 className="text-6xl font-black uppercase tracking-tighter text-foreground">{asset.regNumber}</h2>
                             <p className="text-primary font-bold uppercase tracking-widest text-[10px] mt-2">Verified Bazaar Asset</p>
+                            {results.length > 1 && (
+                              <button 
+                                onClick={() => setAsset(null)}
+                                className="mt-4 text-[8px] font-black uppercase tracking-widest text-primary hover:underline block"
+                              >
+                                ← BACK TO COLLISION LIST
+                              </button>
+                            )}
                          </div>
                          <div className="text-right">
                             <p className="text-[9px] font-black text-zinc-500 uppercase mb-1">Check-in Time</p>
