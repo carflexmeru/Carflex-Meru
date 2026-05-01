@@ -35,55 +35,56 @@ export default function LandingPage() {
             <span className="text-[10px] font-black uppercase tracking-[0.5em] text-zinc-500">Live Bazaar Operations • Meru</span>
           </div>
 
-          {/* Premium Unified Video Mask */}
-          <div className="relative w-full h-[30vh] md:h-[45vh] flex items-center justify-center mb-12">
-             <svg className="absolute inset-0 w-full h-full pointer-events-none select-none z-30">
+          {/* Pure SVG Forensic Mask */}
+          <div className="relative w-full h-[40vh] md:h-[60vh] flex items-center justify-center mb-12 select-none">
+             <svg 
+               viewBox="0 0 1000 500" 
+               className="w-full h-full drop-shadow-[0_20px_50px_rgba(0,0,0,0.5)]"
+               preserveAspectRatio="xMidYMid meet"
+             >
                <defs>
-                 <mask id="textMask" x="0" y="0" width="100%" height="100%">
-                    <rect width="100%" height="100%" fill="black" />
+                 <mask id="videoMask">
+                    <rect width="1000" height="500" fill="black" />
                     <text 
-                      x="50%" 
-                      y="40%" 
+                      x="500" 
+                      y="180" 
                       textAnchor="middle" 
-                      className="text-[18vw] md:text-[12vw] font-black uppercase tracking-tighter" 
+                      className="text-[180px] font-black uppercase tracking-tighter" 
                       fill="white"
                     >
                       ELEVATED
                     </text>
                     <text 
-                      x="50%" 
-                      y="85%" 
+                      x="500" 
+                      y="400" 
                       textAnchor="middle" 
-                      className="text-[18vw] md:text-[12vw] font-black uppercase tracking-tighter italic" 
+                      className="text-[180px] font-black uppercase tracking-tighter italic" 
                       fill="white"
                     >
                       MOBILITY.
                     </text>
                  </mask>
                </defs>
-               {/* Decorative Glow Behind the Mask */}
-               <rect width="100%" height="100%" fill="none" className="filter blur-3xl opacity-20" mask="url(#textMask)" />
+
+               {/* Video Injection via ForeignObject */}
+               <foreignObject x="0" y="0" width="1000" height="500" mask="url(#videoMask)">
+                 <div className="w-full h-full relative">
+                    <iframe 
+                       className="w-[150%] h-[150%] absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 scale-150 pointer-events-none"
+                       src="https://www.youtube.com/embed/vTErTWxtxO4?autoplay=1&mute=1&loop=1&playlist=vTErTWxtxO4&controls=0&modestbranding=1&showinfo=0&rel=0&start=180" 
+                       frameBorder="0" 
+                       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    ></iframe>
+                 </div>
+               </foreignObject>
+
+               {/* Readability Stroke Overlay */}
+               <text x="500" y="180" textAnchor="middle" fill="none" stroke="white" strokeWidth="1" strokeOpacity="0.1" className="text-[180px] font-black uppercase tracking-tighter">ELEVATED</text>
+               <text x="500" y="400" textAnchor="middle" fill="none" stroke="white" strokeWidth="1" strokeOpacity="0.1" className="text-[180px] font-black uppercase tracking-tighter italic">MOBILITY.</text>
              </svg>
-
-             {/* The Video Source */}
-             <div className="absolute inset-0 z-20" style={{ maskImage: 'url(#textMask)', WebkitMaskImage: 'url(#textMask)' }}>
-                <div className="absolute inset-0 bg-primary/10 mix-blend-overlay"></div>
-                <iframe 
-                   className="w-[110vw] h-[110vh] absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 scale-110 object-cover pointer-events-none"
-                   src="https://www.youtube.com/embed/vTErTWxtxO4?autoplay=1&mute=1&loop=1&playlist=vTErTWxtxO4&controls=0&modestbranding=1&showinfo=0&rel=0&start=180" 
-                   frameBorder="0" 
-                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                ></iframe>
-             </div>
-
-             {/* Tactical Underlay (Ensures readability if video is slow) */}
-             <div className="absolute inset-0 z-10 flex flex-col items-center justify-center opacity-10">
-                <p className="text-[18vw] md:text-[12vw] font-black uppercase tracking-tighter leading-none">ELEVATED</p>
-                <p className="text-[18vw] md:text-[12vw] font-black uppercase tracking-tighter leading-none italic">MOBILITY.</p>
-             </div>
           </div>
 
-          <div className="flex flex-col md:flex-row items-center justify-center gap-8 mt-16">
+          <div className="flex flex-col md:flex-row items-center justify-center gap-8 mt-8">
             <button 
               onClick={() => document.getElementById("gallery")?.scrollIntoView({ behavior: "smooth" })}
               className="w-full md:w-auto nm-card bg-primary text-white px-14 py-6 font-black uppercase text-xs tracking-[0.2em] hover:scale-105 transition-transform border-none shadow-[0_20px_50px_rgba(230,0,0,0.3)]"
