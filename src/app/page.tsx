@@ -16,17 +16,6 @@ export default function LandingPage() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // YouTube Loop Sentinel (Force reset to 3 mins)
-  useEffect(() => {
-    const interval = setInterval(() => {
-      if (iframeRef.current) {
-        // Simple reload strategy if video ends (Youtube doesn't easily loop segments via URL)
-        // For a more robust solution, Youtube Iframe API would be used.
-      }
-    }, 10000);
-    return () => clearInterval(interval);
-  }, []);
-
   return (
     <div className="min-h-screen bg-[#050505] text-white selection:bg-primary selection:text-white overflow-x-hidden">
       
@@ -50,7 +39,7 @@ export default function LandingPage() {
            ></iframe>
         </div>
 
-        {/* INVERTED MASK OVERLAY (Reduced Opacity Grey Section) */}
+        {/* INVERTED MASK OVERLAY (Solid Tactical Grey Section) */}
         <div 
           className="absolute inset-0 z-20 pointer-events-none select-none flex items-center justify-center transition-transform duration-75"
           style={{ transform: `translateY(${scrollY * 0.1}px)` }}
@@ -59,7 +48,6 @@ export default function LandingPage() {
               <defs>
                  <mask id="heroInversionMask">
                     <rect width="1000" height="500" fill="white" />
-                    {/* Artistically Compressed Typography */}
                     <text 
                       x="500" 
                       y="210" 
@@ -82,30 +70,69 @@ export default function LandingPage() {
                     </text>
                  </mask>
               </defs>
-              {/* Solid Tactical Grey Overlay (100% Opacity) */}
               <rect width="1000" height="500" fill="#121212" fillOpacity="1" mask="url(#heroInversionMask)" />
            </svg>
         </div>
 
         {/* CONTENT LAYER */}
         <div 
-          className="relative z-30 text-center px-6 w-full max-w-7xl pt-20"
+          className="relative z-30 px-8 md:px-24 w-full max-w-7xl h-full flex flex-col md:flex-row items-center justify-between pt-20"
         >
-          <div className="nm-inset inline-flex items-center gap-3 px-6 py-2 mb-12 bg-black/40 backdrop-blur-xl">
-            <span className="w-2 h-2 bg-primary rounded-full animate-pulse shadow-[0_0_15px_#E60000]"></span>
-            <span className="text-[10px] font-black uppercase tracking-[0.5em] text-zinc-400">Live Bazaar Operations • Meru</span>
+          {/* Left Flank: Primary Commands */}
+          <div className="flex flex-col items-center md:items-start text-center md:text-left space-y-12">
+            <div className="nm-inset inline-flex items-center gap-3 px-6 py-2 bg-black/40 backdrop-blur-xl">
+              <span className="w-2 h-2 bg-primary rounded-full animate-pulse shadow-[0_0_15px_#E60000]"></span>
+              <span className="text-[10px] font-black uppercase tracking-[0.5em] text-zinc-400">Live Bazaar Operations • Meru</span>
+            </div>
+
+            <div className="flex flex-col md:flex-row items-center gap-8 mt-64">
+              <button 
+                onClick={() => document.getElementById("gallery")?.scrollIntoView({ behavior: "smooth" })}
+                className="w-full md:w-auto nm-card bg-primary text-white px-14 py-6 font-black uppercase text-xs tracking-[0.2em] hover:scale-105 transition-transform border-none shadow-[0_20px_50px_rgba(230,0,0,0.3)]"
+              >
+                Explore Inventory
+              </button>
+              <Link href="/marketplace" className="w-full md:w-auto nm-card bg-black/60 text-white px-14 py-6 font-black uppercase text-xs tracking-[0.2em] hover:bg-zinc-800 transition-all border-none backdrop-blur-md">
+                The Marketplace
+              </Link>
+            </div>
           </div>
 
-          <div className="flex flex-col md:flex-row items-center justify-center gap-8 mt-64">
-            <button 
-              onClick={() => document.getElementById("gallery")?.scrollIntoView({ behavior: "smooth" })}
-              className="w-full md:w-auto nm-card bg-primary text-white px-14 py-6 font-black uppercase text-xs tracking-[0.2em] hover:scale-105 transition-transform border-none shadow-[0_20px_50px_rgba(230,0,0,0.3)]"
-            >
-              Explore Inventory
-            </button>
-            <Link href="/marketplace" className="w-full md:w-auto nm-card bg-black/60 text-white px-14 py-6 font-black uppercase text-xs tracking-[0.2em] hover:bg-zinc-800 transition-all border-none backdrop-blur-md">
-              The Marketplace
-            </Link>
+          {/* Right Flank: Glassmorphic Mission Briefing Card */}
+          <div 
+            className="hidden lg:block w-[400px] nm-card bg-white/5 backdrop-blur-2xl border border-white/10 p-10 rounded-[2.5rem] space-y-8 animate-fade-in-up"
+            style={{ animationDelay: '0.5s' }}
+          >
+             <div className="flex justify-between items-start">
+                <p className="text-primary text-[10px] font-black uppercase tracking-[0.5em]">Mission Briefing</p>
+                <span className="material-symbols-outlined text-zinc-600 text-sm">info</span>
+             </div>
+
+             <div className="space-y-6">
+                <h3 className="text-3xl font-black uppercase tracking-tighter leading-none italic">
+                  THE CARFLEX <br/> <span className="text-stroke">ECOSYSTEM.</span>
+                </h3>
+                <p className="text-zinc-400 text-[11px] font-bold leading-relaxed uppercase tracking-widest">
+                  We are defining the next generation of high-trust automotive trade. From direct Japan sourcing to forensic vehicle verification, our platform empowers you to execute missions with total tactical certainty.
+                </p>
+             </div>
+
+             <div className="pt-8 border-t border-white/5 grid grid-cols-2 gap-6">
+                <div>
+                   <p className="text-[8px] font-black text-zinc-500 uppercase tracking-widest mb-1">Active Assets</p>
+                   <p className="text-lg font-black text-white italic">250+</p>
+                </div>
+                <div>
+                   <p className="text-[8px] font-black text-zinc-500 uppercase tracking-widest mb-1">Authorized Hubs</p>
+                   <p className="text-lg font-black text-white italic">12 LOC</p>
+                </div>
+             </div>
+
+             <Link href="/about" className="flex items-center gap-4 group pt-4">
+                <span className="text-[9px] font-black uppercase tracking-[0.3em] group-hover:text-primary transition-colors">Read Manifesto</span>
+                <span className="w-8 h-[1px] bg-white/10 group-hover:w-12 transition-all"></span>
+                <span className="material-symbols-outlined text-sm text-primary">arrow_forward</span>
+             </Link>
           </div>
         </div>
 
@@ -116,7 +143,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Stats Loop */}
+      {/* Stats Loop (As already implemented) */}
       <div className="py-20 border-y border-white/5 bg-black/20 backdrop-blur-sm overflow-hidden">
         <div className="flex animate-marquee whitespace-nowrap gap-20">
           {[1, 2, 3].map((i) => (
@@ -130,12 +157,12 @@ export default function LandingPage() {
         </div>
       </div>
 
-      {/* Main Bazaar Hub */}
+      {/* Main Bazaar Hub (As already implemented) */}
       <main id="gallery" className="relative py-32">
         <LiveGallery />
       </main>
 
-      {/* Training Pillar Section */}
+      {/* Training Pillar Section (As already implemented) */}
       <section className="py-40 px-8 relative">
         <div className="max-w-7xl mx-auto nm-card p-12 md:p-24 grid grid-cols-1 md:grid-cols-2 gap-20 items-center overflow-hidden">
           <div className="space-y-10 relative z-10">
@@ -163,7 +190,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Footer / Contact */}
+      {/* Footer / Contact (As already implemented) */}
       <footer className="py-20 text-center opacity-30 hover:opacity-100 transition-opacity">
         <p className="text-[10px] font-black uppercase tracking-[0.5em] mb-4">Carflex Ecosystem © 2026</p>
         <div className="flex justify-center gap-8 text-[8px] font-bold uppercase tracking-widest">
