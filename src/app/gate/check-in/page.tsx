@@ -123,34 +123,6 @@ export default function GateCheckIn() {
         if (!res.ok) throw new Error(data.error || "STK Push failed");
 
         setStatus("waiting");
-        
-        // Simulate Callback for Demo/Testing
-        setTimeout(async () => {
-          try {
-            const callbackRes = await fetch("/api/gate/check-in", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({
-                ...formData,
-                zoneId: formData.zone,
-                paymentMethod: "mpesa",
-                paymentStatus: "paid"
-              }),
-            });
-
-            if (callbackRes.ok) {
-              setStatus("success");
-              setIsLoading(false);
-            } else {
-              throw new Error("Payment verification timed out");
-            }
-          } catch (callbackError: any) {
-            setErrorMessage(callbackError.message);
-            setStatus("error");
-            setIsLoading(false);
-          }
-        }, 3000);
-
       } catch (error: any) {
         setErrorMessage(error.message);
         setStatus("error");
@@ -158,6 +130,30 @@ export default function GateCheckIn() {
       }
     }
   };
+
+  const checkPaymentStatus = async () => {
+    if (status !== "waiting") return;
+    
+    try {
+      const res = await fetch(`/api/gate/check-in-status?plate=${formData.plate}`);
+      const data = await res.json();
+      
+      if (data.status === "paid") {
+        setStatus("success");
+        setIsLoading(false);
+      }
+    } catch (err) {
+      console.error("Polling error:", err);
+    }
+  };
+
+  useEffect(() => {
+    let interval: any;
+    if (status === "waiting") {
+      interval = setInterval(checkPaymentStatus, 3000);
+    }
+    return () => clearInterval(interval);
+  }, [status, formData.plate]);
 
   const handleDefer = async () => {
     if (!formData.plate || !formData.phone || !formData.zone) {
@@ -356,12 +352,27 @@ export default function GateCheckIn() {
 
                 {paymentMethod === "mpesa" && (
                   <div className="flex flex-col gap-6 animate-fade-in mt-6">
-                    <button
-                      onClick={() => handleSubmit({ preventDefault: () => {} } as React.FormEvent)}
-                      className="nm-card w-full bg-primary text-white py-6 font-black uppercase tracking-widest text-[10px] shadow-[0_10px_30px_rgba(230,0,0,0.3)] hover:scale-[1.02] active:scale-95 transition-all border-none"
-                    >
-                      {status === "pushing" ? "SYSTEM_LINKING..." : status === "waiting" ? "WAITING_FOR_PIN..." : "INITIATE STK PUSH"}
-                    </button>
+                    {status === "waiting" ? (
+                      <div className="space-y-4">
+                        <button
+                          onClick={checkPaymentStatus}
+                          className="nm-card w-full bg-green-500 text-white py-6 font-black uppercase tracking-widest text-[10px] shadow-[0_10px_30px_rgba(34,197,94,0.3)] hover:scale-[1.02] active:scale-95 transition-all border-none"
+                        >
+                          VERIFY PAYMENT NOW
+                        </button>
+                        <div className="nm-inset p-6 flex items-center justify-center gap-4">
+                          <span className="w-2 h-2 bg-primary rounded-full animate-pulse shadow-[0_0_10px_#E60000]"></span>
+                          <span className="text-[9px] font-black uppercase tracking-[0.2em] text-zinc-500">Uplink Active: Waiting for PIN...</span>
+                        </div>
+                      </div>
+                    ) : (
+                      <button
+                        onClick={() => handleSubmit({ preventDefault: () => {} } as React.FormEvent)}
+                        className="nm-card w-full bg-primary text-white py-6 font-black uppercase tracking-widest text-[10px] shadow-[0_10px_30px_rgba(230,0,0,0.3)] hover:scale-[1.02] active:scale-95 transition-all border-none"
+                      >
+                        {status === "pushing" ? "INITIATING UPLINK..." : "INITIATE STK PUSH"}
+                      </button>
+                    )}
                   </div>
                 )}
 
