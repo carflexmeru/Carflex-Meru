@@ -24,6 +24,22 @@ export default function FleetIntake() {
   const [isLoading, setIsLoading] = useState(false);
   const [status, setStatus] = useState<"idle" | "processing" | "success" | "error">("idle");
 
+  // Tactical Memory: Restore from LocalStorage
+  const restoreSession = () => {
+    const savedOrg = localStorage.getItem("fleet_org_cache");
+    const savedFleet = localStorage.getItem("fleet_assets_cache");
+    if (savedOrg) setOrgData(JSON.parse(savedOrg));
+    if (savedFleet) setFleet(JSON.parse(savedFleet));
+  };
+
+  // Tactical Memory: Auto-Save
+  useEffect(() => {
+    if (orgData.name || fleet[0]?.plate) {
+      localStorage.setItem("fleet_org_cache", JSON.stringify(orgData));
+      localStorage.setItem("fleet_assets_cache", JSON.stringify(fleet));
+    }
+  }, [orgData, fleet]);
+
   useEffect(() => {
     async function fetchZones() {
       const res = await fetch("/api/zones");
@@ -110,6 +126,14 @@ export default function FleetIntake() {
             >
               <span className="material-symbols-outlined text-sm">person</span>
               Switch to Single Entry
+            </button>
+
+            <button 
+              onClick={restoreSession}
+              className="nm-card px-6 py-2 text-[10px] font-black text-zinc-500 uppercase tracking-widest hover:text-white transition-all flex items-center gap-2 border-none"
+            >
+              <span className="material-symbols-outlined text-sm">history</span>
+              Reload Last Data
             </button>
           </div>
         </div>
