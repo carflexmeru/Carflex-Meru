@@ -12,7 +12,6 @@ export default function MeruEventLayout({ children }: { children: React.ReactNod
     { name: "Exhibitors", href: "/events/meru-2026/exhibitors" },
     { name: "Tactical Map", href: "/events/meru-2026/map" },
     { name: "Program", href: "/events/meru-2026/schedule" },
-    { name: "Tickets", href: "/events/meru-2026/tickets" },
   ];
 
   return (

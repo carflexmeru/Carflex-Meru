@@ -23,12 +23,9 @@ export default function MeruEventOverview() {
               <p className="text-2xl font-black uppercase tracking-[0.4em] text-zinc-400">ASK Meru Showground Hub</p>
            </div>
 
-           <div className="flex gap-6 pt-12">
-              <Link href="/events/meru-2026/tickets" className="nm-card bg-primary text-white px-12 py-6 font-black uppercase tracking-widest text-[10px] shadow-[0_20px_40px_rgba(230,0,0,0.4)] hover:scale-105 transition-all">
-                SECURE PUBLIC TICKETS
-              </Link>
-              <Link href="/vendor/login" className="nm-card bg-white text-black px-12 py-6 font-black uppercase tracking-widest text-[10px] hover:bg-zinc-200 transition-all">
-                EXHIBITOR REGISTRATION
+           <div className="flex justify-center pt-12">
+              <Link href="/vendor/login" className="nm-card bg-primary text-white px-16 py-6 font-black uppercase tracking-widest text-[11px] shadow-[0_20px_50px_rgba(230,0,0,0.4)] hover:scale-105 transition-all border-none">
+                INITIALIZE EXHIBITOR REGISTRATION
               </Link>
            </div>
         </div>
