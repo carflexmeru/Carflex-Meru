@@ -59,7 +59,7 @@ export default function LoginRoleModal() {
 
         const data = await res.json();
         if (res.ok) {
-          sessionStorage.setItem("vendor_phone", formData.phone || formData.username);
+          sessionStorage.setItem("vendor_phone", data.phone);
           setIsOpen(false);
           router.push(data.onboardingCompleted ? "/vendor/dashboard" : "/vendor/onboarding");
         } else {

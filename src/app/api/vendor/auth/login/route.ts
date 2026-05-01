@@ -45,6 +45,7 @@ export async function POST(request: Request) {
       success: true,
       id: vendor.id,
       name: vendor.name,
+      phone: vendor.phone,
       onboardingCompleted: vendor.onboardingCompleted,
       role: vendor.role
     });
