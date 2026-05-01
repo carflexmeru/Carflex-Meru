@@ -14,6 +14,7 @@ interface Zone {
 }
 
 export default function GateCheckIn() {
+  const router = useRouter();
   const [zones, setZones] = useState<Zone[]>([]);
   const [showSecurityAlert, setShowSecurityAlert] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
