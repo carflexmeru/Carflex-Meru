@@ -96,7 +96,7 @@ model Vehicle {
   status            String    @default("draft") // draft, active, sold, in_garage
   isVerified        Boolean   @default(false)
   isComplete        Boolean   @default(false)
-  images            String?   // JSON string of URLs
+  images            String[]  @default([])
   createdAt         DateTime  @default(now())
   updatedAt         DateTime  @updatedAt
 
