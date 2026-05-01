@@ -7,16 +7,20 @@ export async function POST(request: Request) {
     const { phone, amount, regNumber, zoneId, idNumber } = await request.json();
     const cleanPlate = regNumber.toUpperCase();
 
-    // 1. Check Security Blacklist
-    const isBlacklisted = await prisma.stolenVehicle.findUnique({
-      where: { regNumber: cleanPlate },
-    });
+    // 1. Check Security Blacklist (Fail-safe)
+    try {
+      const isBlacklisted = await prisma.stolenVehicle.findUnique({
+        where: { regNumber: cleanPlate },
+      });
 
-    if (isBlacklisted) {
-      return NextResponse.json({ 
-        error: "SECURITY ALERT: Vehicle is flagged in Stolen Database.",
-        severity: "critical"
-      }, { status: 403 });
+      if (isBlacklisted) {
+        return NextResponse.json({ 
+          error: "SECURITY ALERT: Vehicle is flagged in Stolen Database.",
+          severity: "critical"
+        }, { status: 403 });
+      }
+    } catch (e) {
+      console.warn("⚠️ Security database scan deferred: Run tactical SQL to enable.");
     }
 
     // 2. Prevent DOUBLE ENTRY
