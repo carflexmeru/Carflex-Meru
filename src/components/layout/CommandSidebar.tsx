@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 
-export default function CommandSidebar({ role = "admin" }: { role?: "admin" | "vendor" }) {
+export default function CommandSidebar({ role = "admin" }: { role?: "admin" | "vendor" | "buyer" }) {
   const pathname = usePathname();
   const [expanded, setExpanded] = useState<string | null>(null);
 
@@ -14,11 +14,16 @@ export default function CommandSidebar({ role = "admin" }: { role?: "admin" | "v
     { name: "Events", icon: "event", href: "/admin/events" },
     { name: "Monitor", icon: "monitoring", href: "/admin/monitor" },
     { name: "Audit", icon: "history", href: "/admin/audit" },
+  ] : role === "vendor" ? [
+    { name: "My Showroom", icon: "garage", href: "/vendor/listings" },
+    { name: "Lead Channels", icon: "chat_bubble", href: "/vendor/messages" },
+    { name: "Bazaar Stats", icon: "trending_up", href: "/vendor/dashboard" },
+    { name: "Account Settings", icon: "settings", href: "/vendor/settings" },
   ] : [
-    { name: "My Showroom", icon: "garage", href: "/showroom" },
-    { name: "Active Offers", icon: "handshake", href: "/inbox" },
-    { name: "Bazaar Stats", icon: "trending_up", href: "/dashboard" },
-    { name: "Account Settings", icon: "settings", href: "/dashboard/settings" },
+    { name: "My Dashboard", icon: "dashboard", href: "/buyer" },
+    { name: "Inquiries", icon: "chat", href: "/buyer/messages" },
+    { name: "Liked Assets", icon: "favorite", href: "/buyer/liked" },
+    { name: "Transactions", icon: "receipt_long", href: "/buyer/transactions" },
   ];
 
   return (

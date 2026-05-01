@@ -23,8 +23,10 @@ export default function VehicleProfile() {
   const [loading, setLoading] = useState(true);
   const [showOfferModal, setShowOfferModal] = useState(false);
   const [showShareModal, setShowShareModal] = useState(false);
+  const [showMessageModal, setShowMessageModal] = useState(false);
   const [offerAmount, setOfferAmount] = useState("");
   const [buyerPhone, setBuyerPhone] = useState("");
+  const [inquiryContent, setInquiryContent] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
@@ -56,6 +58,32 @@ export default function VehicleProfile() {
       if (res.ok) {
         setShowOfferModal(false);
         alert("Offer sent! You can now track this in your Bargain Inbox.");
+      }
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleMessage = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    try {
+      const res = await fetch("/api/vendor/messages", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          senderPhone: buyerPhone,
+          vehicleId: id,
+          content: inquiryContent,
+          // receiverId will be handled by the API using vehicleId
+        }),
+      });
+
+      if (res.ok) {
+        setShowMessageModal(false);
+        alert("Transmission sent! Check your Buyer Dashboard for replies.");
       }
     } catch (error) {
       console.error(error);
@@ -155,9 +183,16 @@ export default function VehicleProfile() {
           <div className="flex gap-4 flex-1 md:flex-none">
             <button 
               onClick={() => setShowShareModal(true)}
-              className="px-8 py-5 border-2 border-black font-black text-sm tracking-widest uppercase hover:bg-black hover:text-white transition-all"
+              className="hidden lg:block px-8 py-5 border-2 border-zinc-200 font-black text-[10px] tracking-widest uppercase hover:bg-black hover:text-white transition-all"
             >
-              Share Listing
+              Share
+            </button>
+            <button 
+              onClick={() => setShowMessageModal(true)}
+              className="px-8 py-5 border-2 border-black font-black text-sm tracking-widest uppercase hover:bg-black hover:text-white transition-all flex items-center gap-2"
+            >
+              <span className="material-symbols-outlined text-sm">chat_bubble</span>
+              Message Seller
             </button>
             <button 
               onClick={() => setShowOfferModal(true)}
@@ -215,6 +250,51 @@ export default function VehicleProfile() {
                 className="w-full bg-black text-white py-5 font-black uppercase tracking-widest hover:bg-primary transition-all disabled:opacity-50"
               >
                 {isSubmitting ? "Sending..." : "Submit Proposal"}
+              </button>
+            </div>
+          </form>
+        </div>
+      )}
+      {/* Message Seller Modal */}
+      {showMessageModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setShowMessageModal(false)}></div>
+          <form onSubmit={handleMessage} className="relative bg-white w-full max-w-md rounded-none border-t-[12px] border-black p-10 animate-scale-up shadow-2xl">
+            <div className="mb-8">
+              <h3 className="text-3xl font-black uppercase tracking-tighter">Secure Inquiry</h3>
+              <p className="text-zinc-500 text-xs font-bold uppercase tracking-widest mt-2">Send a direct message to the vendor.</p>
+            </div>
+
+            <div className="space-y-6">
+              <div className="flex flex-col gap-2">
+                <label className="text-[10px] font-black uppercase tracking-widest text-zinc-400">Your Communication Node (Phone)</label>
+                <input
+                  required
+                  type="tel"
+                  placeholder="0712345678"
+                  className="w-full bg-zinc-50 border-2 border-zinc-100 rounded-none px-6 py-4 font-bold outline-none focus:border-black transition-all"
+                  value={buyerPhone}
+                  onChange={(e) => setBuyerPhone(e.target.value)}
+                />
+              </div>
+
+              <div className="flex flex-col gap-2">
+                <label className="text-[10px] font-black uppercase tracking-widest text-zinc-400">Inquiry Content</label>
+                <textarea
+                  required
+                  rows={4}
+                  placeholder="e.g. Is this vehicle available for viewing today?"
+                  className="w-full bg-zinc-50 border-2 border-zinc-100 rounded-none px-6 py-4 font-bold outline-none focus:border-black transition-all resize-none"
+                  value={inquiryContent}
+                  onChange={(e) => setInquiryContent(e.target.value)}
+                ></textarea>
+              </div>
+
+              <button
+                disabled={isSubmitting}
+                className="w-full bg-black text-white py-5 font-black uppercase tracking-widest hover:bg-primary transition-all disabled:opacity-50 shadow-xl"
+              >
+                {isSubmitting ? "TRANSMITTING..." : "SEND TRANSMISSION"}
               </button>
             </div>
           </form>
