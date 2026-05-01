@@ -7,6 +7,8 @@ export default function VendorOnboardingPage() {
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
     name: "",
+    email: "",
+    businessAddress: "",
     username: "",
     password: "",
     confirmPassword: ""
@@ -66,6 +68,32 @@ export default function VendorOnboardingPage() {
            <form onSubmit={handleComplete} className="space-y-8">
               {step === 1 && (
                 <div className="space-y-8 animate-fade-in">
+                   <div className="space-y-3">
+                      <label className="text-zinc-500 text-[9px] font-black uppercase tracking-widest px-2">Official Trade Email</label>
+                      <div className="nm-inset">
+                        <input
+                          type="email"
+                          required
+                          placeholder="e.g. sales@diamondmotors.com"
+                          className="w-full bg-transparent p-6 text-white font-black uppercase text-xl tracking-tighter outline-none placeholder:text-zinc-800 border-none"
+                          value={formData.email}
+                          onChange={(e) => setFormData({...formData, email: e.target.value})}
+                        />
+                      </div>
+                   </div>
+                   <div className="space-y-3">
+                      <label className="text-zinc-500 text-[9px] font-black uppercase tracking-widest px-2">Business Headquarters / Address</label>
+                      <div className="nm-inset">
+                        <input
+                          type="text"
+                          required
+                          placeholder="e.g. 5th Ave, Nairobi, Kenya"
+                          className="w-full bg-transparent p-6 text-white font-black uppercase text-xl tracking-tighter outline-none placeholder:text-zinc-800 border-none"
+                          value={formData.businessAddress}
+                          onChange={(e) => setFormData({...formData, businessAddress: e.target.value})}
+                        />
+                      </div>
+                   </div>
                    <div className="space-y-3">
                       <label className="text-zinc-500 text-[9px] font-black uppercase tracking-widest px-2">Public Trade Name</label>
                       <div className="nm-inset">

@@ -23,10 +23,12 @@ export async function POST(request: Request) {
       where: { phone },
       data: {
         name,
+        email,
+        businessAddress,
         username,
         password,
         onboardingCompleted: true,
-        role: "vendor" // Force role just in case
+        role: "vendor"
       }
     });
 

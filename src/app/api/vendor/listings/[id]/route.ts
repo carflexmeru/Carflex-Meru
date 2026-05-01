@@ -8,7 +8,7 @@ export async function PATCH(
   try {
     const { id } = params;
     const body = await request.json();
-    const { price, description, features, images, status } = body;
+    const { price, description, features, images, ownershipProofUrl, status } = body;
 
     // 1. Update the Vehicle Asset
     const updatedVehicle = await prisma.vehicle.update({
@@ -17,6 +17,7 @@ export async function PATCH(
         price: price ? parseFloat(price) : undefined,
         description,
         features,
+        ownershipProofUrl,
         images,
         status: status || "active", // Promote to active if not specified
         updatedAt: new Date()

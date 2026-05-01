@@ -83,6 +83,29 @@ export default function AssetEditor() {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
         <div className="lg:col-span-2 space-y-8">
+           {/* Forensic Evidence Section */}
+           <div className="nm-card p-10 space-y-8 border-primary/20 border bg-primary/5">
+              <div className="flex items-center gap-4">
+                 <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center">
+                    <span className="material-symbols-outlined text-white">description</span>
+                 </div>
+                 <div>
+                    <h3 className="text-foreground text-xl font-black uppercase tracking-tighter">Proof of Ownership</h3>
+                    <p className="text-zinc-500 text-[9px] font-black uppercase tracking-widest">Mandatory forensic document (Logbook / Certificate)</p>
+                 </div>
+              </div>
+
+              <div className="nm-inset p-8 text-center border-dashed border-2 border-primary/30 group hover:border-primary transition-all">
+                 <span className="material-symbols-outlined text-4xl text-primary mb-4 group-hover:scale-110 transition-transform">cloud_upload</span>
+                 <p className="text-zinc-500 text-[10px] font-black uppercase tracking-widest">
+                   {vehicle.ownershipProofUrl ? "DOCUMENT_CAPTURED_READY_FOR_AUDIT" : "UPLOAD_LOGBOOK_OR_OWNERSHIP_PROOF"}
+                 </p>
+                 <button className="mt-6 nm-card px-8 py-3 bg-white text-black text-[9px] font-black uppercase tracking-widest hover:bg-primary hover:text-white transition-all border-none">
+                    {vehicle.ownershipProofUrl ? "REPLACE DOCUMENT" : "SELECT FILE"}
+                 </button>
+              </div>
+           </div>
+
            {/* Basic Details */}
            <div className="nm-card p-10 space-y-8">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
