@@ -7,14 +7,36 @@ export async function GET(request: Request) {
     const phone = searchParams.get("phone");
 
     if (!phone) {
-      return NextResponse.json({ error: "Missing identity node." }, { status: 400 });
+      return NextResponse.json([], { status: 200 });
     }
 
-    // 1. Fetch bookings linked to vendor's vehicles
+    // NORMALIZE PHONE
+    let normalizedPhone = phone.replace(/\s+/g, "");
+    if (normalizedPhone.startsWith("0")) {
+      normalizedPhone = "+254" + normalizedPhone.substring(1);
+    } else if (!normalizedPhone.startsWith("+") && /^\d+$/.test(normalizedPhone)) {
+      normalizedPhone = "+" + normalizedPhone;
+    }
+
+    // 1. Resolve Profile to ensure correct ownerId link
+    const vendor = await prisma.profile.findFirst({
+      where: {
+        OR: [
+          { phone: normalizedPhone },
+          { username: phone }
+        ]
+      }
+    });
+
+    if (!vendor) {
+      return NextResponse.json([], { status: 200 });
+    }
+
+    // 2. Fetch bookings linked to specific vendor's vehicles
     const transactions = await prisma.booking.findMany({
       where: {
         vehicle: {
-          owner: { phone }
+          ownerId: vendor.id
         }
       },
       include: {
@@ -26,9 +48,9 @@ export async function GET(request: Request) {
       }
     });
 
-    return NextResponse.json(transactions);
+    return NextResponse.json(Array.isArray(transactions) ? transactions : []);
   } catch (error: any) {
     console.error("Vendor transactions fetch error:", error);
-    return NextResponse.json({ error: "FAILED_TO_SYNC_LEDGER" }, { status: 500 });
+    return NextResponse.json([], { status: 200 });
   }
 }
