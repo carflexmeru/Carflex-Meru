@@ -41,6 +41,11 @@ export async function initiateStkPush(phone: string, amount: number, reference: 
     // Format phone to 254...
     const formattedPhone = phone.startsWith("0") ? `254${phone.slice(1)}` : phone;
 
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://carflex-eta.vercel.app";
+    const callbackUrl = `${baseUrl.replace(/\/$/, "")}/api/daraja/callback`;
+    
+    console.log("📡 SENDING CALLBACK URL:", callbackUrl);
+
     const pushRes = await fetch(
       "https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest",
       {
@@ -58,7 +63,7 @@ export async function initiateStkPush(phone: string, amount: number, reference: 
           PartyA: formattedPhone,
           PartyB: shortCode,
           PhoneNumber: formattedPhone,
-          CallBackURL: `${process.env.NEXT_PUBLIC_APP_URL}/api/daraja/callback`,
+          CallBackURL: callbackUrl,
           AccountReference: reference,
           TransactionDesc: `Carflex Bazaar Entry: ${reference}`,
         }),
