@@ -21,11 +21,9 @@ export default function GateCheckIn() {
     plate: "",
     idNumber: "",
     phone: "",
-    zone: "",
-  });
-  const [isLoading, setIsLoading] = useState(false);
   const [status, setStatus] = useState<"idle" | "pushing" | "waiting" | "success" | "error">("idle");
   const [errorMessage, setErrorMessage] = useState("");
+  const [paymentMethod, setPaymentMethod] = useState<"cash" | "mpesa">("mpesa");
 
   useEffect(() => {
     async function fetchZones() {
@@ -52,77 +50,93 @@ export default function GateCheckIn() {
   const handleSubmit = async (e: React.FormEvent) => {
     if (e) e.preventDefault();
     
-    // 0. Robust Validation
     if (!formData.plate || !formData.phone || !formData.zone) {
       setErrorMessage("REQUIRED: PLATE, PHONE, AND ZONE MUST BE DEFINED.");
       return;
     }
 
-    console.log("🚀 INITIATING GATE ENTRY:", formData);
     setIsLoading(true);
-    setStatus("pushing");
     setErrorMessage("");
 
-    try {
-      // 1. Send STK Push
-      const res = await fetch("/api/daraja/stk-push", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          phone: formData.phone,
-          amount: selectedZone?.price || 0,
-          regNumber: formData.plate.toUpperCase(),
-          zoneId: formData.zone,
-          idNumber: formData.idNumber,
-        }),
-      });
+    if (paymentMethod === "cash") {
+      setStatus("pushing");
+      try {
+        const res = await fetch("/api/gate/check-in", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            ...formData,
+            zoneId: formData.zone,
+            paymentMethod: "cash",
+            paymentStatus: "paid"
+          }),
+        });
 
-      const data = await res.json();
-      console.log("📡 API RESPONSE:", data);
-
-      if (!res.ok) {
-        throw new Error(data.error || "STK Push failed");
-      }
-
-      // 2. Simulate waiting for PIN entry
-      setStatus("waiting");
-      
-      // 3. Simulate Callback
-      setTimeout(async () => {
-        try {
-          console.log("🔄 SIMULATING MPESA CALLBACK...");
-          const callbackRes = await fetch("/api/daraja/callback", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              checkoutRequestId: data.checkoutRequestId,
-              regNumber: formData.plate.toUpperCase(),
-              zoneId: formData.zone,
-              phone: formData.phone,
-            }),
-          });
-
-          if (callbackRes.ok) {
-            console.log("✅ ENTRY GRANTED SUCCESSFULLY");
-            setStatus("success");
-            setIsLoading(false);
-          } else {
-            const errData = await callbackRes.json();
-            throw new Error(errData.error || "Callback processing failed");
-          }
-        } catch (callbackError: any) {
-          console.error("❌ CALLBACK ERROR:", callbackError);
-          setErrorMessage(callbackError.message);
-          setStatus("error");
-          setIsLoading(false);
+        if (res.ok) {
+          setStatus("success");
+        } else {
+          const data = await res.json();
+          throw new Error(data.error || "Cash check-in failed");
         }
-      }, 3000);
+      } catch (err: any) {
+        setErrorMessage(err.message);
+        setStatus("error");
+      } finally {
+        setIsLoading(false);
+      }
+    } else {
+      // MPESA FLOW
+      setStatus("pushing");
+      try {
+        const res = await fetch("/api/daraja/stk-push", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            phone: formData.phone,
+            amount: selectedZone?.price || 0,
+            regNumber: formData.plate.toUpperCase(),
+            zoneId: formData.zone,
+            idNumber: formData.idNumber,
+          }),
+        });
 
-    } catch (error: any) {
-      console.error("❌ SUBMISSION ERROR:", error);
-      setErrorMessage(error.message);
-      setStatus("error");
-      setIsLoading(false);
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || "STK Push failed");
+
+        setStatus("waiting");
+        
+        // Simulate Callback for Demo/Testing
+        setTimeout(async () => {
+          try {
+            const callbackRes = await fetch("/api/gate/check-in", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                ...formData,
+                zoneId: formData.zone,
+                paymentMethod: "mpesa",
+                paymentStatus: "paid"
+              }),
+            });
+
+            if (callbackRes.ok) {
+              setStatus("success");
+              setIsLoading(false);
+            } else {
+              throw new Error("Payment verification timed out");
+            }
+          } catch (callbackError: any) {
+            setErrorMessage(callbackError.message);
+            setStatus("error");
+            setIsLoading(false);
+          }
+        }, 3000);
+
+      } catch (error: any) {
+        setErrorMessage(error.message);
+        setStatus("error");
+        setIsLoading(false);
+      }
     }
   };
 
@@ -175,7 +189,11 @@ export default function GateCheckIn() {
   return (
     <AgentLayout
       agentName="Agent 1 (Gate)"
-      primaryAction={status === "pushing" ? "INITIATING UPLINK..." : status === "waiting" ? "WAITING FOR PIN..." : "AUTHORIZE ENTRY"}
+      primaryAction={
+        status === "pushing" ? "INITIATING UPLINK..." : 
+        status === "waiting" ? "WAITING FOR PIN..." : 
+        paymentMethod === "cash" ? "AUTHORIZE ENTRY (CASH)" : "INITIATE M-PESA LINK"
+      }
       onAction={() => handleSubmit({ preventDefault: () => {} } as React.FormEvent)}
     >
       <div className="space-y-16 animate-fade-in max-w-5xl mx-auto py-12 pb-40">
@@ -253,18 +271,44 @@ export default function GateCheckIn() {
                 </div>
                 
                 <div className="flex flex-col gap-3">
-                  <label className="text-zinc-400 text-[10px] font-black uppercase tracking-widest px-2">M-Pesa Link Number</label>
-                  <div className="nm-inset">
-                    <input
-                      required
-                      type="tel"
-                      placeholder="0712345678"
-                      className="w-full bg-transparent p-6 text-white font-bold tracking-[0.4em] focus:text-primary outline-none transition-all placeholder:text-white/5 border-none"
-                      value={formData.phone}
-                      onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                    />
+                  <label className="text-zinc-400 text-[10px] font-black uppercase tracking-widest px-2">Payment Protocol</label>
+                  <div className="flex gap-4 p-2 nm-inset rounded-2xl">
+                    <button
+                      type="button"
+                      onClick={() => setPaymentMethod("mpesa")}
+                      className={`flex-1 py-4 px-6 rounded-xl font-black text-[10px] uppercase tracking-widest transition-all ${
+                        paymentMethod === "mpesa" ? "bg-primary text-white shadow-[0_0_20px_rgba(230,0,0,0.3)]" : "text-zinc-500 hover:text-white"
+                      }`}
+                    >
+                      M-Pesa Push
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setPaymentMethod("cash")}
+                      className={`flex-1 py-4 px-6 rounded-xl font-black text-[10px] uppercase tracking-widest transition-all ${
+                        paymentMethod === "cash" ? "bg-white text-black" : "text-zinc-500 hover:text-white"
+                      }`}
+                    >
+                      Physical Cash
+                    </button>
                   </div>
                 </div>
+
+                {paymentMethod === "mpesa" && (
+                  <div className="flex flex-col gap-3 animate-fade-in">
+                    <label className="text-zinc-400 text-[10px] font-black uppercase tracking-widest px-2">M-Pesa Link Number</label>
+                    <div className="nm-inset">
+                      <input
+                        required
+                        type="tel"
+                        placeholder="0712345678"
+                        className="w-full bg-transparent p-6 text-white font-bold tracking-[0.4em] focus:text-primary outline-none transition-all placeholder:text-white/5 border-none"
+                        value={formData.phone}
+                        onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                      />
+                    </div>
+                  </div>
+                )}
               </div>
 
               {/* DEFER BUTTON */}
