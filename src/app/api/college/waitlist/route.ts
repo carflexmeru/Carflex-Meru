@@ -4,27 +4,26 @@ import { prisma } from "@/lib/prisma";
 export async function POST(request: Request) {
   try {
     const data = await request.json();
-    const { fullName, email, phone, coursePref } = data;
+    const { name, email, phone, coursePref } = data;
 
-    if (!email || !fullName) {
+    if (!email || !name) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
     }
 
-    // Following 4D DNA: Link to profile or create if not exists
-    let user = await prisma.profile.findUnique({ where: { phone } });
-    if (!user) {
-      user = await prisma.profile.create({
-        data: {
-          phone,
-          fullName,
-          role: "student",
-        }
-      });
-    }
+    // 1. Resolve or Create Profile
+    const profile = await prisma.profile.upsert({
+      where: { phone: phone || `COLLEGE-${email}` },
+      update: { name, email },
+      create: {
+        phone: phone || `COLLEGE-${email}`,
+        name,
+        role: "student",
+      }
+    });
 
     const lead = await prisma.collegeLead.create({
       data: {
-        userId: user.id,
+        userId: profile.id,
         coursePref,
       },
     });

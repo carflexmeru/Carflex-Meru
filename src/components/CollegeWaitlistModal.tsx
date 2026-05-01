@@ -71,8 +71,8 @@ export default function CollegeWaitlistModal({ isOpen, onClose }: { isOpen: bool
                 <input
                   type="text"
                   required
-                  value={formData.fullName}
-                  onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
+                  value={formData.name}
+                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   className="w-full bg-transparent px-6 py-4 text-white text-sm font-bold focus:outline-none placeholder:text-white/5 border-none"
                   placeholder="IDENTITY_STRING"
                 />

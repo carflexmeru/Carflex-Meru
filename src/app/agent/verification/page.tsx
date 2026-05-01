@@ -106,7 +106,7 @@ export default function AgentVerification() {
               <h3 className="text-2xl font-black tracking-tighter uppercase mb-4">{v.regNumber}</h3>
               <div className="space-y-1">
                 <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">Vendor</p>
-                <p className="text-sm font-bold">{v.owner?.fullName || "UNKNOWN"}</p>
+                <p className="text-sm font-bold">{v.owner?.name || "UNKNOWN"}</p>
                 <p className="text-xs text-zinc-400 font-mono">{v.owner?.phone}</p>
               </div>
               <div className="mt-6 flex items-center gap-2 text-primary text-[10px] font-black uppercase tracking-widest">

@@ -118,7 +118,7 @@ export default function VehicleProfile() {
                 <span className="material-symbols-outlined text-3xl">person</span>
               </div>
               <div>
-                <p className="font-black uppercase text-lg">{vehicle.owner?.fullName || "Verified Vendor"}</p>
+                <p className="font-black uppercase text-lg">{vehicle.owner?.name || "Verified Vendor"}</p>
                 <p className="text-zinc-500 text-sm font-medium">Bazaar Platinum Member</p>
               </div>
             </div>

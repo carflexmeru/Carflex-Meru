@@ -59,7 +59,7 @@ export default function AuditExplorer() {
                     {new Date(log.createdAt).toISOString().replace('T', ' ').split('.')[0]}
                   </td>
                   <td className="px-8 py-6 font-bold text-black uppercase">
-                    {log.admin?.fullName || "SYSTEM_ROOT"}
+                    {log.admin?.name || "SYSTEM_ROOT"}
                   </td>
                   <td className="px-8 py-6 text-black font-black uppercase tracking-tight">
                     {log.action}

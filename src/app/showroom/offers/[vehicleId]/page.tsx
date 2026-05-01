@@ -9,7 +9,7 @@ interface Offer {
   amount: number;
   status: string;
   createdAt: string;
-  buyer: { phone: string; fullName: string | null } | null;
+  buyer: { phone: string; name: string | null } | null;
   vehicle: { regNumber: string; make: string; model: string } | null;
 }
 
