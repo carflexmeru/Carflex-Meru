@@ -26,7 +26,8 @@ model Profile {
   vehicles     Vehicle[]
   bookings     Booking[]
   offers       Offer[]
-  messages     Message[]
+  sentMessages     Message[] @relation("SentMessages")
+  receivedMessages Message[] @relation("ReceivedMessages")
   transactions Transaction[]
   auditLogs    AuditLog[]
   garageJobs   GarageJob[]
@@ -154,8 +155,12 @@ model Message {
   id        String   @id @default(uuid())
   offerId   String?
   offer     Offer?   @relation(fields: [offerId], references: [id])
+  vehicleId String?
+  vehicle   Vehicle? @relation(fields: [vehicleId], references: [id])
   senderId  String?
-  sender    Profile? @relation(fields: [senderId], references: [id])
+  sender    Profile? @relation("SentMessages", fields: [senderId], references: [id])
+  receiverId String?
+  receiver  Profile? @relation("ReceivedMessages", fields: [receiverId], references: [id])
   content   String
   mediaUrl  String?
   createdAt DateTime @default(now())
