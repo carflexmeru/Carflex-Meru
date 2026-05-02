@@ -52,7 +52,10 @@ export async function GET(request: Request) {
     return NextResponse.json(Array.isArray(rawListings) ? rawListings : []);
   } catch (error: any) {
     console.error("RAW_LISTINGS_API ERROR:", error);
-    return NextResponse.json([], { status: 500 });
+    return NextResponse.json(
+       { error: error.message, stack: error.stack }, 
+       { status: 500 }
+    );
   }
 }
 
