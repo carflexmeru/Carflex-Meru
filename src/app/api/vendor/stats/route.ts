@@ -66,7 +66,7 @@ export async function GET(request: Request) {
     let receivedMessages: any[] = [];
     try {
        receivedMessages = await prisma.message.findMany({
-          where: { receiverId: vendor.id },
+          where: { receiverId: vendor?.id || "NO_ID" },
           take: 5,
           orderBy: { createdAt: "desc" }
        });
