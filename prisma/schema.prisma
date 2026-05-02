@@ -49,6 +49,7 @@ model Favorite {
   createdAt DateTime @default(now())
 
   @@unique([userId, vehicleId])
+  @@map("favorites")
 }
 
 // B. Bazaar & Spatial Operations

@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 export default function VendorListings() {
   const [vehicles, setVehicles] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [syncing, setSyncing] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -25,7 +26,29 @@ export default function VendorListings() {
       }
     };
     fetchListings();
-  }, []);
+  }, [syncing]);
+
+  const handleSyncAssets = async () => {
+    const phone = sessionStorage.getItem("vendor_phone");
+    if (!phone) return;
+    
+    setSyncing(true);
+    try {
+      const res = await fetch("/api/vendor/sync-assets", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ phone }),
+      });
+      if (res.ok) {
+        const result = await res.json();
+        alert(`ASSET SYNC COMPLETE: ${result.assetsMoved || 0} vehicles recovered from shadow profile.`);
+      }
+    } catch (error) {
+      console.error("Sync error:", error);
+    } finally {
+      setSyncing(false);
+    }
+  };
 
   return (
     <div className="space-y-12">
@@ -47,6 +70,18 @@ export default function VendorListings() {
               <p className="text-2xl font-black text-primary">{vehicles.filter(v => v.status === 'draft').length}</p>
            </div>
         </div>
+      </div>
+
+      {/* Asset Recovery Protocol */}
+      <div className="flex justify-end">
+         <button 
+            onClick={handleSyncAssets} 
+            disabled={syncing}
+            className="nm-card px-8 py-4 flex items-center gap-3 text-[10px] font-black uppercase tracking-widest hover:text-primary transition-all disabled:opacity-50"
+         >
+            <span className={`material-symbols-outlined text-sm ${syncing ? 'animate-spin text-primary' : ''}`}>sync</span>
+            {syncing ? 'RUNNING ASSET RECOVERY...' : 'SYNC GATED ASSETS'}
+         </button>
       </div>
 
       {loading ? (
