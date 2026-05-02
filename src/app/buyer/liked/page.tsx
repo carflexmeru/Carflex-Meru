@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import ListingCard from "@/app/components/cards/ListingCard";
+import ListingCard from "@/components/cards/ListingCard";
 
 export default function BuyerLiked() {
   const [likedAssets, setLikedAssets] = useState<any[]>([]);

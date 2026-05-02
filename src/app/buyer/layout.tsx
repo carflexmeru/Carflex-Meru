@@ -1,5 +1,5 @@
-import CommandSidebar from "@/app/components/layout/CommandSidebar";
-import MobileNav from "@/app/components/layout/MobileNav";
+import CommandSidebar from "@/components/layout/CommandSidebar";
+import MobileNav from "@/components/layout/MobileNav";
 
 export default function BuyerLayout({
   children,
