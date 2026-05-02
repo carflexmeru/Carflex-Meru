@@ -12,7 +12,22 @@ export async function POST(req: Request) {
         status: "verified",
         updatedAt: new Date(),
       },
+      include: { owner: true }
     });
+
+    // Generate the Raw Listing for the Vendor Dashboard
+    if (vehicle) {
+       await prisma.rawListing.create({
+          data: {
+             originalRegNum: vehicle.regNumber,
+             ownerPhone: vehicle.owner?.phone || null,
+             ownerIdNumber: vehicle.owner?.idNumber || null,
+             make: vehicle.make,
+             model: vehicle.model,
+             year: vehicle.year
+          }
+       });
+    }
 
     return NextResponse.json({ success: true, vehicle });
   } catch (error: any) {

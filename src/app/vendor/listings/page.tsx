@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 
 export default function VendorListings() {
   const [vehicles, setVehicles] = useState<any[]>([]);
+  const [rawListings, setRawListings] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [syncing, setSyncing] = useState(false);
   const router = useRouter();
@@ -15,10 +16,16 @@ export default function VendorListings() {
       if (!phone) return;
 
       try {
-        const res = await fetch(`/api/vendor/listings?phone=${phone}`);
-        const result = await res.json();
-        // Ensure result is an array before setting state
-        setVehicles(Array.isArray(result) ? result : []);
+        const [resVehicles, resRaw] = await Promise.all([
+           fetch(`/api/vendor/listings?phone=${phone}`),
+           fetch(`/api/vendor/raw-listings?phone=${phone}`)
+        ]);
+        
+        const resultVehicles = await resVehicles.json();
+        const resultRaw = await resRaw.json();
+        
+        setVehicles(Array.isArray(resultVehicles) ? resultVehicles : []);
+        setRawListings(Array.isArray(resultRaw) ? resultRaw : []);
       } catch (err) {
         console.error("Listings fetch error:", err);
       } finally {
@@ -48,6 +55,19 @@ export default function VendorListings() {
     } finally {
       setSyncing(false);
     }
+  };
+
+  const handleConvertRawListing = async (id: string, regNum: string) => {
+     // Mark raw listing as converted
+     await fetch("/api/vendor/raw-listings", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id }),
+     });
+     // Optional: Here you could route to a pre-filled "Create Listing" page
+     // passing the regNum as a query param. For now, we sync to refresh.
+     setSyncing(prev => !prev);
+     alert("Raw listing cleared. Please initialize the asset in your pending sync below.");
   };
 
   return (
@@ -83,6 +103,36 @@ export default function VendorListings() {
             {syncing ? 'RUNNING ASSET RECOVERY...' : 'SYNC GATED ASSETS'}
          </button>
       </div>
+
+      {/* RAW LISTINGS SECTOR */}
+      {rawListings.length > 0 && (
+         <div className="nm-inset p-8 border-2 border-primary/20 space-y-6">
+            <div className="flex items-center gap-4">
+               <span className="material-symbols-outlined text-primary text-3xl animate-pulse">new_releases</span>
+               <div>
+                  <h3 className="text-xl font-black uppercase tracking-widest text-primary">Raw Gate Listings Detected</h3>
+                  <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-500">These vehicles were verified at the gate. Convert them into full listings.</p>
+               </div>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+               {rawListings.map(raw => (
+                  <div key={raw.id} className="nm-card p-6 flex flex-col justify-between h-48 border-none bg-primary/5">
+                     <div>
+                        <p className="text-[10px] font-black text-primary uppercase tracking-widest mb-1">{raw.make || 'Unknown'} {raw.model || 'Asset'}</p>
+                        <h4 className="text-2xl font-black text-foreground uppercase tracking-tighter italic">{raw.originalRegNum}</h4>
+                        <p className="text-[8px] text-zinc-500 uppercase tracking-widest mt-2">Gate Entry: {new Date(raw.gateEntryTime).toLocaleString()}</p>
+                     </div>
+                     <button 
+                        onClick={() => handleConvertRawListing(raw.id, raw.originalRegNum)}
+                        className="w-full py-3 bg-primary text-white font-black text-[10px] uppercase tracking-widest nm-card"
+                     >
+                        CONVERT TO LISTING
+                     </button>
+                  </div>
+               ))}
+            </div>
+         </div>
+      )}
 
       {loading ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">

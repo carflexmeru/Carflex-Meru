@@ -136,6 +136,22 @@ model Vehicle {
   favorites         Favorite[]
 }
 
+model RawListing {
+  id              String   @id @default(uuid())
+  originalRegNum  String
+  ownerPhone      String?
+  ownerIdNumber   String?
+  make            String?
+  model           String?
+  year            Int?
+  gateEntryTime   DateTime @default(now())
+  isConverted     Boolean  @default(false)
+  
+  createdAt       DateTime @default(now())
+  
+  @@map("raw_listings")
+}
+
 model Organization {
   id        String    @id @default(uuid())
   name      String
