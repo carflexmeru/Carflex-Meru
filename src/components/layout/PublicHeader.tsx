@@ -20,14 +20,8 @@ export default function PublicHeader() {
     <header className="fixed top-0 left-0 right-0 z-50 transition-all duration-500 bg-black/90 backdrop-blur-xl border-b border-white/5">
       <nav className="max-w-7xl mx-auto px-8 h-24 flex items-center justify-between">
         {/* Brand Node */}
-        <Link href="/" className="flex items-center gap-3 group">
-          <div className="w-12 h-12 bg-primary flex items-center justify-center rounded-sm shadow-[0_0_30px_rgba(230,0,0,0.3)] group-hover:scale-110 transition-all">
-            <span className="material-symbols-outlined text-white font-black">shield</span>
-          </div>
-          <div className="flex flex-col -space-y-1">
-            <img src="/logo.png" alt="CARFLEX" className="h-8 w-auto object-contain" />
-            <span className="text-[8px] font-bold tracking-[0.4em] text-zinc-500 uppercase">Mission_Control</span>
-          </div>
+        <Link href="/" className="flex items-center">
+          <img src="/logo.png" alt="CARFLEX" className="h-8 w-auto object-contain" />
         </Link>
 
         {/* Strategic Links */}

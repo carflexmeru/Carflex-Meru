@@ -86,9 +86,11 @@ export default function LiveGallery() {
           {vehicles.map((vehicle) => (
             <div key={vehicle.id} className="nm-card group p-4 hover:scale-[1.02] transition-transform duration-500 cursor-pointer">
               <div className="aspect-[16/10] nm-inset relative overflow-hidden rounded-[1.5rem] mb-6">
-                <div className="absolute inset-0 flex items-center justify-center text-zinc-900">
-                  <span className="material-symbols-outlined text-8xl opacity-10">directions_car</span>
-                </div>
+                <img 
+                   src="/event assets/IMG-20260428-WA0002.jpg" 
+                   alt="Carflex Asset" 
+                   className="absolute inset-0 w-full h-full object-cover mix-blend-luminosity opacity-80" 
+                />
                 
                 {/* Status Badges */}
                 <div className="absolute top-6 left-6 z-10 flex gap-2">

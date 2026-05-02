@@ -23,49 +23,7 @@ export default function LandingPage() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // YouTube Segment Loop Logic (3:00 to 4:00)
-  useEffect(() => {
-    // 1. Load the YouTube IFrame API
-    if (!window.YT) {
-      const tag = document.createElement("script");
-      tag.src = "https://www.youtube.com/iframe_api";
-      const firstScriptTag = document.getElementsByTagName("script")[0];
-      firstScriptTag.parentNode?.insertBefore(tag, firstScriptTag);
-    }
-
-    // 2. Initialize Player when API is ready
-    window.onYouTubeIframeAPIReady = () => {
-      playerRef.current = new window.YT.Player("hero-video-frame", {
-        events: {
-          onReady: (event: any) => {
-            event.target.mute();
-            event.target.seekTo(180); // Start at 3 mins
-            event.target.playVideo();
-          },
-          onStateChange: (event: any) => {
-            if (event.data === window.YT.PlayerState.PLAYING) {
-              const checkTime = setInterval(() => {
-                if (playerRef.current && playerRef.current.getCurrentTime) {
-                  const currentTime = playerRef.current.getCurrentTime();
-                  if (currentTime >= 240) { // Loop at 4 mins
-                    playerRef.current.seekTo(180);
-                  }
-                }
-              }, 500);
-              
-              // Clean up interval if player stops
-              return () => clearInterval(checkTime);
-            }
-          },
-        },
-      });
-    };
-
-    // If YT is already loaded, manually trigger the ready function
-    if (window.YT && window.YT.Player) {
-      window.onYouTubeIframeAPIReady();
-    }
-  }, []);
+  // Native Video Loop handled via HTML5 Video attributes. No YouTube API needed.
 
   return (
     <div className="min-h-screen bg-[#050505] text-white selection:bg-primary selection:text-white overflow-x-hidden">
@@ -79,10 +37,18 @@ export default function LandingPage() {
       {/* Hero Section */}
       <section className="relative h-screen flex flex-col items-center justify-center overflow-hidden bg-black">
         
-        {/* FULLSCREEN VIDEO BACKGROUND */}
+        {/* FULLSCREEN NATIVE VIDEO BACKGROUND */}
         <div className="absolute inset-0 z-10 pointer-events-none overflow-hidden select-none">
-           <div id="hero-video-frame" className="w-[120vw] h-[120vh] absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 scale-125 object-cover"></div>
-           <div className="absolute inset-0 bg-black/20"></div>
+           <video 
+              autoPlay 
+              loop 
+              muted 
+              playsInline 
+              className="w-[120vw] h-[120vh] absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 scale-125 object-cover"
+           >
+              <source src="/event assets/VID-20260429-WA0000.mp4" type="video/mp4" />
+           </video>
+           <div className="absolute inset-0 bg-black/40"></div>
         </div>
 
         {/* INVERTED MASK OVERLAY */}
@@ -225,8 +191,12 @@ export default function LandingPage() {
             </button>
           </div>
           <div className="relative">
-             <div className="aspect-square nm-inset flex items-center justify-center">
-                <span className="material-symbols-outlined text-[120px] md:text-[200px] opacity-10 animate-pulse">school</span>
+             <div className="aspect-square nm-inset overflow-hidden rounded-[2.5rem]">
+                <img 
+                  src="/event assets/IMG-20260428-WA0003.jpg" 
+                  alt="Carflex College Training" 
+                  className="w-full h-full object-cover hover:scale-110 transition-transform duration-1000 grayscale opacity-80 mix-blend-luminosity" 
+                />
              </div>
              <div className="absolute -top-10 -right-10 w-40 h-40 bg-primary/20 blur-3xl rounded-full"></div>
           </div>
