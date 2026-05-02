@@ -16,13 +16,19 @@ export default function VendorListings() {
       if (!phone) return;
 
       try {
-        const [resVehicles, resRaw] = await Promise.all([
-           fetch(`/api/vendor/listings?phone=${phone}`),
-           fetch(`/api/vendor/raw-listings?phone=${phone}`)
-        ]);
+        const resVehicles = await fetch(`/api/vendor/listings?phone=${phone}`).catch(() => null);
+        const resRaw = await fetch(`/api/vendor/raw-listings?phone=${phone}`).catch(() => null);
         
-        const resultVehicles = await resVehicles.json();
-        const resultRaw = await resRaw.json();
+        let resultVehicles = [];
+        let resultRaw = [];
+
+        if (resVehicles && resVehicles.ok) {
+           try { resultVehicles = await resVehicles.json(); } catch(e) {}
+        }
+        
+        if (resRaw && resRaw.ok) {
+           try { resultRaw = await resRaw.json(); } catch(e) {}
+        }
         
         setVehicles(Array.isArray(resultVehicles) ? resultVehicles : []);
         setRawListings(Array.isArray(resultRaw) ? resultRaw : []);
