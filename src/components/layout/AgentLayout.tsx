@@ -23,7 +23,7 @@ export default function AgentLayout({ children, agentName, primaryAction, onActi
       {/* Top Header */}
       <header className="px-8 py-6 flex justify-between items-center z-20 relative">
         <div className="nm-inset flex items-center gap-4 px-6 py-3">
-           <img src="/logo.png" alt="CARFLEX" className="w-8 h-auto object-contain" />
+           <img src="/logo.png" alt="CARFLEX" className="w-14 h-auto object-contain" />
            <div className="h-4 w-px bg-zinc-800"></div>
            <span className="text-[10px] font-black uppercase tracking-widest text-zinc-400">{agentName}</span>
         </div>

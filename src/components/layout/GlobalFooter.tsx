@@ -41,7 +41,7 @@ export default function GlobalFooter() {
         {/* Brand & Newsletter */}
         <div className="md:col-span-2 space-y-12">
           <div className="flex items-center gap-4">
-             <img src="/logo.png" alt="CARFLEX" className="w-12 h-auto object-contain" />
+             <img src="/logo.png" alt="CARFLEX" className="w-20 h-auto object-contain" />
              <h2 className="text-4xl font-black uppercase tracking-tighter">Growth <span className="text-primary">Engine.</span></h2>
           </div>
           <p className="text-zinc-500 font-bold max-w-sm">Capture the next bazaar. Subscribe to the Carflex DNA newsletter for live stock alerts and price drops.</p>

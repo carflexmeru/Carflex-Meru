@@ -21,7 +21,7 @@ export default function PublicHeader() {
       <nav className="max-w-7xl mx-auto px-8 h-24 flex items-center justify-between">
         {/* Brand Node */}
         <Link href="/" className="flex items-center">
-          <img src="/logo.png" alt="CARFLEX" className="h-8 w-auto object-contain" />
+          <img src="/logo.png" alt="CARFLEX" className="h-16 w-auto object-contain" />
         </Link>
 
         {/* Strategic Links */}
