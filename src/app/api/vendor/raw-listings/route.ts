@@ -69,7 +69,17 @@ export async function POST(request: Request) {
       data: { isConverted: true }
     });
 
-    return NextResponse.json({ success: true, updated });
+    // Find the actual vehicle associated with this raw listing
+    const vehicle = await prisma.vehicle.findFirst({
+       where: { regNumber: updated.originalRegNum },
+       orderBy: { createdAt: "desc" }
+    });
+
+    return NextResponse.json({ 
+       success: true, 
+       updated,
+       vehicleId: vehicle?.id || null
+    });
   } catch (error: any) {
     console.error("CONVERT_ERROR:", error);
     return NextResponse.json({ error: error.message }, { status: 500 });

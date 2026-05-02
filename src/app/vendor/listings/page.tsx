@@ -64,16 +64,31 @@ export default function VendorListings() {
   };
 
   const handleConvertRawListing = async (id: string, regNum: string) => {
-     // Mark raw listing as converted
-     await fetch("/api/vendor/raw-listings", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id }),
-     });
-     // Optional: Here you could route to a pre-filled "Create Listing" page
-     // passing the regNum as a query param. For now, we sync to refresh.
-     setSyncing(prev => !prev);
-     alert("Raw listing cleared. Please initialize the asset in your pending sync below.");
+     setSyncing(true); // Temporarily trigger loading state
+     try {
+        // Mark raw listing as converted and get vehicleId
+        const res = await fetch("/api/vendor/raw-listings", {
+           method: "POST",
+           headers: { "Content-Type": "application/json" },
+           body: JSON.stringify({ id }),
+        });
+        
+        if (res.ok) {
+           const data = await res.json();
+           if (data.vehicleId) {
+              // Instantly route to the initialization page for this vehicle!
+              router.push(`/vendor/listings/${data.vehicleId}`);
+           } else {
+              setSyncing(false);
+              alert("Asset verified, please look for it in the pending list below.");
+           }
+        } else {
+           setSyncing(false);
+        }
+     } catch (err) {
+        setSyncing(false);
+        console.error(err);
+     }
   };
 
   return (
