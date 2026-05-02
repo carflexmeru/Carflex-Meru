@@ -18,24 +18,37 @@ export async function GET(request: Request) {
       normalizedPhone = "+" + normalizedPhone;
     }
 
-    // 1. Fetch Core Profile with Resilient Includes
+    // 1. Fetch Core Profile
     const vendor = await prisma.profile.findFirst({
       where: {
         OR: [
           { phone: normalizedPhone },
           { username: phone }
         ]
-      },
-      include: {
-        vehicles: {
-          include: { views: true }
-        },
-        bookings: true,
       }
     });
 
-    // 2. BASELINE RESPONSE: If vendor not found, return empty stats instead of 404
-    if (!vendor) {
+    const shadowPhone = normalizedPhone.replace("+254", "0");
+
+    // 2. OMNI-SEARCH PROTOCOL: Retrieve all vehicles tied to ANY matching profile
+    const vehicles = await prisma.vehicle.findMany({
+       where: {
+         owner: {
+           OR: [
+             { id: vendor?.id || "N/A" },
+             { phone: normalizedPhone },
+             { phone: shadowPhone },
+             { phone: phone },
+             { username: phone },
+             { idNumber: phone }
+           ]
+         }
+       },
+       include: { views: true }
+    });
+
+    // 3. BASELINE RESPONSE: If no assets and no profile, return empty
+    if (!vendor && vehicles.length === 0) {
       return NextResponse.json({
         analytics: {
           totalAssets: 0,
@@ -62,14 +75,14 @@ export async function GET(request: Request) {
     }
 
     // 4. Calculate Analytics
-    const totalAssets = vendor.vehicles.length;
-    const activeListings = vendor.vehicles.filter(v => v.status === "active").length;
-    const totalViews = vendor.vehicles.reduce((sum, v) => sum + (v.views?.length || 0), 0);
-    const totalValue = vendor.vehicles.reduce((sum, v) => sum + (v.price || 0), 0);
+    const totalAssets = vehicles.length;
+    const activeListings = vehicles.filter((v: any) => v.status === "active").length;
+    const totalViews = vehicles.reduce((sum: number, v: any) => sum + (v.views?.length || 0), 0);
+    const totalValue = vehicles.reduce((sum: number, v: any) => sum + (v.price || 0), 0);
 
     // 5. Recent History (Combined logs)
     const recentActivity = [
-      ...vendor.vehicles.slice(0, 3).map(v => ({
+      ...vehicles.slice(0, 3).map((v: any) => ({
         type: "ASSET_UPDATE",
         message: `${v.make} ${v.model} (${v.regNumber}) status changed to ${v.status}`,
         time: v.updatedAt
@@ -89,7 +102,7 @@ export async function GET(request: Request) {
         totalValue
       },
       recentActivity,
-      vendorName: vendor.name || vendor.username
+      vendorName: vendor?.name || vendor?.username || "Authorized Vendor"
     });
 
   } catch (error: any) {

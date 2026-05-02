@@ -38,10 +38,21 @@ export async function GET(request: Request) {
 
     console.log(`[LISTINGS_API] SUCCESS: Profile resolved. Name: ${vendor.name}, ID: ${vendor.id}`);
 
-    // 2. Fetch Vehicles with Direct ID link
+    // 2. OMNI-SEARCH PROTOCOL: Find vehicles owned by ANY profile matching these identifiers
+    const shadowPhone = normalizedPhone.replace("+254", "0");
+    
     const vehicles = await prisma.vehicle.findMany({
       where: {
-        ownerId: vendor.id
+        owner: {
+          OR: [
+            { id: vendor.id }, // The exact resolved profile
+            { phone: normalizedPhone }, // The permanent format
+            { phone: shadowPhone }, // The gate format
+            { phone: phone }, // The raw input
+            { username: phone }, // The login handle
+            { idNumber: phone } // The National ID (if used instead of phone)
+          ]
+        }
       },
       include: {
         zone: true,
