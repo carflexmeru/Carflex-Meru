@@ -138,16 +138,16 @@ model Vehicle {
 
 model RawListing {
   id              String   @id @default(uuid())
-  originalRegNum  String
-  ownerPhone      String?
-  ownerIdNumber   String?
+  originalRegNum  String   @map("original_reg_num")
+  ownerPhone      String?  @map("owner_phone")
+  ownerIdNumber   String?  @map("owner_id_number")
   make            String?
   model           String?
   year            Int?
-  gateEntryTime   DateTime @default(now())
-  isConverted     Boolean  @default(false)
+  gateEntryTime   DateTime @default(now()) @map("gate_entry_time")
+  isConverted     Boolean  @default(false) @map("is_converted")
   
-  createdAt       DateTime @default(now())
+  createdAt       DateTime @default(now()) @map("created_at")
   
   @@map("raw_listings")
 }
