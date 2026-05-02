@@ -14,9 +14,12 @@ export async function GET(request: Request) {
     let normalizedPhone = phone.replace(/\s+/g, "");
     if (normalizedPhone.startsWith("0")) {
       normalizedPhone = "+254" + normalizedPhone.substring(1);
-    } else if (!normalizedPhone.startsWith("+")) {
+    } else if (!normalizedPhone.startsWith("+") && /^\d+$/.test(normalizedPhone)) {
       normalizedPhone = "+" + normalizedPhone;
     }
+
+    console.log(`[LISTINGS_API] Request received for raw phone: ${phone}`);
+    console.log(`[LISTINGS_API] Normalized phone format: ${normalizedPhone}`);
 
     // 1. Resolve Profile First
     const vendor = await prisma.profile.findFirst({
@@ -29,8 +32,11 @@ export async function GET(request: Request) {
     });
 
     if (!vendor) {
+       console.log(`[LISTINGS_API] FAILURE: No profile found for ${normalizedPhone} or username ${phone}. Returning empty array.`);
        return NextResponse.json([], { status: 200 }); // Return empty array if no vendor
     }
+
+    console.log(`[LISTINGS_API] SUCCESS: Profile resolved. Name: ${vendor.name}, ID: ${vendor.id}`);
 
     // 2. Fetch Vehicles with Direct ID link
     const vehicles = await prisma.vehicle.findMany({
@@ -46,9 +52,18 @@ export async function GET(request: Request) {
       }
     });
 
+    console.log(`[LISTINGS_API] ASSET SCAN COMPLETE: Found ${vehicles?.length || 0} vehicles linked to ownerId ${vendor.id}.`);
+    
+    // Log the statuses to help debug if they are "unlisted" or draft
+    if (vehicles && vehicles.length > 0) {
+       vehicles.forEach(v => {
+          console.log(`   -> Asset [${v.regNumber}]: Status = ${v.status}, Zone = ${v.zone?.name || 'Unassigned'}`);
+       });
+    }
+
     return NextResponse.json(Array.isArray(vehicles) ? vehicles : []);
   } catch (error: any) {
-    console.error("Vendor listings fetch error:", error);
+    console.error("[LISTINGS_API] CRITICAL FETCH ERROR:", error);
     // CRITICAL: Always return an array to prevent frontend crashes
     return NextResponse.json([], { status: 200 }); 
   }
