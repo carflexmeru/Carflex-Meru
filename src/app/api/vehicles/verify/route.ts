@@ -38,8 +38,24 @@ export async function POST(request: Request) {
       data: {
         isVerified: true,
         status: status || "active"
-      }
+      },
+      include: { owner: true }
     });
+
+    // GENERATE RAW LISTING FOR VENDOR DASHBOARD
+    if (updatedVehicle) {
+       await prisma.rawListing.create({
+          data: {
+             originalRegNum: updatedVehicle.regNumber,
+             ownerPhone: updatedVehicle.owner?.phone || null,
+             ownerIdNumber: updatedVehicle.owner?.idNumber || null,
+             make: updatedVehicle.make,
+             model: updatedVehicle.model,
+             year: updatedVehicle.year
+          }
+       });
+    }
+
 
     // RECORD TO ACTION REGISTRY
     await prisma.actionLog.create({
