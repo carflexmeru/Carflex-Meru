@@ -38,20 +38,28 @@ export async function GET(request: Request) {
 
     console.log(`[LISTINGS_API] SUCCESS: Profile resolved. Name: ${vendor.name}, ID: ${vendor.id}`);
 
-    // 2. OMNI-SEARCH PROTOCOL: Find vehicles owned by ANY profile matching these identifiers
+    // 2. ULTIMATE OMNI-SEARCH PROTOCOL: Cast a net using ALL immutable identifiers
     const shadowPhone = normalizedPhone.replace("+254", "0");
     
+    // Build an array of highly-reliable query parameters
+    const searchMatrix: any[] = [
+      { id: vendor.id }, 
+      { phone: normalizedPhone }, 
+      { phone: shadowPhone }, 
+      { phone: phone }, 
+      { username: phone }, 
+      { idNumber: phone } 
+    ];
+
+    // If the resolved profile has these immutable fields, add them to the matrix!
+    if (vendor.email) searchMatrix.push({ email: vendor.email });
+    if (vendor.idNumber) searchMatrix.push({ idNumber: vendor.idNumber });
+    if (vendor.username) searchMatrix.push({ username: vendor.username });
+
     const vehicles = await prisma.vehicle.findMany({
       where: {
         owner: {
-          OR: [
-            { id: vendor.id }, // The exact resolved profile
-            { phone: normalizedPhone }, // The permanent format
-            { phone: shadowPhone }, // The gate format
-            { phone: phone }, // The raw input
-            { username: phone }, // The login handle
-            { idNumber: phone } // The National ID (if used instead of phone)
-          ]
+          OR: searchMatrix
         }
       },
       include: {
