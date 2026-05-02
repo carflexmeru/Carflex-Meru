@@ -19,7 +19,7 @@ export default function SupportLayout({ children }: { children: React.ReactNode 
       {/* Support Header */}
       <nav className="bg-[#0A0A0A] text-white px-12 py-8 flex flex-col md:flex-row justify-between items-center border-b border-white/5">
         <div className="flex items-center gap-2 mb-6 md:mb-0">
-          <div className="w-8 h-8 bg-primary flex items-center justify-center font-black italic">CF</div>
+          <img src="/logo.png" alt="CARFLEX" className="w-8 h-auto object-contain" />
           <span className="text-xl font-black uppercase tracking-tighter">Support <span className="text-primary italic">Pillar</span></span>
         </div>
         <div className="flex gap-8 overflow-x-auto w-full md:w-auto pb-4 md:pb-0 no-scrollbar">

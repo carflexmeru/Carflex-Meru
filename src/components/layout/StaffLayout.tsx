@@ -103,8 +103,8 @@ export default function StaffLayout({ children }: StaffLayoutProps) {
         }`}
       >
         <div className="mb-12">
-          <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center shadow-[0_0_20px_var(--primary-glow)]">
-            <span className="material-symbols-outlined text-white text-xl">dataset</span>
+          <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center">
+            <img src="/logo.png" alt="CARFLEX" className="w-6 h-auto object-contain" />
           </div>
         </div>
 
@@ -163,8 +163,8 @@ export default function StaffLayout({ children }: StaffLayoutProps) {
       {/* Mobile Command Header */}
       <header className="md:hidden fixed top-0 left-0 w-full z-40 bg-[var(--sidebar)] border-b border-[var(--glass-border)] p-4 flex justify-between items-center">
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-            <span className="material-symbols-outlined text-white text-lg">dataset</span>
+          <div className="w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center">
+            <img src="/logo.png" alt="CARFLEX" className="w-5 h-auto object-contain" />
           </div>
           <span className="font-black uppercase tracking-tighter text-sm">STAFF <span className="text-primary italic">TERMINAL</span></span>
         </div>

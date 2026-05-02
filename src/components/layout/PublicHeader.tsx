@@ -25,7 +25,7 @@ export default function PublicHeader() {
             <span className="material-symbols-outlined text-white font-black">shield</span>
           </div>
           <div className="flex flex-col -space-y-1">
-            <span className="text-2xl font-black tracking-tighter text-white uppercase italic">CARFLEX</span>
+            <img src="/logo.png" alt="CARFLEX" className="h-8 w-auto object-contain" />
             <span className="text-[8px] font-bold tracking-[0.4em] text-zinc-500 uppercase">Mission_Control</span>
           </div>
         </Link>

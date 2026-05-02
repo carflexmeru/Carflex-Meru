@@ -30,7 +30,7 @@ export default function CommandSidebar({ role = "admin" }: { role?: "admin" | "v
     <aside className="hidden md:flex flex-col w-80 h-screen sticky top-0 bg-[#0A0A0A] border-r border-white/5 text-white">
       <div className="p-12">
         <Link href="/" className="flex items-center gap-3 mb-20">
-          <div className="w-10 h-10 bg-primary flex items-center justify-center font-black italic">CF</div>
+          <img src="/logo.png" alt="CARFLEX" className="w-10 h-auto object-contain" />
           <span className="text-xl font-black uppercase tracking-tighter">Command <span className="text-primary italic">HQ.</span></span>
         </Link>
 
