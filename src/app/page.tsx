@@ -56,12 +56,16 @@ export default function LandingPage() {
             loop
             muted
             playsInline
-            preload="metadata"
+            preload="auto"
+            poster="/assets/hero_fallback.png"
             onError={(e) => console.error("Video error:", e)}
-            className="w-[120vw] h-[120vh] absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 scale-125 object-cover"
+            className="w-[110vw] h-[110vh] absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 scale-110 object-cover transition-opacity duration-1000"
             style={{
               WebkitBackfaceVisibility: 'hidden',
-              backfaceVisibility: 'hidden'
+              backfaceVisibility: 'hidden',
+              backgroundImage: 'url(/assets/hero_fallback.png)',
+              backgroundSize: 'cover',
+              backgroundPosition: 'center'
             }}
           >
             <source src="/assets/VID-20260429-WA0000.mp4" type="video/mp4" />
