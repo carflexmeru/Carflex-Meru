@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+import { supabase } from "@/lib/supabase";
 
 export async function GET(
   request: Request,
@@ -10,13 +10,15 @@ export async function GET(
     
     console.log("Fetching ticket:", ticketId);
     
-    const ticket = await prisma.registrationTicket.findUnique({
-      where: { ticketId }
-    });
+    const { data: ticket, error } = await supabase
+      .from("registration_tickets")
+      .select("*")
+      .eq("ticket_id", ticketId)
+      .single();
 
     console.log("Ticket found:", ticket ? "yes" : "no");
 
-    if (!ticket) {
+    if (error || !ticket) {
       console.log("Ticket not found for ID:", ticketId);
       return NextResponse.json({ error: "Ticket not found" }, { status: 404 });
     }
@@ -159,16 +161,16 @@ export async function GET(
 
           <div class="ticket-body">
             <div class="qr-section">
-              <img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(ticket.qrData)}" alt="QR Code">
+              <img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(ticket.qr_data)}" alt="QR Code">
               <p style="font-size: 10px; margin-top: 15px; text-transform: uppercase; color: #666;">Scan for immediate verification</p>
             </div>
 
             <div class="details">
-              <div class="ticket-id-badge">${ticket.ticketId}</div>
+              <div class="ticket-id-badge">${ticket.ticket_id}</div>
               
               <div class="detail-row">
                 <span class="detail-label">Registration:</span>
-                <span class="detail-value">${ticket.regNumber}</span>
+                <span class="detail-value">${ticket.reg_number}</span>
               </div>
               <div class="detail-row">
                 <span class="detail-label">Vehicle:</span>
@@ -176,23 +178,23 @@ export async function GET(
               </div>
               <div class="detail-row">
                 <span class="detail-label">Owner Name:</span>
-                <span class="detail-value">${ticket.ownerName}</span>
+                <span class="detail-value">${ticket.owner_name}</span>
               </div>
               <div class="detail-row">
                 <span class="detail-label">ID Number:</span>
-                <span class="detail-value">${ticket.ownerIdNumber || "N/A"}</span>
+                <span class="detail-value">${ticket.owner_id_number || "N/A"}</span>
               </div>
               <div class="detail-row">
                 <span class="detail-label">Phone:</span>
-                <span class="detail-value">${ticket.ownerPhone}</span>
+                <span class="detail-value">${ticket.owner_phone}</span>
               </div>
               <div class="detail-row">
                 <span class="detail-label">Market Zone:</span>
-                <span class="detail-value" style="color: #E60000;">${ticket.zoneName}</span>
+                <span class="detail-value" style="color: #E60000;">${ticket.zone_name}</span>
               </div>
               <div class="detail-row" style="background: rgba(230, 0, 0, 0.05); margin: 0 -12px; padding: 12px 12px; font-size: 18px; font-weight: 900;">
                 <span class="detail-label">Amount Paid:</span>
-                <span class="detail-value" style="color: #E60000; font-size: 20px;">KSH ${(ticket.amountPaid || 0).toLocaleString()}</span>
+                <span class="detail-value" style="color: #E60000; font-size: 20px;">KSH ${(ticket.amount_paid || 0).toLocaleString()}</span>
               </div>
             </div>
           </div>
@@ -200,7 +202,7 @@ export async function GET(
           <div class="footer">
             <p>Valid for Single Entry • Non-Transferable • Carflex Ground Operations</p>
             <div class="timestamp">
-              Generated: ${new Date(ticket.createdAt).toLocaleString()}
+              Generated: ${new Date(ticket.created_at).toLocaleString()}
             </div>
           </div>
         </div>
