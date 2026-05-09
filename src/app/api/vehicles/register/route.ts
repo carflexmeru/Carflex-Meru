@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
+import { prisma } from "@/lib/prisma";
 
 export async function POST(req: Request) {
   try {
@@ -37,12 +38,12 @@ export async function POST(req: Request) {
       );
     }
 
-    // Check if vehicle already exists
-    const { data: existingVehicle } = await supabase
-      .from("vehicles")
-      .select("id")
-      .eq("reg_number", regNumber)
-      .single();
+    // Check if vehicle already exists in Prisma
+    const existingVehicle = await prisma.vehicle.findFirst({
+      where: {
+        regNumber: regNumber,
+      },
+    });
 
     if (existingVehicle) {
       return NextResponse.json(
@@ -51,8 +52,24 @@ export async function POST(req: Request) {
       );
     }
 
-    // Create vehicle
-    const { data: vehicle, error: vehicleError } = await supabase
+    // Create vehicle in Prisma (PostgreSQL)
+    const vehicle = await prisma.vehicle.create({
+      data: {
+        regNumber,
+        make,
+        model,
+        year: year ? parseInt(year) : null,
+        price: price ? parseFloat(price) : null,
+        eventId,
+        zoneId,
+        status: "active",
+        isVerified: true,
+        ownerId: user.id,
+      },
+    });
+
+    // Also save to Supabase for backup
+    const { data: supabaseVehicle } = await supabase
       .from("vehicles")
       .insert({
         owner_id: user.id,
@@ -70,29 +87,41 @@ export async function POST(req: Request) {
       .select()
       .single();
 
-    if (vehicleError) {
-      return NextResponse.json(
-        { error: vehicleError.message },
-        { status: 400 }
-      );
-    }
-
     // Get event details
-    const { data: event } = await supabase
-      .from("events")
-      .select("*")
-      .eq("id", eventId)
-      .single();
+    const event = await prisma.event.findUnique({
+      where: { id: eventId },
+    });
 
     // Generate ticket ID
     const ticketId = `CFX-${regNumber.replace(/\s/g, "")}-${Date.now()}`;
 
-    // Create registration ticket with event and time tracking
-    const { data: ticket, error: ticketError } = await supabase
+    // Create registration ticket in Prisma
+    const ticket = await prisma.registrationTicket.create({
+      data: {
+        ticketId,
+        vehicleId: vehicle.id,
+        eventId,
+        regNumber,
+        make,
+        model,
+        year: year ? parseInt(year) : null,
+        ownerName,
+        ownerPhone,
+        ownerIdNumber,
+        amountPaid: amountPaid ? parseFloat(amountPaid) : null,
+        zoneName,
+        status: "active",
+        issuedAt: new Date(),
+        expiresAt: event?.endDate || new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+      },
+    });
+
+    // Also save ticket to Supabase for backup
+    await supabase
       .from("registration_tickets")
       .insert({
         ticket_id: ticketId,
-        vehicle_id: vehicle.id,
+        vehicle_id: supabaseVehicle?.id,
         event_id: eventId,
         reg_number: regNumber,
         make,
@@ -105,7 +134,7 @@ export async function POST(req: Request) {
         zone_name: zoneName,
         status: "active",
         issued_at: new Date().toISOString(),
-        expires_at: event?.end_date || new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
+        expires_at: event?.endDate?.toISOString() || new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
         qr_data: {
           vehicleId: vehicle.id,
           regNumber,
@@ -114,16 +143,7 @@ export async function POST(req: Request) {
           eventId,
           issuedAt: new Date().toISOString(),
         },
-      })
-      .select()
-      .single();
-
-    if (ticketError) {
-      return NextResponse.json(
-        { error: ticketError.message },
-        { status: 400 }
-      );
-    }
+      });
 
     return NextResponse.json({
       success: true,
@@ -134,7 +154,7 @@ export async function POST(req: Request) {
   } catch (error) {
     console.error("Registration error:", error);
     return NextResponse.json(
-      { error: "Server error" },
+      { error: "Server error", details: error instanceof Error ? error.message : "Unknown error" },
       { status: 500 }
     );
   }
