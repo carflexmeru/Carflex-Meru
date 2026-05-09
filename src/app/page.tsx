@@ -58,8 +58,8 @@ export default function LandingPage() {
             playsInline
             className="w-[120vw] h-[120vh] absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 scale-125 object-cover"
           >
-            <source src="/hero_video.mp4" type="video/mp4" />
             <source src="/event assets/VID-20260429-WA0000.mp4" type="video/mp4" />
+            <source src="/event assets/VID-20260428-WA0004.mp4" type="video/mp4" />
           </video>
           <div
             className="absolute inset-0"
