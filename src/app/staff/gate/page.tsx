@@ -48,6 +48,8 @@ export default function GateDashboard() {
       const pendingData = await pendingRes.json();
       if (Array.isArray(pendingData)) {
         setPending(pendingData);
+      } else {
+        setPending([]);
       }
 
       // Fetch approved vehicles
@@ -55,14 +57,20 @@ export default function GateDashboard() {
       const approvedData = await approvedRes.json();
       if (Array.isArray(approvedData)) {
         setApproved(approvedData);
+      } else {
+        setApproved([]);
       }
 
       const manifestRes = await fetch(`/api/gate/manifest?status=active${qs}`);
       const manifestData = await manifestRes.json();
       if (Array.isArray(manifestData)) {
-        setRecentTickets(manifestData.slice(0, 6));
-        if (pendingData.length === 0) {
-          setPending(manifestData);
+        const normalized = manifestData.slice(0, 6);
+        setRecentTickets(normalized);
+        if ((Array.isArray(pendingData) ? pendingData : []).length === 0) {
+          setPending(normalized);
+        }
+        if ((Array.isArray(approvedData) ? approvedData : []).length === 0) {
+          setApproved(normalized);
         }
       } else {
         setRecentTickets([]);
