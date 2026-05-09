@@ -102,10 +102,9 @@ export default function VendorLoginPage() {
                   type="tel"
                   required
                   placeholder="0712345678"
-                  className="w-full bg-transparent p-6 font-black uppercase text-xl tracking-tighter outline-none border-none"
+                  className="w-full bg-transparent p-6 font-black uppercase text-xl tracking-tighter outline-none border-none placeholder:text-zinc-500"
                   style={{
-                    color: isDark ? 'white' : '#000000',
-                    placeholderColor: isDark ? 'rgba(0, 0, 0, 0.5)' : 'rgba(0, 0, 0, 0.4)'
+                    color: isDark ? 'white' : '#000000'
                   }}
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
@@ -125,10 +124,9 @@ export default function VendorLoginPage() {
                   type="password"
                   required
                   placeholder="ID_NUMBER_REQUIRED"
-                  className="w-full bg-transparent p-6 font-black uppercase text-xl tracking-[0.3em] outline-none border-none"
+                  className="w-full bg-transparent p-6 font-black uppercase text-xl tracking-[0.3em] outline-none border-none placeholder:text-zinc-500"
                   style={{
-                    color: isDark ? 'white' : '#000000',
-                    placeholderColor: isDark ? 'rgba(0, 0, 0, 0.5)' : 'rgba(0, 0, 0, 0.4)'
+                    color: isDark ? 'white' : '#000000'
                   }}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
