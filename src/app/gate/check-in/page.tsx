@@ -167,8 +167,12 @@ export default function GateCheckIn() {
 
         if (res.ok) {
           const result = await res.json();
-          // Redirect directly to the standalone ticket page
-          router.push(`/gate/ticket/${result.data.ticketId}`);
+          if (result.data?.ticketId) {
+            router.push(`/gate/ticket/${result.data.ticketId}`);
+          } else {
+            setErrorMessage(result.warning || "SUBMISSION SUCCESSFUL BUT TICKET GENERATION FAILED. CHECK DATABASE SCHEMA.");
+            setStatus("error");
+          }
         } else {
           const data = await res.json();
           throw new Error(data.error || "Check-in failed");
@@ -216,8 +220,12 @@ export default function GateCheckIn() {
       const data = await res.json();
       
       if (data.success) {
-        // Direct redirect to the standalone ticket page
-        router.push(`/gate/ticket/${data.data.ticketId}`);
+        if (data.data?.ticketId) {
+          router.push(`/gate/ticket/${data.data.ticketId}`);
+        } else {
+          setErrorMessage(data.warning || "PAYMENT VERIFIED BUT TICKET NOT FOUND.");
+          setStatus("error");
+        }
       } else {
         setErrorMessage(data.error || "Submission failed");
       }
