@@ -212,10 +212,9 @@ export async function POST(req: Request) {
 
     if (ticketError || !ticket) {
       console.error("TICKET_CREATE_ERROR:", ticketError);
-      // Even if ticket fails, we return the booking but warn
       return NextResponse.json({ 
         success: true, 
-        warning: "Ticket generation failed",
+        warning: `Booking created but ticket generation failed: ${ticketError?.message || "Unknown error"}`,
         data: { vehicle, booking } 
       });
     }
