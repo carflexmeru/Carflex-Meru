@@ -166,7 +166,7 @@ export default function StaffLogin() {
                   type="email"
                   required
                   placeholder="staff@carflex.com"
-                  className="w-full bg-transparent p-5 md:p-6 font-black uppercase text-lg md:text-xl tracking-tighter outline-none border-none placeholder:text-zinc-500"
+                  className="w-full bg-transparent p-5 md:p-6 font-black text-lg md:text-xl tracking-tighter outline-none border-none placeholder:text-zinc-500"
                   style={{ color: fieldText }}
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
@@ -188,7 +188,7 @@ export default function StaffLogin() {
                 <input
                   type={showPassword ? "text" : "password"}
                   placeholder="PASSWORD_REQUIRED"
-                  className="staff-field w-full bg-transparent p-5 md:p-6 font-black uppercase text-lg md:text-xl tracking-[0.28em] outline-none border-none placeholder:text-zinc-500"
+                  className="staff-field w-full bg-transparent p-5 md:p-6 font-black text-lg md:text-xl tracking-[0.28em] outline-none border-none placeholder:text-zinc-500"
                   style={{ color: fieldText }}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
