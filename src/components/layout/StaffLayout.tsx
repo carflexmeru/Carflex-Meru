@@ -16,7 +16,7 @@ interface StaffLayoutProps {
 }
 
 export default function StaffLayout({ children }: StaffLayoutProps) {
-  const [theme, setTheme] = useState<"light" | "dark">("dark");
+  const [theme, setTheme] = useState<"light" | "dark">("light");
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const [agentType, setAgentType] = useState<string | null>(null);
   const [activeEvent, setActiveEvent] = useState<string>("meru-10th-2026");
@@ -27,6 +27,7 @@ export default function StaffLayout({ children }: StaffLayoutProps) {
   useEffect(() => {
     const savedTheme = localStorage.getItem("staff_theme") as "light" | "dark";
     if (savedTheme) setTheme(savedTheme);
+    else setTheme("light");
     
     const type = localStorage.getItem("carflex_staff_type");
     const savedEvent = localStorage.getItem("carflex_staff_event");

@@ -13,7 +13,7 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
 
   useEffect(() => {
     const savedTheme = localStorage.getItem("carflex_theme");
-    const initialTheme = savedTheme === "light" ? "light" : "dark";
+    const initialTheme = savedTheme === "dark" ? "dark" : "light";
     document.documentElement.setAttribute("data-theme", initialTheme);
   }, []);
 
