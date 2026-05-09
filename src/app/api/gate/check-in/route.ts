@@ -62,10 +62,12 @@ export async function POST(req: Request) {
     }
 
     if (!owner) {
-      // Create new profile
+      // Create new profile with explicit UUID
+      const profileId = crypto.randomUUID();
       const { data: newProfile, error: createError } = await supabase
         .from("profiles")
         .insert({
+          id: profileId,
           phone: normalizedPhone,
           id_number: idNumber || null,
           role: "vendor",
@@ -144,7 +146,7 @@ export async function POST(req: Request) {
 
       if (createVehicleError || !newVehicle) {
         console.error("VEHICLE_CREATE_ERROR:", createVehicleError);
-        return NextResponse.json({ error: "Failed to create vehicle record" }, { status: 500 });
+        return NextResponse.json({ error: `Failed to create vehicle record: ${createVehicleError?.message || "Unknown error"}` }, { status: 500 });
       }
       vehicle = newVehicle;
     }
