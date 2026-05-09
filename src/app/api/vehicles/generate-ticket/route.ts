@@ -25,7 +25,8 @@ export async function POST(request: Request) {
           select: {
             id: true,
             name: true,
-            price: true
+            price: true,
+            eventId: true
           }
         }
       }
@@ -37,6 +38,11 @@ export async function POST(request: Request) {
 
     if (!vehicle.isVerified) {
       return NextResponse.json({ error: "Vehicle not verified" }, { status: 400 });
+    }
+
+    // Ensure vehicle has an event
+    if (!vehicle.zone?.eventId) {
+      return NextResponse.json({ error: "Vehicle must be assigned to an event zone" }, { status: 400 });
     }
 
     // Get the next serial number
@@ -55,6 +61,7 @@ export async function POST(request: Request) {
         ticketId,
         serialNumber: nextSerial,
         vehicleId,
+        eventId: vehicle.zone!.eventId,
         regNumber: vehicle.regNumber,
         make: vehicle.make || "Unknown",
         model: vehicle.model || "Unknown",
