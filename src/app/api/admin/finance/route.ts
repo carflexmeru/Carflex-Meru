@@ -6,7 +6,7 @@ export async function GET() {
     // Try to fetch data, but return empty/default if tables don't exist
     let expectedRevenue = 0;
     let actualRevenue = 0;
-    let breakdown = [];
+    let breakdown: Array<{ method: string; amount: number }> = [];
     let paymentProtocol = { paybill: "", accountNumber: "" };
 
     try {

@@ -3,7 +3,7 @@ import { prisma } from "@/lib/prisma";
 
 export async function GET() {
   try {
-    let zones = [];
+    let zones: any[] = [];
     
     try {
       zones = await prisma.zone.findMany({

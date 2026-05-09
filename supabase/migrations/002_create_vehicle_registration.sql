@@ -1,7 +1,7 @@
 -- Create vehicles table
 CREATE TABLE IF NOT EXISTS vehicles (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  owner_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
+  owner_id UUID,
   reg_number TEXT NOT NULL UNIQUE,
   chassis_number TEXT UNIQUE,
   make TEXT,
@@ -15,8 +15,8 @@ CREATE TABLE IF NOT EXISTS vehicles (
   features JSONB,
   images JSONB,
   at_event BOOLEAN DEFAULT FALSE,
-  event_id UUID REFERENCES events(id),
-  zone_id UUID REFERENCES zones(id),
+  event_id UUID,
+  zone_id UUID,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
@@ -36,7 +36,7 @@ CREATE TABLE IF NOT EXISTS events (
 -- Create zones table
 CREATE TABLE IF NOT EXISTS zones (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  event_id UUID REFERENCES events(id) ON DELETE CASCADE,
+  event_id UUID,
   name TEXT NOT NULL,
   capacity INTEGER,
   occupancy INTEGER DEFAULT 0,
@@ -50,8 +50,8 @@ CREATE TABLE IF NOT EXISTS zones (
 CREATE TABLE IF NOT EXISTS registration_tickets (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   ticket_id TEXT NOT NULL UNIQUE,
-  vehicle_id UUID NOT NULL REFERENCES vehicles(id) ON DELETE CASCADE,
-  event_id UUID NOT NULL REFERENCES events(id) ON DELETE CASCADE,
+  vehicle_id UUID NOT NULL,
+  event_id UUID NOT NULL,
   reg_number TEXT NOT NULL,
   make TEXT,
   model TEXT,
@@ -85,53 +85,49 @@ ALTER TABLE events ENABLE ROW LEVEL SECURITY;
 ALTER TABLE zones ENABLE ROW LEVEL SECURITY;
 ALTER TABLE registration_tickets ENABLE ROW LEVEL SECURITY;
 
--- RLS Policies for vehicles
+-- Drop existing policies if they exist
+DROP POLICY IF EXISTS "Users can read all vehicles" ON vehicles;
+DROP POLICY IF EXISTS "Users can create own vehicles" ON vehicles;
+DROP POLICY IF EXISTS "Users can update own vehicles" ON vehicles;
+DROP POLICY IF EXISTS "Users can create vehicles" ON vehicles;
+DROP POLICY IF EXISTS "Users can update vehicles" ON vehicles;
+DROP POLICY IF EXISTS "Anyone can read events" ON events;
+DROP POLICY IF EXISTS "Anyone can read zones" ON zones;
+DROP POLICY IF EXISTS "Anyone can read tickets" ON registration_tickets;
+DROP POLICY IF EXISTS "Staff can create tickets" ON registration_tickets;
+DROP POLICY IF EXISTS "Staff can update tickets" ON registration_tickets;
+DROP POLICY IF EXISTS "Anyone can create tickets" ON registration_tickets;
+DROP POLICY IF EXISTS "Anyone can update tickets" ON registration_tickets;
+
+-- RLS Policies for vehicles - allow all for now
 CREATE POLICY "Users can read all vehicles" ON vehicles
   FOR SELECT USING (TRUE);
 
-CREATE POLICY "Users can create own vehicles" ON vehicles
-  FOR INSERT WITH CHECK (auth.uid() = owner_id);
+CREATE POLICY "Users can create vehicles" ON vehicles
+  FOR INSERT WITH CHECK (TRUE);
 
-CREATE POLICY "Users can update own vehicles" ON vehicles
-  FOR UPDATE USING (auth.uid() = owner_id);
+CREATE POLICY "Users can update vehicles" ON vehicles
+  FOR UPDATE USING (TRUE);
 
--- RLS Policies for events
+-- RLS Policies for events - allow all
 CREATE POLICY "Anyone can read events" ON events
   FOR SELECT USING (TRUE);
 
--- RLS Policies for zones
+-- RLS Policies for zones - allow all
 CREATE POLICY "Anyone can read zones" ON zones
   FOR SELECT USING (TRUE);
 
--- RLS Policies for registration_tickets
+-- RLS Policies for registration_tickets - allow all
 CREATE POLICY "Anyone can read tickets" ON registration_tickets
   FOR SELECT USING (TRUE);
 
-CREATE POLICY "Staff can create tickets" ON registration_tickets
-  FOR INSERT WITH CHECK (
-    EXISTS (
-      SELECT 1 FROM staff_agents WHERE id = auth.uid()
-    )
-  );
+CREATE POLICY "Anyone can create tickets" ON registration_tickets
+  FOR INSERT WITH CHECK (TRUE);
 
-CREATE POLICY "Staff can update tickets" ON registration_tickets
-  FOR UPDATE USING (
-    EXISTS (
-      SELECT 1 FROM staff_agents WHERE id = auth.uid()
-    )
-  );
+CREATE POLICY "Anyone can update tickets" ON registration_tickets
+  FOR UPDATE USING (TRUE);
 
--- Create storage bucket for vehicle images
+-- Create storage bucket for vehicle images if not exists
 INSERT INTO storage.buckets (id, name, public)
 VALUES ('vehicle-images', 'vehicle-images', true)
 ON CONFLICT (id) DO NOTHING;
-
--- Storage policies for vehicle images
-CREATE POLICY "Anyone can view vehicle images" ON storage.objects
-  FOR SELECT USING (bucket_id = 'vehicle-images');
-
-CREATE POLICY "Users can upload vehicle images" ON storage.objects
-  FOR INSERT WITH CHECK (bucket_id = 'vehicle-images' AND auth.role() = 'authenticated');
-
-CREATE POLICY "Users can delete own vehicle images" ON storage.objects
-  FOR DELETE USING (bucket_id = 'vehicle-images' AND auth.uid()::text = (storage.foldername(name))[1]);

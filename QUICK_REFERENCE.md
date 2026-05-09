@@ -1,222 +1,169 @@
-# Carflex - Quick Reference Checklist
+# Quick Reference Guide
 
-## 🎯 WHAT'S MISSING (At a Glance)
-
-### 🔴 CRITICAL (Blocking Production)
-- [ ] Input Validation (Zod) - 2-3 days
-- [ ] Route Protection (Auth) - 2-3 days
-- [ ] Password Hashing (bcrypt) - 1 day
-- [ ] M-Pesa Verification - 1-2 days
-- [ ] Error Boundaries - 1 day
-
-### 🟡 HIGH (Important for UX)
-- [ ] Real-Time Chat (WebSocket) - 3-4 days
-- [ ] Form Validation - 2-3 days
-- [ ] Admin Dashboard (2 pages) - 3-4 days
-- [ ] Offline Mode - 2-3 days
-
-### 🟢 MEDIUM (Nice to Have)
-- [ ] Error Tracking (Sentry) - 1 day
-- [ ] API Documentation (Swagger) - 1-2 days
-- [ ] Testing (Vitest) - 2-3 days
-- [ ] Performance Optimization - 2-3 days
-
----
-
-## 📊 IMPLEMENTATION STATUS
-
-| Component | Status | % | Notes |
-|-----------|--------|---|-------|
-| Pages | 18/29 | 62% | Core done, admin partial |
-| API Routes | 25+/30 | 85% | Most exist, some minimal |
-| Database | 18/18 | 100% | Complete |
-| Components | 28/28 | 100% | All built |
-| Auth | Partial | 60% | Supabase setup, no protection |
-| Payment | Partial | 70% | M-Pesa integrated, no verify |
-| Real-Time | None | 0% | No WebSocket |
-| Admin | Partial | 60% | 3/5 pages |
-| Error Handling | Partial | 40% | Basic only |
-| Security | Partial | 40% | No validation |
-
----
-
-## 🚀 QUICK WINS (6 Hours)
-
-### 1. Add Zod Validation (2 hours)
-```bash
-npm install zod
-# Create src/lib/validation.ts
-# Update 3-4 API routes
-```
-
-### 2. Hash Staff Passwords (1 hour)
-```bash
-npm install bcrypt
-# Update staff login
-# Update seed script
-```
-
-### 3. Add Error Boundary (1 hour)
-```typescript
-# Create src/components/ErrorBoundary.tsx
-# Add to root layout
-```
-
-### 4. Protect Admin Routes (2 hours)
-```typescript
-# Create src/lib/auth.ts
-# Add auth checks to pages
-```
-
----
-
-## 📅 TIMELINE
-
-### Week 1-2: Security (🔴 CRITICAL)
-- [ ] Zod validation
-- [ ] Route protection
-- [ ] Password hashing
-- [ ] M-Pesa verification
-- [ ] Error boundaries
-
-### Week 3-4: Features (🟡 HIGH)
-- [ ] WebSocket chat
-- [ ] Form validation
-- [ ] Admin dashboard
-- [ ] Offline mode
-
-### Week 5-6: Polish (🟢 MEDIUM)
-- [ ] Error tracking
-- [ ] API docs
-- [ ] Testing
-- [ ] Optimization
-
----
-
-## 💰 COSTS
-
-| Phase | Time | Team | Cost |
-|-------|------|------|------|
-| Phase 1 | 2 wks | 2 | $4K |
-| Phase 2 | 2 wks | 2 | $4K |
-| Phase 3 | 1-2 wks | 1 | $2K |
-| **Total** | **5-6 wks** | **2** | **$10K** |
-
----
-
-## 📚 DOCUMENTS
-
-1. **README_RECOMMENDATIONS.md** - Navigation guide
-2. **NEXT_STEPS.md** - Developer guide
-3. **RECOMMENDATIONS_SUMMARY.md** - Executive summary
-4. **IMPLEMENTATION_ROADMAP.md** - Detailed guide
-5. **WORKSPACE_OVERVIEW.md** - Architecture
-
----
-
-## ✅ DEPLOYMENT CHECKLIST
-
-### Security
-- [ ] Input validation on all routes
-- [ ] Auth checks on all pages
-- [ ] Passwords hashed
-- [ ] M-Pesa verified
-- [ ] CORS configured
-- [ ] Security headers set
-- [ ] Rate limiting enabled
-
-### Features
-- [ ] Real-time chat working
-- [ ] Admin dashboard complete
-- [ ] Form validation working
-- [ ] Offline mode working
-
-### Quality
-- [ ] Error tracking configured
-- [ ] Tests passing
-- [ ] API documented
-- [ ] Performance optimized
-
-### Operations
-- [ ] Database backups
-- [ ] Env vars set
-- [ ] Monitoring up
-- [ ] Logging configured
-
----
-
-## 🎯 PRIORITY MATRIX
-
-```
-HIGH IMPACT, LOW EFFORT (DO FIRST)
-├── Zod validation
-├── Password hashing
-├── Error boundaries
-└── Route protection
-
-HIGH IMPACT, HIGH EFFORT (DO SECOND)
-├── WebSocket chat
-├── Admin dashboard
-├── Form validation
-└── Offline mode
-
-LOW IMPACT, LOW EFFORT (DO LAST)
-├── Error tracking
-├── API docs
-├── Testing
-└── Optimization
-```
-
----
-
-## 🔧 TECH STACK ADDITIONS
+## 🚀 5-Minute Setup
 
 ```bash
-# Security
-npm install zod bcrypt jsonwebtoken
+# 1. Run migrations
+supabase migration up
 
-# Real-Time
-npm install socket.io socket.io-client
+# 2. Create auth users in Supabase dashboard
+# (See credentials below)
 
-# Forms
-npm install react-hook-form @hookform/resolvers
+# 3. Run migration 007 with actual UUIDs
+# (See instructions below)
 
-# Offline
-npm install idb
-
-# Monitoring
-npm install @sentry/nextjs
-
-# Testing
-npm install -D vitest @testing-library/react
-
-# Docs
-npm install swagger-ui-react swagger-jsdoc
+# 4. Test login
+# Go to http://localhost:3000/staff/login
 ```
 
 ---
 
-## 📞 QUICK LINKS
+## 👥 Staff Credentials
 
-- **Zod**: https://zod.dev/
-- **bcrypt**: https://github.com/kelektiv/node.bcrypt.js
-- **Socket.io**: https://socket.io/
-- **React Hook Form**: https://react-hook-form.com/
-- **Sentry**: https://sentry.io/
-- **Vitest**: https://vitest.dev/
-- **Swagger**: https://swagger.io/
+Create these 4 users in Supabase Authentication:
 
----
+```
+1. registration@carflex.com / Registration@Carflex123
+2. gate@carflex.com / Gate@Carflex123
+3. ground@carflex.com / Ground@Carflex123
+4. exit@carflex.com / Exit@Carflex123
+```
 
-## 🎓 NEXT ACTION
-
-1. Read README_RECOMMENDATIONS.md
-2. Choose your role
-3. Read relevant document
-4. Start Phase 1 this week
+**Copy each user's UUID after creation!**
 
 ---
 
-**Status**: Ready for Implementation  
-**Priority**: 🔴 CRITICAL (Security First)  
-**Timeline**: 5-6 weeks to production
+## 🔗 Link Auth Users to Staff Agents
+
+Run this SQL in Supabase SQL Editor:
+
+```sql
+INSERT INTO staff_agents (id, email, name, type, created_at, updated_at)
+VALUES
+  ('UUID_1', 'registration@carflex.com', 'Registration Agent', 'REGISTRATION_AGENT', NOW(), NOW()),
+  ('UUID_2', 'gate@carflex.com', 'Gate Verification Agent', 'GATE_VERIFICATION_AGENT', NOW(), NOW()),
+  ('UUID_3', 'ground@carflex.com', 'Ground Verification Agent', 'GROUND_VERIFICATION_AGENT', NOW(), NOW()),
+  ('UUID_4', 'exit@carflex.com', 'Exit Command Agent', 'EXIT_COMMAND_AGENT', NOW(), NOW())
+ON CONFLICT (id) DO NOTHING;
+```
+
+Replace `UUID_1`, `UUID_2`, etc. with actual auth user UUIDs.
+
+---
+
+## 📊 Database Tables
+
+| Table | Purpose |
+|-------|---------|
+| staff_agents | Staff member accounts |
+| vehicles | Vehicle registration records |
+| events | Event records |
+| zones | Parking zones |
+| registration_tickets | Generated tickets |
+| admin_logs | Audit trail |
+
+---
+
+## 🗂️ Migrations
+
+| # | File | Purpose | Run? |
+|---|------|---------|------|
+| 1 | 001_create_staff_agents.sql | Storage buckets | ✅ |
+| 2 | 002_create_vehicle_registration.sql | Main tables | ✅ |
+| 3 | 003_seed_staff_agents.sql | Reference only | ⚠️ |
+| 4 | 004_fix_staff_agents_schema.sql | Staff table | ✅ |
+| 5 | 005_seed_events_and_zones.sql | Sample data | ✅ |
+| 6 | 006_clean_setup.sql | Alternative setup | ⚠️ |
+| 7 | 007_populate_staff_agents.sql | Link auth users | ✅ |
+
+---
+
+## 🎯 Staff Dashboards
+
+| Email | Password | Dashboard |
+|-------|----------|-----------|
+| registration@carflex.com | Registration@Carflex123 | `/staff/registration` |
+| gate@carflex.com | Gate@Carflex123 | `/staff/gate` |
+| ground@carflex.com | Ground@Carflex123 | `/staff/ground` |
+| exit@carflex.com | Exit@Carflex123 | `/staff/exit` |
+
+---
+
+## 🔍 Verify Setup
+
+```sql
+-- Check staff_agents
+SELECT id, email, name, type FROM staff_agents;
+
+-- Check vehicles
+SELECT id, reg_number, status FROM vehicles;
+
+-- Check events
+SELECT id, name, is_active FROM events;
+
+-- Check zones
+SELECT id, name, capacity FROM zones;
+
+-- Check tickets
+SELECT id, ticket_id, status FROM registration_tickets;
+```
+
+---
+
+## 🆘 Quick Troubleshooting
+
+| Error | Solution |
+|-------|----------|
+| "Staff record not found" | Run migration 007 with correct UUIDs |
+| "Invalid credentials" | Check email/password, verify user exists |
+| "Dropdown not showing" | Clear cache, hard refresh (Ctrl+Shift+R) |
+| "Foreign key error" | Run migrations in order |
+| "Column does not exist" | Verify migration ran successfully |
+
+---
+
+## 📚 Documentation
+
+| File | Purpose |
+|------|---------|
+| CARFLEX_DATABASE_SETUP.md | ⭐ Master guide |
+| DATABASE_SETUP_INDEX.md | Documentation index |
+| MIGRATION_ISSUES_FIXED.md | What was fixed |
+| SETUP_COMPLETE.md | Completion summary |
+| supabase/README.md | Supabase guide |
+| supabase/SETUP_GUIDE.md | Detailed setup |
+| supabase/STAFF_CREDENTIALS.md | Credentials |
+| supabase/MIGRATION_SUMMARY.md | Migration details |
+
+---
+
+## 🔑 Key Concepts
+
+**Auth Users**: Created in Supabase dashboard
+**Staff Agents**: Database table linked to auth users
+**Connection**: `staff_agents.id = auth.users.id`
+
+---
+
+## 📞 Need Help?
+
+1. Check `CARFLEX_DATABASE_SETUP.md` troubleshooting
+2. Check `supabase/STAFF_CREDENTIALS.md` for credentials
+3. Check `supabase/MIGRATION_SUMMARY.md` for migration details
+4. Check browser console for errors
+
+---
+
+## ✅ Setup Checklist
+
+- [ ] Run migrations 001, 002, 004, 005
+- [ ] Create 4 auth users in Supabase
+- [ ] Copy auth user UUIDs
+- [ ] Run migration 007 with UUIDs
+- [ ] Test login at `/staff/login`
+- [ ] Verify redirect to dashboard
+
+---
+
+**Last Updated**: May 9, 2026
+**Version**: 1.0

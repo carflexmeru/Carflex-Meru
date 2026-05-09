@@ -113,7 +113,7 @@ export async function POST(request: Request) {
 
 export async function GET() {
   try {
-    let waitlist = [];
+    let waitlist: any[] = [];
     try {
       waitlist = await prisma.booking.findMany({
         where: { paymentStatus: "pending" },
