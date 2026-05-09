@@ -121,164 +121,142 @@ export default function TicketPage({
   }
 
   return (
-    <div className="min-h-screen bg-surface p-4 md:p-8 flex flex-col items-center">
-      <div className="max-w-2xl w-full nm-card p-6 md:p-10 space-y-8 border border-primary/20 relative">
-        <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full blur-3xl -mr-16 -mt-16 pointer-events-none" />
+    <div className="min-h-screen bg-[#f5f5f5] p-4 md:p-12 flex flex-col items-center font-mono">
+      {/* Action Bar (Not printed) */}
+      <div className="max-w-[1000px] w-full flex justify-between items-center mb-6 print:hidden">
+        <button
+          onClick={() => router.push("/gate/check-in")}
+          className="flex items-center gap-2 text-zinc-500 hover:text-primary font-black uppercase text-[10px] tracking-widest"
+        >
+          <span className="material-symbols-outlined text-sm">arrow_back</span>
+          Back to Check-In
+        </button>
         
-        {/* Header */}
-        <div className="flex items-start justify-between">
-          <div className="flex items-start gap-4">
-            <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0">
-              <span className="material-symbols-outlined text-primary">confirmation_number</span>
-            </div>
-            <div>
-              <h1 className="text-xl md:text-2xl font-black uppercase tracking-tighter text-foreground">
-                Registration Ticket
-              </h1>
-              <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest mt-1">
-                Verified Gate Access Pass
-              </p>
-            </div>
-          </div>
-          <button
-            onClick={() => router.push("/gate/check-in")}
-            className="nm-card w-10 h-10 flex items-center justify-center text-zinc-500 hover:text-foreground transition-colors"
-          >
-            <span className="material-symbols-outlined">close</span>
-          </button>
-        </div>
-
-        {/* Ticket Content */}
-        {error && (
-          <div className="nm-inset p-4 bg-primary/10 border border-primary/30 rounded space-y-2">
-            <div className="flex items-start gap-3">
-              <span className="material-symbols-outlined text-primary text-lg flex-shrink-0 mt-0.5">warning</span>
-              <div>
-                <p className="text-[9px] font-black text-primary uppercase tracking-widest mb-1">Update Error</p>
-                <p className="text-[10px] text-zinc-300 break-words whitespace-normal">{error}</p>
-              </div>
-            </div>
-          </div>
-        )}
-        
-        <div className="nm-inset p-6 md:p-8 space-y-6 bg-primary/5 border border-primary/20">
-          <div className="nm-inset p-4 md:p-6 space-y-2">
-            <p className="text-[9px] font-black text-zinc-500 uppercase tracking-widest">Ticket Number</p>
-            <p className="text-3xl md:text-4xl font-black text-primary tracking-tighter font-mono break-all leading-none">
-              {ticket.ticketId}
-            </p>
-          </div>
-
-          <div className="flex flex-col md:flex-row gap-8 items-center md:items-start">
-            {/* QR Code */}
-            <div className="nm-inset p-4 bg-white flex-shrink-0">
-              <Image
-                src={ticket.qrCodeUrl}
-                alt="QR Code"
-                width={200}
-                height={200}
-                className="w-48 h-48 md:w-56 md:h-56"
-                unoptimized
+        <div className="flex gap-4">
+          {editingPrice ? (
+            <div className="flex items-center gap-2 nm-inset p-1 px-3 bg-white border border-primary/20 rounded-full">
+              <input
+                type="number"
+                value={newPrice}
+                onChange={(e) => setNewPrice(e.target.value)}
+                className="bg-transparent border-none text-primary font-black text-xs w-20 text-right focus:ring-0"
               />
+              <button onClick={handleUpdatePrice} className="text-primary hover:scale-110"><span className="material-symbols-outlined text-sm font-black">check</span></button>
+              <button onClick={() => setEditingPrice(false)} className="text-zinc-400 hover:scale-110"><span className="material-symbols-outlined text-sm font-black">close</span></button>
             </div>
-
-            <div className="flex-1 w-full space-y-4 text-[11px] md:text-[13px]">
-              <div className="flex justify-between items-center">
-                <span className="text-zinc-500 font-bold uppercase tracking-wider">Registration:</span>
-                <span className="text-foreground font-black">{ticket.regNumber}</span>
-              </div>
-              <div className="flex justify-between items-center border-t border-foreground/5 pt-3">
-                <span className="text-zinc-500 font-bold uppercase tracking-wider">Vehicle:</span>
-                <span className="text-foreground font-black">
-                  {ticket.year} {ticket.make} {ticket.model}
-                </span>
-              </div>
-              <div className="flex justify-between items-center border-t border-foreground/5 pt-3">
-                <span className="text-zinc-500 font-bold uppercase tracking-wider">Owner:</span>
-                <span className="text-foreground font-black">{ticket.ownerName}</span>
-              </div>
-              <div className="flex justify-between items-center border-t border-foreground/5 pt-3">
-                <span className="text-zinc-500 font-bold uppercase tracking-wider">ID Number:</span>
-                <span className="text-foreground font-black">{ticket.ownerIdNumber || "N/A"}</span>
-              </div>
-              <div className="flex justify-between items-center border-t border-foreground/5 pt-3">
-                <span className="text-zinc-500 font-bold uppercase tracking-wider">Phone:</span>
-                <span className="text-foreground font-black">{ticket.ownerPhone || "N/A"}</span>
-              </div>
-              <div className="flex justify-between items-center border-t border-foreground/5 pt-3">
-                <span className="text-zinc-500 font-bold uppercase tracking-wider">Zone:</span>
-                <span className="text-foreground font-black text-primary">{ticket.zoneName}</span>
-              </div>
-              <div className="flex justify-between items-center border-t border-primary/20 pt-4 bg-primary/5 -mx-6 md:-mx-8 px-6 md:px-8 py-4 mt-6">
-                <span className="text-zinc-500 font-bold uppercase tracking-wider">Amount Paid:</span>
-                {editingPrice ? (
-                  <div className="flex items-center gap-2">
-                    <input
-                      type="number"
-                      value={newPrice}
-                      onChange={(e) => setNewPrice(e.target.value)}
-                      className="bg-primary/20 border border-primary/40 rounded px-3 py-1 text-primary font-black text-lg w-32 text-right"
-                      placeholder="0"
-                    />
-                    <button
-                      onClick={handleUpdatePrice}
-                      className="text-primary hover:text-primary/80 transition-colors"
-                      title="Save"
-                    >
-                      <span className="material-symbols-outlined text-sm">check</span>
-                    </button>
-                    <button
-                      onClick={() => {
-                        setEditingPrice(false);
-                        setNewPrice(ticket.amountPaid?.toString() || "0");
-                      }}
-                      className="text-zinc-500 hover:text-zinc-400 transition-colors"
-                      title="Cancel"
-                    >
-                      <span className="material-symbols-outlined text-sm">close</span>
-                    </button>
-                  </div>
-                ) : (
-                  <div className="flex items-center gap-3">
-                    <span className="text-primary font-black text-xl">KES {ticket.amountPaid?.toLocaleString()}</span>
-                    <button
-                      onClick={() => setEditingPrice(true)}
-                      className="text-zinc-500 hover:text-primary transition-colors"
-                      title="Edit price"
-                    >
-                      <span className="material-symbols-outlined text-sm">edit</span>
-                    </button>
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Actions */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4">
-          <a
-            href={ticket.printUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="nm-card !bg-primary text-white py-6 font-black uppercase tracking-[0.2em] text-xs hover:scale-[1.02] active:scale-95 transition-all border-none shadow-[0_15px_30px_rgba(230,0,0,0.3)] flex items-center justify-center gap-3"
+          ) : (
+            <button 
+              onClick={() => setEditingPrice(true)}
+              className="nm-card px-4 py-2 text-[10px] font-black text-zinc-500 uppercase tracking-widest hover:text-primary"
+            >
+              Adjust Price
+            </button>
+          )}
+          <button 
+            onClick={() => window.print()}
+            className="nm-card px-6 py-2 bg-primary text-white text-[10px] font-black uppercase tracking-widest shadow-[0_10px_20px_rgba(230,0,0,0.2)] border-none"
           >
-            <span className="material-symbols-outlined text-sm">print</span>
-            Download Ticket
-          </a>
-          <button
-            onClick={() => router.push("/gate/check-in")}
-            className="nm-card text-foreground py-6 font-black uppercase tracking-[0.2em] text-xs hover:bg-foreground/5 transition-all border-none flex items-center justify-center gap-3"
-          >
-            <span className="material-symbols-outlined text-sm">add_circle</span>
-            New Check-in
+            Print Ticket
           </button>
         </div>
       </div>
+
+      {/* Main Ticket Container */}
+      <div className="ticket-container w-full max-w-[1000px] bg-white border-[3px] border-[#E60000] p-8 md:p-12 shadow-[0_10px_40px_rgba(0,0,0,0.1)] print:shadow-none print:max-w-none print:w-full print:h-screen print:flex print:flex-col print:justify-center">
+        
+        {/* Header */}
+        <div className="header text-center mb-8 border-b-2 border-[#E60000] pb-6">
+          <h1 className="text-4xl font-black tracking-[4px] text-black mb-1">CARFLEX</h1>
+          <p className="text-sm font-black tracking-[2px] text-[#666] uppercase">Verification Ticket</p>
+        </div>
+
+        {/* Ticket Body */}
+        <div className="ticket-body flex flex-col md:flex-row gap-10 items-start">
+          
+          {/* QR Section */}
+          <div className="qr-section flex-shrink-0 w-full md:w-[300px] text-center p-6 bg-[#f9f9f9] border border-[#ddd]">
+            <div className="relative w-[260px] h-[260px] mx-auto bg-white p-2 border border-[#eee]">
+              <Image
+                src={ticket.qrCodeUrl}
+                alt="QR Code"
+                fill
+                className="object-contain"
+                unoptimized
+              />
+            </div>
+            <p className="text-[10px] font-black mt-4 uppercase text-[#666] tracking-wider leading-relaxed">
+              Scan for immediate <br/> verification
+            </p>
+          </div>
+
+          {/* Details Section */}
+          <div className="details flex-1 w-full space-y-1">
+            <div className="text-3xl font-black text-[#E60000] mb-6 tracking-tighter">
+              {ticket.ticketId}
+            </div>
+
+            <div className="detail-row flex justify-between py-3 border-b border-[#eee] text-base">
+              <span className="font-black uppercase text-[#333] w-2/5">Registration:</span>
+              <span className="text-right font-black text-black">{ticket.regNumber}</span>
+            </div>
+
+            <div className="detail-row flex justify-between py-3 border-b border-[#eee] text-base">
+              <span className="font-black uppercase text-[#333] w-2/5">Vehicle:</span>
+              <span className="text-right font-black text-black">
+                {ticket.year} {ticket.make} {ticket.model}
+              </span>
+            </div>
+
+            <div className="detail-row flex justify-between py-3 border-b border-[#eee] text-base">
+              <span className="font-black uppercase text-[#333] w-2/5">Owner Name:</span>
+              <span className="text-right font-black text-black">{ticket.ownerName}</span>
+            </div>
+
+            <div className="detail-row flex justify-between py-3 border-b border-[#eee] text-base">
+              <span className="font-black uppercase text-[#333] w-2/5">ID Number:</span>
+              <span className="text-right font-black text-black">{ticket.ownerIdNumber || "N/A"}</span>
+            </div>
+
+            <div className="detail-row flex justify-between py-3 border-b border-[#eee] text-base">
+              <span className="font-black uppercase text-[#333] w-2/5">Phone:</span>
+              <span className="text-right font-black text-black">{ticket.ownerPhone || "N/A"}</span>
+            </div>
+
+            <div className="detail-row flex justify-between py-3 border-b border-[#eee] text-base">
+              <span className="font-black uppercase text-[#333] w-2/5">Market Zone:</span>
+              <span className="text-right font-black text-[#E60000]">{ticket.zoneName}</span>
+            </div>
+
+            <div className="detail-row flex justify-between mt-6 bg-[#E60000]/5 -mx-3 px-3 py-4 text-lg font-black border-2 border-[#E60000]/10">
+              <span className="uppercase text-[#333]">Amount Paid:</span>
+              <span className="text-[#E60000] text-xl">KSH {ticket.amountPaid?.toLocaleString()}</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Footer */}
+        <div className="footer text-center mt-10 pt-6 border-t-2 border-[#E60000]">
+          <p className="text-[11px] font-black text-[#666] tracking-wider uppercase mb-2">
+            Valid for Single Entry • Non-Transferable • Carflex Ground Operations
+          </p>
+          <div className="text-[10px] font-bold text-[#999] uppercase tracking-widest">
+            Generated: {new Date().toLocaleString('en-US', { 
+              month: 'numeric', 
+              day: 'numeric', 
+              year: 'numeric', 
+              hour: 'numeric', 
+              minute: '2-digit', 
+              second: '2-digit', 
+              hour12: true 
+            })}
+          </div>
+        </div>
+      </div>
       
-      <p className="mt-8 text-zinc-500 text-[10px] font-black uppercase tracking-widest text-center">
-        Carflex Ground Operations • Meru Showground 2024
+      <p className="mt-12 text-zinc-400 text-[10px] font-black uppercase tracking-[0.4em] text-center print:hidden">
+        Meru Showground 2024 • Ops Protocol v2.4
       </p>
     </div>
   );
+}
 }
