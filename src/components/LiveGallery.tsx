@@ -112,7 +112,7 @@ export default function LiveGallery() {
             >
               <div className="aspect-[16/10] nm-inset relative overflow-hidden rounded-[1.5rem] mb-6">
                 <img
-                  src="/event assets/IMG-20260428-WA0002.jpg"
+                  src="/assets/IMG-20260428-WA0002.jpg"
                   alt="Carflex Asset"
                   className="absolute inset-0 w-full h-full object-cover opacity-90"
                 />
