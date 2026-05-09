@@ -3094,10 +3094,12 @@ export namespace Prisma {
 
   export type EventCountOutputType = {
     zones: number
+    registrationTickets: number
   }
 
   export type EventCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     zones?: boolean | EventCountOutputTypeCountZonesArgs
+    registrationTickets?: boolean | EventCountOutputTypeCountRegistrationTicketsArgs
   }
 
   // Custom InputTypes
@@ -3116,6 +3118,13 @@ export namespace Prisma {
    */
   export type EventCountOutputTypeCountZonesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ZoneWhereInput
+  }
+
+  /**
+   * EventCountOutputType without action
+   */
+  export type EventCountOutputTypeCountRegistrationTicketsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: RegistrationTicketWhereInput
   }
 
 
@@ -4344,6 +4353,7 @@ export namespace Prisma {
      * The data used to create many Profiles.
      */
     data: ProfileCreateManyInput | ProfileCreateManyInput[]
+    skipDuplicates?: boolean
   }
 
   /**
@@ -4362,6 +4372,7 @@ export namespace Prisma {
      * The data used to create many Profiles.
      */
     data: ProfileCreateManyInput | ProfileCreateManyInput[]
+    skipDuplicates?: boolean
   }
 
   /**
@@ -5699,6 +5710,7 @@ export namespace Prisma {
      * The data used to create many Favorites.
      */
     data: FavoriteCreateManyInput | FavoriteCreateManyInput[]
+    skipDuplicates?: boolean
   }
 
   /**
@@ -5717,6 +5729,7 @@ export namespace Prisma {
      * The data used to create many Favorites.
      */
     data: FavoriteCreateManyInput | FavoriteCreateManyInput[]
+    skipDuplicates?: boolean
     /**
      * Choose, which related nodes to fetch as well
      */
@@ -6047,6 +6060,7 @@ export namespace Prisma {
     isActive?: boolean
     createdAt?: boolean
     zones?: boolean | Event$zonesArgs<ExtArgs>
+    registrationTickets?: boolean | Event$registrationTicketsArgs<ExtArgs>
     _count?: boolean | EventCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["event"]>
 
@@ -6077,6 +6091,7 @@ export namespace Prisma {
   export type EventOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "location" | "isActive" | "createdAt", ExtArgs["result"]["event"]>
   export type EventInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     zones?: boolean | Event$zonesArgs<ExtArgs>
+    registrationTickets?: boolean | Event$registrationTicketsArgs<ExtArgs>
     _count?: boolean | EventCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type EventIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -6086,6 +6101,7 @@ export namespace Prisma {
     name: "Event"
     objects: {
       zones: Prisma.$ZonePayload<ExtArgs>[]
+      registrationTickets: Prisma.$RegistrationTicketPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -6488,6 +6504,7 @@ export namespace Prisma {
   export interface Prisma__EventClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     zones<T extends Event$zonesArgs<ExtArgs> = {}>(args?: Subset<T, Event$zonesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ZonePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    registrationTickets<T extends Event$registrationTicketsArgs<ExtArgs> = {}>(args?: Subset<T, Event$registrationTicketsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RegistrationTicketPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -6751,6 +6768,7 @@ export namespace Prisma {
      * The data used to create many Events.
      */
     data: EventCreateManyInput | EventCreateManyInput[]
+    skipDuplicates?: boolean
   }
 
   /**
@@ -6769,6 +6787,7 @@ export namespace Prisma {
      * The data used to create many Events.
      */
     data: EventCreateManyInput | EventCreateManyInput[]
+    skipDuplicates?: boolean
   }
 
   /**
@@ -6929,6 +6948,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: ZoneScalarFieldEnum | ZoneScalarFieldEnum[]
+  }
+
+  /**
+   * Event.registrationTickets
+   */
+  export type Event$registrationTicketsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RegistrationTicket
+     */
+    select?: RegistrationTicketSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RegistrationTicket
+     */
+    omit?: RegistrationTicketOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RegistrationTicketInclude<ExtArgs> | null
+    where?: RegistrationTicketWhereInput
+    orderBy?: RegistrationTicketOrderByWithRelationInput | RegistrationTicketOrderByWithRelationInput[]
+    cursor?: RegistrationTicketWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: RegistrationTicketScalarFieldEnum | RegistrationTicketScalarFieldEnum[]
   }
 
   /**
@@ -7888,6 +7931,7 @@ export namespace Prisma {
      * The data used to create many Zones.
      */
     data: ZoneCreateManyInput | ZoneCreateManyInput[]
+    skipDuplicates?: boolean
   }
 
   /**
@@ -7906,6 +7950,7 @@ export namespace Prisma {
      * The data used to create many Zones.
      */
     data: ZoneCreateManyInput | ZoneCreateManyInput[]
+    skipDuplicates?: boolean
     /**
      * Choose, which related nodes to fetch as well
      */
@@ -9117,6 +9162,7 @@ export namespace Prisma {
      * The data used to create many Bookings.
      */
     data: BookingCreateManyInput | BookingCreateManyInput[]
+    skipDuplicates?: boolean
   }
 
   /**
@@ -9135,6 +9181,7 @@ export namespace Prisma {
      * The data used to create many Bookings.
      */
     data: BookingCreateManyInput | BookingCreateManyInput[]
+    skipDuplicates?: boolean
     /**
      * Choose, which related nodes to fetch as well
      */
@@ -10236,6 +10283,7 @@ export namespace Prisma {
      * The data used to create many ExitPasses.
      */
     data: ExitPassCreateManyInput | ExitPassCreateManyInput[]
+    skipDuplicates?: boolean
   }
 
   /**
@@ -10254,6 +10302,7 @@ export namespace Prisma {
      * The data used to create many ExitPasses.
      */
     data: ExitPassCreateManyInput | ExitPassCreateManyInput[]
+    skipDuplicates?: boolean
     /**
      * Choose, which related nodes to fetch as well
      */
@@ -11584,6 +11633,7 @@ export namespace Prisma {
      * The data used to create many Vehicles.
      */
     data: VehicleCreateManyInput | VehicleCreateManyInput[]
+    skipDuplicates?: boolean
   }
 
   /**
@@ -11602,6 +11652,7 @@ export namespace Prisma {
      * The data used to create many Vehicles.
      */
     data: VehicleCreateManyInput | VehicleCreateManyInput[]
+    skipDuplicates?: boolean
     /**
      * Choose, which related nodes to fetch as well
      */
@@ -12925,6 +12976,7 @@ export namespace Prisma {
      * The data used to create many RawListings.
      */
     data: RawListingCreateManyInput | RawListingCreateManyInput[]
+    skipDuplicates?: boolean
   }
 
   /**
@@ -12943,6 +12995,7 @@ export namespace Prisma {
      * The data used to create many RawListings.
      */
     data: RawListingCreateManyInput | RawListingCreateManyInput[]
+    skipDuplicates?: boolean
   }
 
   /**
@@ -13953,6 +14006,7 @@ export namespace Prisma {
      * The data used to create many Organizations.
      */
     data: OrganizationCreateManyInput | OrganizationCreateManyInput[]
+    skipDuplicates?: boolean
   }
 
   /**
@@ -13971,6 +14025,7 @@ export namespace Prisma {
      * The data used to create many Organizations.
      */
     data: OrganizationCreateManyInput | OrganizationCreateManyInput[]
+    skipDuplicates?: boolean
   }
 
   /**
@@ -14999,6 +15054,7 @@ export namespace Prisma {
      * The data used to create many StolenVehicles.
      */
     data: StolenVehicleCreateManyInput | StolenVehicleCreateManyInput[]
+    skipDuplicates?: boolean
   }
 
   /**
@@ -15017,6 +15073,7 @@ export namespace Prisma {
      * The data used to create many StolenVehicles.
      */
     data: StolenVehicleCreateManyInput | StolenVehicleCreateManyInput[]
+    skipDuplicates?: boolean
     /**
      * Choose, which related nodes to fetch as well
      */
@@ -16135,6 +16192,7 @@ export namespace Prisma {
      * The data used to create many Offers.
      */
     data: OfferCreateManyInput | OfferCreateManyInput[]
+    skipDuplicates?: boolean
   }
 
   /**
@@ -16153,6 +16211,7 @@ export namespace Prisma {
      * The data used to create many Offers.
      */
     data: OfferCreateManyInput | OfferCreateManyInput[]
+    skipDuplicates?: boolean
     /**
      * Choose, which related nodes to fetch as well
      */
@@ -17316,6 +17375,7 @@ export namespace Prisma {
      * The data used to create many Messages.
      */
     data: MessageCreateManyInput | MessageCreateManyInput[]
+    skipDuplicates?: boolean
   }
 
   /**
@@ -17334,6 +17394,7 @@ export namespace Prisma {
      * The data used to create many Messages.
      */
     data: MessageCreateManyInput | MessageCreateManyInput[]
+    skipDuplicates?: boolean
     /**
      * Choose, which related nodes to fetch as well
      */
@@ -18508,6 +18569,7 @@ export namespace Prisma {
      * The data used to create many Transactions.
      */
     data: TransactionCreateManyInput | TransactionCreateManyInput[]
+    skipDuplicates?: boolean
   }
 
   /**
@@ -18526,6 +18588,7 @@ export namespace Prisma {
      * The data used to create many Transactions.
      */
     data: TransactionCreateManyInput | TransactionCreateManyInput[]
+    skipDuplicates?: boolean
     /**
      * Choose, which related nodes to fetch as well
      */
@@ -19621,6 +19684,7 @@ export namespace Prisma {
      * The data used to create many CashLogs.
      */
     data: CashLogCreateManyInput | CashLogCreateManyInput[]
+    skipDuplicates?: boolean
   }
 
   /**
@@ -19639,6 +19703,7 @@ export namespace Prisma {
      * The data used to create many CashLogs.
      */
     data: CashLogCreateManyInput | CashLogCreateManyInput[]
+    skipDuplicates?: boolean
     /**
      * Choose, which related nodes to fetch as well
      */
@@ -20683,6 +20748,7 @@ export namespace Prisma {
      * The data used to create many VehicleViews.
      */
     data: VehicleViewCreateManyInput | VehicleViewCreateManyInput[]
+    skipDuplicates?: boolean
   }
 
   /**
@@ -20701,6 +20767,7 @@ export namespace Prisma {
      * The data used to create many VehicleViews.
      */
     data: VehicleViewCreateManyInput | VehicleViewCreateManyInput[]
+    skipDuplicates?: boolean
     /**
      * Choose, which related nodes to fetch as well
      */
@@ -21693,6 +21760,7 @@ export namespace Prisma {
      * The data used to create many NewsletterSubs.
      */
     data: NewsletterSubCreateManyInput | NewsletterSubCreateManyInput[]
+    skipDuplicates?: boolean
   }
 
   /**
@@ -21711,6 +21779,7 @@ export namespace Prisma {
      * The data used to create many NewsletterSubs.
      */
     data: NewsletterSubCreateManyInput | NewsletterSubCreateManyInput[]
+    skipDuplicates?: boolean
   }
 
   /**
@@ -22712,6 +22781,7 @@ export namespace Prisma {
      * The data used to create many CollegeLeads.
      */
     data: CollegeLeadCreateManyInput | CollegeLeadCreateManyInput[]
+    skipDuplicates?: boolean
   }
 
   /**
@@ -22730,6 +22800,7 @@ export namespace Prisma {
      * The data used to create many CollegeLeads.
      */
     data: CollegeLeadCreateManyInput | CollegeLeadCreateManyInput[]
+    skipDuplicates?: boolean
     /**
      * Choose, which related nodes to fetch as well
      */
@@ -23842,6 +23913,7 @@ export namespace Prisma {
      * The data used to create many GarageJobs.
      */
     data: GarageJobCreateManyInput | GarageJobCreateManyInput[]
+    skipDuplicates?: boolean
   }
 
   /**
@@ -23860,6 +23932,7 @@ export namespace Prisma {
      * The data used to create many GarageJobs.
      */
     data: GarageJobCreateManyInput | GarageJobCreateManyInput[]
+    skipDuplicates?: boolean
     /**
      * Choose, which related nodes to fetch as well
      */
@@ -24884,6 +24957,7 @@ export namespace Prisma {
      * The data used to create many SystemSettings.
      */
     data: SystemSettingCreateManyInput | SystemSettingCreateManyInput[]
+    skipDuplicates?: boolean
   }
 
   /**
@@ -24902,6 +24976,7 @@ export namespace Prisma {
      * The data used to create many SystemSettings.
      */
     data: SystemSettingCreateManyInput | SystemSettingCreateManyInput[]
+    skipDuplicates?: boolean
   }
 
   /**
@@ -25916,6 +25991,7 @@ export namespace Prisma {
      * The data used to create many SupportTickets.
      */
     data: SupportTicketCreateManyInput | SupportTicketCreateManyInput[]
+    skipDuplicates?: boolean
   }
 
   /**
@@ -25934,6 +26010,7 @@ export namespace Prisma {
      * The data used to create many SupportTickets.
      */
     data: SupportTicketCreateManyInput | SupportTicketCreateManyInput[]
+    skipDuplicates?: boolean
     /**
      * Choose, which related nodes to fetch as well
      */
@@ -26978,6 +27055,7 @@ export namespace Prisma {
      * The data used to create many AuditLogs.
      */
     data: AuditLogCreateManyInput | AuditLogCreateManyInput[]
+    skipDuplicates?: boolean
   }
 
   /**
@@ -26996,6 +27074,7 @@ export namespace Prisma {
      * The data used to create many AuditLogs.
      */
     data: AuditLogCreateManyInput | AuditLogCreateManyInput[]
+    skipDuplicates?: boolean
     /**
      * Choose, which related nodes to fetch as well
      */
@@ -28014,6 +28093,7 @@ export namespace Prisma {
      * The data used to create many StaffAgents.
      */
     data: StaffAgentCreateManyInput | StaffAgentCreateManyInput[]
+    skipDuplicates?: boolean
   }
 
   /**
@@ -28032,6 +28112,7 @@ export namespace Prisma {
      * The data used to create many StaffAgents.
      */
     data: StaffAgentCreateManyInput | StaffAgentCreateManyInput[]
+    skipDuplicates?: boolean
   }
 
   /**
@@ -29016,6 +29097,7 @@ export namespace Prisma {
      * The data used to create many ActionLogs.
      */
     data: ActionLogCreateManyInput | ActionLogCreateManyInput[]
+    skipDuplicates?: boolean
   }
 
   /**
@@ -29034,6 +29116,7 @@ export namespace Prisma {
      * The data used to create many ActionLogs.
      */
     data: ActionLogCreateManyInput | ActionLogCreateManyInput[]
+    skipDuplicates?: boolean
   }
 
   /**
@@ -29204,6 +29287,7 @@ export namespace Prisma {
     serialNumber: number | null
     ticketId: string | null
     vehicleId: string | null
+    eventId: string | null
     regNumber: string | null
     make: string | null
     model: string | null
@@ -29224,6 +29308,7 @@ export namespace Prisma {
     serialNumber: number | null
     ticketId: string | null
     vehicleId: string | null
+    eventId: string | null
     regNumber: string | null
     make: string | null
     model: string | null
@@ -29244,6 +29329,7 @@ export namespace Prisma {
     serialNumber: number
     ticketId: number
     vehicleId: number
+    eventId: number
     regNumber: number
     make: number
     model: number
@@ -29278,6 +29364,7 @@ export namespace Prisma {
     serialNumber?: true
     ticketId?: true
     vehicleId?: true
+    eventId?: true
     regNumber?: true
     make?: true
     model?: true
@@ -29298,6 +29385,7 @@ export namespace Prisma {
     serialNumber?: true
     ticketId?: true
     vehicleId?: true
+    eventId?: true
     regNumber?: true
     make?: true
     model?: true
@@ -29318,6 +29406,7 @@ export namespace Prisma {
     serialNumber?: true
     ticketId?: true
     vehicleId?: true
+    eventId?: true
     regNumber?: true
     make?: true
     model?: true
@@ -29425,6 +29514,7 @@ export namespace Prisma {
     serialNumber: number
     ticketId: string
     vehicleId: string
+    eventId: string
     regNumber: string
     make: string
     model: string
@@ -29464,6 +29554,7 @@ export namespace Prisma {
     serialNumber?: boolean
     ticketId?: boolean
     vehicleId?: boolean
+    eventId?: boolean
     regNumber?: boolean
     make?: boolean
     model?: boolean
@@ -29478,6 +29569,7 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     vehicle?: boolean | VehicleDefaultArgs<ExtArgs>
+    event?: boolean | EventDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["registrationTicket"]>
 
   export type RegistrationTicketSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -29485,6 +29577,7 @@ export namespace Prisma {
     serialNumber?: boolean
     ticketId?: boolean
     vehicleId?: boolean
+    eventId?: boolean
     regNumber?: boolean
     make?: boolean
     model?: boolean
@@ -29499,6 +29592,7 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     vehicle?: boolean | VehicleDefaultArgs<ExtArgs>
+    event?: boolean | EventDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["registrationTicket"]>
 
   export type RegistrationTicketSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -29506,6 +29600,7 @@ export namespace Prisma {
     serialNumber?: boolean
     ticketId?: boolean
     vehicleId?: boolean
+    eventId?: boolean
     regNumber?: boolean
     make?: boolean
     model?: boolean
@@ -29520,6 +29615,7 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     vehicle?: boolean | VehicleDefaultArgs<ExtArgs>
+    event?: boolean | EventDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["registrationTicket"]>
 
   export type RegistrationTicketSelectScalar = {
@@ -29527,6 +29623,7 @@ export namespace Prisma {
     serialNumber?: boolean
     ticketId?: boolean
     vehicleId?: boolean
+    eventId?: boolean
     regNumber?: boolean
     make?: boolean
     model?: boolean
@@ -29542,27 +29639,32 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type RegistrationTicketOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "serialNumber" | "ticketId" | "vehicleId" | "regNumber" | "make" | "model" | "year" | "ownerName" | "ownerPhone" | "ownerIdNumber" | "amountPaid" | "zoneName" | "status" | "qrData" | "createdAt" | "updatedAt", ExtArgs["result"]["registrationTicket"]>
+  export type RegistrationTicketOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "serialNumber" | "ticketId" | "vehicleId" | "eventId" | "regNumber" | "make" | "model" | "year" | "ownerName" | "ownerPhone" | "ownerIdNumber" | "amountPaid" | "zoneName" | "status" | "qrData" | "createdAt" | "updatedAt", ExtArgs["result"]["registrationTicket"]>
   export type RegistrationTicketInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     vehicle?: boolean | VehicleDefaultArgs<ExtArgs>
+    event?: boolean | EventDefaultArgs<ExtArgs>
   }
   export type RegistrationTicketIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     vehicle?: boolean | VehicleDefaultArgs<ExtArgs>
+    event?: boolean | EventDefaultArgs<ExtArgs>
   }
   export type RegistrationTicketIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     vehicle?: boolean | VehicleDefaultArgs<ExtArgs>
+    event?: boolean | EventDefaultArgs<ExtArgs>
   }
 
   export type $RegistrationTicketPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "RegistrationTicket"
     objects: {
       vehicle: Prisma.$VehiclePayload<ExtArgs>
+      event: Prisma.$EventPayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
       serialNumber: number
       ticketId: string
       vehicleId: string
+      eventId: string
       regNumber: string
       make: string
       model: string
@@ -29971,6 +30073,7 @@ export namespace Prisma {
   export interface Prisma__RegistrationTicketClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     vehicle<T extends VehicleDefaultArgs<ExtArgs> = {}>(args?: Subset<T, VehicleDefaultArgs<ExtArgs>>): Prisma__VehicleClient<$Result.GetResult<Prisma.$VehiclePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    event<T extends EventDefaultArgs<ExtArgs> = {}>(args?: Subset<T, EventDefaultArgs<ExtArgs>>): Prisma__EventClient<$Result.GetResult<Prisma.$EventPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -30004,6 +30107,7 @@ export namespace Prisma {
     readonly serialNumber: FieldRef<"RegistrationTicket", 'Int'>
     readonly ticketId: FieldRef<"RegistrationTicket", 'String'>
     readonly vehicleId: FieldRef<"RegistrationTicket", 'String'>
+    readonly eventId: FieldRef<"RegistrationTicket", 'String'>
     readonly regNumber: FieldRef<"RegistrationTicket", 'String'>
     readonly make: FieldRef<"RegistrationTicket", 'String'>
     readonly model: FieldRef<"RegistrationTicket", 'String'>
@@ -30246,6 +30350,7 @@ export namespace Prisma {
      * The data used to create many RegistrationTickets.
      */
     data: RegistrationTicketCreateManyInput | RegistrationTicketCreateManyInput[]
+    skipDuplicates?: boolean
   }
 
   /**
@@ -30264,6 +30369,7 @@ export namespace Prisma {
      * The data used to create many RegistrationTickets.
      */
     data: RegistrationTicketCreateManyInput | RegistrationTicketCreateManyInput[]
+    skipDuplicates?: boolean
     /**
      * Choose, which related nodes to fetch as well
      */
@@ -30434,6 +30540,9 @@ export namespace Prisma {
    */
 
   export const TransactionIsolationLevel: {
+    ReadUncommitted: 'ReadUncommitted',
+    ReadCommitted: 'ReadCommitted',
+    RepeatableRead: 'RepeatableRead',
     Serializable: 'Serializable'
   };
 
@@ -30731,6 +30840,7 @@ export namespace Prisma {
     serialNumber: 'serialNumber',
     ticketId: 'ticketId',
     vehicleId: 'vehicleId',
+    eventId: 'eventId',
     regNumber: 'regNumber',
     make: 'make',
     model: 'model',
@@ -30765,6 +30875,14 @@ export namespace Prisma {
   export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
 
 
+  export const QueryMode: {
+    default: 'default',
+    insensitive: 'insensitive'
+  };
+
+  export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
+
+
   export const NullsOrder: {
     first: 'first',
     last: 'last'
@@ -30782,14 +30900,6 @@ export namespace Prisma {
   export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
 
 
-  export const QueryMode: {
-    default: 'default',
-    insensitive: 'insensitive'
-  };
-
-  export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
-
-
   /**
    * Field references
    */
@@ -30799,6 +30909,13 @@ export namespace Prisma {
    * Reference to a field of type 'String'
    */
   export type StringFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'String'>
+    
+
+
+  /**
+   * Reference to a field of type 'String[]'
+   */
+  export type ListStringFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'String[]'>
     
 
 
@@ -30817,6 +30934,13 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'DateTime[]'
+   */
+  export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime[]'>
+    
+
+
+  /**
    * Reference to a field of type 'Int'
    */
   export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
@@ -30824,9 +30948,23 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'Int[]'
+   */
+  export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
+    
+
+
+  /**
    * Reference to a field of type 'Float'
    */
   export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
+    
+
+
+  /**
+   * Reference to a field of type 'Float[]'
+   */
+  export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
     
 
 
@@ -31047,6 +31185,7 @@ export namespace Prisma {
     isActive?: BoolFilter<"Event"> | boolean
     createdAt?: DateTimeFilter<"Event"> | Date | string
     zones?: ZoneListRelationFilter
+    registrationTickets?: RegistrationTicketListRelationFilter
   }
 
   export type EventOrderByWithRelationInput = {
@@ -31056,6 +31195,7 @@ export namespace Prisma {
     isActive?: SortOrder
     createdAt?: SortOrder
     zones?: ZoneOrderByRelationAggregateInput
+    registrationTickets?: RegistrationTicketOrderByRelationAggregateInput
   }
 
   export type EventWhereUniqueInput = Prisma.AtLeast<{
@@ -31068,6 +31208,7 @@ export namespace Prisma {
     isActive?: BoolFilter<"Event"> | boolean
     createdAt?: DateTimeFilter<"Event"> | Date | string
     zones?: ZoneListRelationFilter
+    registrationTickets?: RegistrationTicketListRelationFilter
   }, "id">
 
   export type EventOrderByWithAggregationInput = {
@@ -32386,6 +32527,7 @@ export namespace Prisma {
     serialNumber?: IntFilter<"RegistrationTicket"> | number
     ticketId?: StringFilter<"RegistrationTicket"> | string
     vehicleId?: StringFilter<"RegistrationTicket"> | string
+    eventId?: StringFilter<"RegistrationTicket"> | string
     regNumber?: StringFilter<"RegistrationTicket"> | string
     make?: StringFilter<"RegistrationTicket"> | string
     model?: StringFilter<"RegistrationTicket"> | string
@@ -32400,6 +32542,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"RegistrationTicket"> | Date | string
     updatedAt?: DateTimeFilter<"RegistrationTicket"> | Date | string
     vehicle?: XOR<VehicleScalarRelationFilter, VehicleWhereInput>
+    event?: XOR<EventScalarRelationFilter, EventWhereInput>
   }
 
   export type RegistrationTicketOrderByWithRelationInput = {
@@ -32407,6 +32550,7 @@ export namespace Prisma {
     serialNumber?: SortOrder
     ticketId?: SortOrder
     vehicleId?: SortOrder
+    eventId?: SortOrder
     regNumber?: SortOrder
     make?: SortOrder
     model?: SortOrder
@@ -32421,6 +32565,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     vehicle?: VehicleOrderByWithRelationInput
+    event?: EventOrderByWithRelationInput
   }
 
   export type RegistrationTicketWhereUniqueInput = Prisma.AtLeast<{
@@ -32431,6 +32576,7 @@ export namespace Prisma {
     NOT?: RegistrationTicketWhereInput | RegistrationTicketWhereInput[]
     serialNumber?: IntFilter<"RegistrationTicket"> | number
     vehicleId?: StringFilter<"RegistrationTicket"> | string
+    eventId?: StringFilter<"RegistrationTicket"> | string
     regNumber?: StringFilter<"RegistrationTicket"> | string
     make?: StringFilter<"RegistrationTicket"> | string
     model?: StringFilter<"RegistrationTicket"> | string
@@ -32445,6 +32591,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"RegistrationTicket"> | Date | string
     updatedAt?: DateTimeFilter<"RegistrationTicket"> | Date | string
     vehicle?: XOR<VehicleScalarRelationFilter, VehicleWhereInput>
+    event?: XOR<EventScalarRelationFilter, EventWhereInput>
   }, "id" | "ticketId">
 
   export type RegistrationTicketOrderByWithAggregationInput = {
@@ -32452,6 +32599,7 @@ export namespace Prisma {
     serialNumber?: SortOrder
     ticketId?: SortOrder
     vehicleId?: SortOrder
+    eventId?: SortOrder
     regNumber?: SortOrder
     make?: SortOrder
     model?: SortOrder
@@ -32480,6 +32628,7 @@ export namespace Prisma {
     serialNumber?: IntWithAggregatesFilter<"RegistrationTicket"> | number
     ticketId?: StringWithAggregatesFilter<"RegistrationTicket"> | string
     vehicleId?: StringWithAggregatesFilter<"RegistrationTicket"> | string
+    eventId?: StringWithAggregatesFilter<"RegistrationTicket"> | string
     regNumber?: StringWithAggregatesFilter<"RegistrationTicket"> | string
     make?: StringWithAggregatesFilter<"RegistrationTicket"> | string
     model?: StringWithAggregatesFilter<"RegistrationTicket"> | string
@@ -32720,6 +32869,7 @@ export namespace Prisma {
     isActive?: boolean
     createdAt?: Date | string
     zones?: ZoneCreateNestedManyWithoutEventInput
+    registrationTickets?: RegistrationTicketCreateNestedManyWithoutEventInput
   }
 
   export type EventUncheckedCreateInput = {
@@ -32729,6 +32879,7 @@ export namespace Prisma {
     isActive?: boolean
     createdAt?: Date | string
     zones?: ZoneUncheckedCreateNestedManyWithoutEventInput
+    registrationTickets?: RegistrationTicketUncheckedCreateNestedManyWithoutEventInput
   }
 
   export type EventUpdateInput = {
@@ -32738,6 +32889,7 @@ export namespace Prisma {
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     zones?: ZoneUpdateManyWithoutEventNestedInput
+    registrationTickets?: RegistrationTicketUpdateManyWithoutEventNestedInput
   }
 
   export type EventUncheckedUpdateInput = {
@@ -32747,6 +32899,7 @@ export namespace Prisma {
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     zones?: ZoneUncheckedUpdateManyWithoutEventNestedInput
+    registrationTickets?: RegistrationTicketUncheckedUpdateManyWithoutEventNestedInput
   }
 
   export type EventCreateManyInput = {
@@ -34111,6 +34264,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     vehicle: VehicleCreateNestedOneWithoutRegistrationTicketsInput
+    event: EventCreateNestedOneWithoutRegistrationTicketsInput
   }
 
   export type RegistrationTicketUncheckedCreateInput = {
@@ -34118,6 +34272,7 @@ export namespace Prisma {
     serialNumber?: number
     ticketId: string
     vehicleId: string
+    eventId: string
     regNumber: string
     make: string
     model: string
@@ -34151,6 +34306,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     vehicle?: VehicleUpdateOneRequiredWithoutRegistrationTicketsNestedInput
+    event?: EventUpdateOneRequiredWithoutRegistrationTicketsNestedInput
   }
 
   export type RegistrationTicketUncheckedUpdateInput = {
@@ -34158,6 +34314,7 @@ export namespace Prisma {
     serialNumber?: IntFieldUpdateOperationsInput | number
     ticketId?: StringFieldUpdateOperationsInput | string
     vehicleId?: StringFieldUpdateOperationsInput | string
+    eventId?: StringFieldUpdateOperationsInput | string
     regNumber?: StringFieldUpdateOperationsInput | string
     make?: StringFieldUpdateOperationsInput | string
     model?: StringFieldUpdateOperationsInput | string
@@ -34178,6 +34335,7 @@ export namespace Prisma {
     serialNumber?: number
     ticketId: string
     vehicleId: string
+    eventId: string
     regNumber: string
     make: string
     model: string
@@ -34217,6 +34375,7 @@ export namespace Prisma {
     serialNumber?: IntFieldUpdateOperationsInput | number
     ticketId?: StringFieldUpdateOperationsInput | string
     vehicleId?: StringFieldUpdateOperationsInput | string
+    eventId?: StringFieldUpdateOperationsInput | string
     regNumber?: StringFieldUpdateOperationsInput | string
     make?: StringFieldUpdateOperationsInput | string
     model?: StringFieldUpdateOperationsInput | string
@@ -34234,8 +34393,8 @@ export namespace Prisma {
 
   export type StringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
-    in?: string[]
-    notIn?: string[]
+    in?: string[] | ListStringFieldRefInput<$PrismaModel>
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel>
     lt?: string | StringFieldRefInput<$PrismaModel>
     lte?: string | StringFieldRefInput<$PrismaModel>
     gt?: string | StringFieldRefInput<$PrismaModel>
@@ -34243,13 +34402,14 @@ export namespace Prisma {
     contains?: string | StringFieldRefInput<$PrismaModel>
     startsWith?: string | StringFieldRefInput<$PrismaModel>
     endsWith?: string | StringFieldRefInput<$PrismaModel>
+    mode?: QueryMode
     not?: NestedStringFilter<$PrismaModel> | string
   }
 
   export type StringNullableFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | null
-    notIn?: string[] | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
     lt?: string | StringFieldRefInput<$PrismaModel>
     lte?: string | StringFieldRefInput<$PrismaModel>
     gt?: string | StringFieldRefInput<$PrismaModel>
@@ -34257,6 +34417,7 @@ export namespace Prisma {
     contains?: string | StringFieldRefInput<$PrismaModel>
     startsWith?: string | StringFieldRefInput<$PrismaModel>
     endsWith?: string | StringFieldRefInput<$PrismaModel>
+    mode?: QueryMode
     not?: NestedStringNullableFilter<$PrismaModel> | string | null
   }
 
@@ -34267,8 +34428,8 @@ export namespace Prisma {
 
   export type DateTimeFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    in?: Date[] | string[]
-    notIn?: Date[] | string[]
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
     lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
@@ -34454,8 +34615,8 @@ export namespace Prisma {
 
   export type StringWithAggregatesFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
-    in?: string[]
-    notIn?: string[]
+    in?: string[] | ListStringFieldRefInput<$PrismaModel>
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel>
     lt?: string | StringFieldRefInput<$PrismaModel>
     lte?: string | StringFieldRefInput<$PrismaModel>
     gt?: string | StringFieldRefInput<$PrismaModel>
@@ -34463,6 +34624,7 @@ export namespace Prisma {
     contains?: string | StringFieldRefInput<$PrismaModel>
     startsWith?: string | StringFieldRefInput<$PrismaModel>
     endsWith?: string | StringFieldRefInput<$PrismaModel>
+    mode?: QueryMode
     not?: NestedStringWithAggregatesFilter<$PrismaModel> | string
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedStringFilter<$PrismaModel>
@@ -34471,8 +34633,8 @@ export namespace Prisma {
 
   export type StringNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | null
-    notIn?: string[] | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
     lt?: string | StringFieldRefInput<$PrismaModel>
     lte?: string | StringFieldRefInput<$PrismaModel>
     gt?: string | StringFieldRefInput<$PrismaModel>
@@ -34480,6 +34642,7 @@ export namespace Prisma {
     contains?: string | StringFieldRefInput<$PrismaModel>
     startsWith?: string | StringFieldRefInput<$PrismaModel>
     endsWith?: string | StringFieldRefInput<$PrismaModel>
+    mode?: QueryMode
     not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedStringNullableFilter<$PrismaModel>
@@ -34496,8 +34659,8 @@ export namespace Prisma {
 
   export type DateTimeWithAggregatesFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    in?: Date[] | string[]
-    notIn?: Date[] | string[]
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
     lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
@@ -34550,7 +34713,17 @@ export namespace Prisma {
     none?: ZoneWhereInput
   }
 
+  export type RegistrationTicketListRelationFilter = {
+    every?: RegistrationTicketWhereInput
+    some?: RegistrationTicketWhereInput
+    none?: RegistrationTicketWhereInput
+  }
+
   export type ZoneOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type RegistrationTicketOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -34580,8 +34753,8 @@ export namespace Prisma {
 
   export type IntFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[]
-    notIn?: number[]
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
     lt?: number | IntFieldRefInput<$PrismaModel>
     lte?: number | IntFieldRefInput<$PrismaModel>
     gt?: number | IntFieldRefInput<$PrismaModel>
@@ -34591,8 +34764,8 @@ export namespace Prisma {
 
   export type FloatFilter<$PrismaModel = never> = {
     equals?: number | FloatFieldRefInput<$PrismaModel>
-    in?: number[]
-    notIn?: number[]
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
     lt?: number | FloatFieldRefInput<$PrismaModel>
     lte?: number | FloatFieldRefInput<$PrismaModel>
     gt?: number | FloatFieldRefInput<$PrismaModel>
@@ -34646,8 +34819,8 @@ export namespace Prisma {
 
   export type IntWithAggregatesFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[]
-    notIn?: number[]
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
     lt?: number | IntFieldRefInput<$PrismaModel>
     lte?: number | IntFieldRefInput<$PrismaModel>
     gt?: number | IntFieldRefInput<$PrismaModel>
@@ -34662,8 +34835,8 @@ export namespace Prisma {
 
   export type FloatWithAggregatesFilter<$PrismaModel = never> = {
     equals?: number | FloatFieldRefInput<$PrismaModel>
-    in?: number[]
-    notIn?: number[]
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
     lt?: number | FloatFieldRefInput<$PrismaModel>
     lte?: number | FloatFieldRefInput<$PrismaModel>
     gt?: number | FloatFieldRefInput<$PrismaModel>
@@ -34678,8 +34851,8 @@ export namespace Prisma {
 
   export type FloatNullableFilter<$PrismaModel = never> = {
     equals?: number | FloatFieldRefInput<$PrismaModel> | null
-    in?: number[] | null
-    notIn?: number[] | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
     lt?: number | FloatFieldRefInput<$PrismaModel>
     lte?: number | FloatFieldRefInput<$PrismaModel>
     gt?: number | FloatFieldRefInput<$PrismaModel>
@@ -34689,8 +34862,8 @@ export namespace Prisma {
 
   export type DateTimeNullableFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | null
-    notIn?: Date[] | string[] | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
     lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
@@ -34764,8 +34937,8 @@ export namespace Prisma {
 
   export type FloatNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: number | FloatFieldRefInput<$PrismaModel> | null
-    in?: number[] | null
-    notIn?: number[] | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
     lt?: number | FloatFieldRefInput<$PrismaModel>
     lte?: number | FloatFieldRefInput<$PrismaModel>
     gt?: number | FloatFieldRefInput<$PrismaModel>
@@ -34780,8 +34953,8 @@ export namespace Prisma {
 
   export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | null
-    notIn?: Date[] | string[] | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
     lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
@@ -34820,8 +34993,8 @@ export namespace Prisma {
 
   export type IntNullableFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | null
-    notIn?: number[] | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
     lt?: number | IntFieldRefInput<$PrismaModel>
     lte?: number | IntFieldRefInput<$PrismaModel>
     gt?: number | IntFieldRefInput<$PrismaModel>
@@ -34840,17 +35013,7 @@ export namespace Prisma {
     none?: VehicleViewWhereInput
   }
 
-  export type RegistrationTicketListRelationFilter = {
-    every?: RegistrationTicketWhereInput
-    some?: RegistrationTicketWhereInput
-    none?: RegistrationTicketWhereInput
-  }
-
   export type VehicleViewOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type RegistrationTicketOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -34938,8 +35101,8 @@ export namespace Prisma {
 
   export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | null
-    notIn?: number[] | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
     lt?: number | IntFieldRefInput<$PrismaModel>
     lte?: number | IntFieldRefInput<$PrismaModel>
     gt?: number | IntFieldRefInput<$PrismaModel>
@@ -35379,13 +35542,18 @@ export namespace Prisma {
 
   export type JsonNullableFilterBase<$PrismaModel = never> = {
     equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
-    path?: string
+    path?: string[]
     mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
     string_contains?: string | StringFieldRefInput<$PrismaModel>
     string_starts_with?: string | StringFieldRefInput<$PrismaModel>
     string_ends_with?: string | StringFieldRefInput<$PrismaModel>
     array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
     array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
     not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
   }
 
@@ -35422,17 +35590,27 @@ export namespace Prisma {
 
   export type JsonNullableWithAggregatesFilterBase<$PrismaModel = never> = {
     equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
-    path?: string
+    path?: string[]
     mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
     string_contains?: string | StringFieldRefInput<$PrismaModel>
     string_starts_with?: string | StringFieldRefInput<$PrismaModel>
     string_ends_with?: string | StringFieldRefInput<$PrismaModel>
     array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
     array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
     not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedJsonNullableFilter<$PrismaModel>
     _max?: NestedJsonNullableFilter<$PrismaModel>
+  }
+
+  export type EventScalarRelationFilter = {
+    is?: EventWhereInput
+    isNot?: EventWhereInput
   }
 
   export type RegistrationTicketCountOrderByAggregateInput = {
@@ -35440,6 +35618,7 @@ export namespace Prisma {
     serialNumber?: SortOrder
     ticketId?: SortOrder
     vehicleId?: SortOrder
+    eventId?: SortOrder
     regNumber?: SortOrder
     make?: SortOrder
     model?: SortOrder
@@ -35466,6 +35645,7 @@ export namespace Prisma {
     serialNumber?: SortOrder
     ticketId?: SortOrder
     vehicleId?: SortOrder
+    eventId?: SortOrder
     regNumber?: SortOrder
     make?: SortOrder
     model?: SortOrder
@@ -35486,6 +35666,7 @@ export namespace Prisma {
     serialNumber?: SortOrder
     ticketId?: SortOrder
     vehicleId?: SortOrder
+    eventId?: SortOrder
     regNumber?: SortOrder
     make?: SortOrder
     model?: SortOrder
@@ -36104,11 +36285,25 @@ export namespace Prisma {
     connect?: ZoneWhereUniqueInput | ZoneWhereUniqueInput[]
   }
 
+  export type RegistrationTicketCreateNestedManyWithoutEventInput = {
+    create?: XOR<RegistrationTicketCreateWithoutEventInput, RegistrationTicketUncheckedCreateWithoutEventInput> | RegistrationTicketCreateWithoutEventInput[] | RegistrationTicketUncheckedCreateWithoutEventInput[]
+    connectOrCreate?: RegistrationTicketCreateOrConnectWithoutEventInput | RegistrationTicketCreateOrConnectWithoutEventInput[]
+    createMany?: RegistrationTicketCreateManyEventInputEnvelope
+    connect?: RegistrationTicketWhereUniqueInput | RegistrationTicketWhereUniqueInput[]
+  }
+
   export type ZoneUncheckedCreateNestedManyWithoutEventInput = {
     create?: XOR<ZoneCreateWithoutEventInput, ZoneUncheckedCreateWithoutEventInput> | ZoneCreateWithoutEventInput[] | ZoneUncheckedCreateWithoutEventInput[]
     connectOrCreate?: ZoneCreateOrConnectWithoutEventInput | ZoneCreateOrConnectWithoutEventInput[]
     createMany?: ZoneCreateManyEventInputEnvelope
     connect?: ZoneWhereUniqueInput | ZoneWhereUniqueInput[]
+  }
+
+  export type RegistrationTicketUncheckedCreateNestedManyWithoutEventInput = {
+    create?: XOR<RegistrationTicketCreateWithoutEventInput, RegistrationTicketUncheckedCreateWithoutEventInput> | RegistrationTicketCreateWithoutEventInput[] | RegistrationTicketUncheckedCreateWithoutEventInput[]
+    connectOrCreate?: RegistrationTicketCreateOrConnectWithoutEventInput | RegistrationTicketCreateOrConnectWithoutEventInput[]
+    createMany?: RegistrationTicketCreateManyEventInputEnvelope
+    connect?: RegistrationTicketWhereUniqueInput | RegistrationTicketWhereUniqueInput[]
   }
 
   export type ZoneUpdateManyWithoutEventNestedInput = {
@@ -36125,6 +36320,20 @@ export namespace Prisma {
     deleteMany?: ZoneScalarWhereInput | ZoneScalarWhereInput[]
   }
 
+  export type RegistrationTicketUpdateManyWithoutEventNestedInput = {
+    create?: XOR<RegistrationTicketCreateWithoutEventInput, RegistrationTicketUncheckedCreateWithoutEventInput> | RegistrationTicketCreateWithoutEventInput[] | RegistrationTicketUncheckedCreateWithoutEventInput[]
+    connectOrCreate?: RegistrationTicketCreateOrConnectWithoutEventInput | RegistrationTicketCreateOrConnectWithoutEventInput[]
+    upsert?: RegistrationTicketUpsertWithWhereUniqueWithoutEventInput | RegistrationTicketUpsertWithWhereUniqueWithoutEventInput[]
+    createMany?: RegistrationTicketCreateManyEventInputEnvelope
+    set?: RegistrationTicketWhereUniqueInput | RegistrationTicketWhereUniqueInput[]
+    disconnect?: RegistrationTicketWhereUniqueInput | RegistrationTicketWhereUniqueInput[]
+    delete?: RegistrationTicketWhereUniqueInput | RegistrationTicketWhereUniqueInput[]
+    connect?: RegistrationTicketWhereUniqueInput | RegistrationTicketWhereUniqueInput[]
+    update?: RegistrationTicketUpdateWithWhereUniqueWithoutEventInput | RegistrationTicketUpdateWithWhereUniqueWithoutEventInput[]
+    updateMany?: RegistrationTicketUpdateManyWithWhereWithoutEventInput | RegistrationTicketUpdateManyWithWhereWithoutEventInput[]
+    deleteMany?: RegistrationTicketScalarWhereInput | RegistrationTicketScalarWhereInput[]
+  }
+
   export type ZoneUncheckedUpdateManyWithoutEventNestedInput = {
     create?: XOR<ZoneCreateWithoutEventInput, ZoneUncheckedCreateWithoutEventInput> | ZoneCreateWithoutEventInput[] | ZoneUncheckedCreateWithoutEventInput[]
     connectOrCreate?: ZoneCreateOrConnectWithoutEventInput | ZoneCreateOrConnectWithoutEventInput[]
@@ -36137,6 +36346,20 @@ export namespace Prisma {
     update?: ZoneUpdateWithWhereUniqueWithoutEventInput | ZoneUpdateWithWhereUniqueWithoutEventInput[]
     updateMany?: ZoneUpdateManyWithWhereWithoutEventInput | ZoneUpdateManyWithWhereWithoutEventInput[]
     deleteMany?: ZoneScalarWhereInput | ZoneScalarWhereInput[]
+  }
+
+  export type RegistrationTicketUncheckedUpdateManyWithoutEventNestedInput = {
+    create?: XOR<RegistrationTicketCreateWithoutEventInput, RegistrationTicketUncheckedCreateWithoutEventInput> | RegistrationTicketCreateWithoutEventInput[] | RegistrationTicketUncheckedCreateWithoutEventInput[]
+    connectOrCreate?: RegistrationTicketCreateOrConnectWithoutEventInput | RegistrationTicketCreateOrConnectWithoutEventInput[]
+    upsert?: RegistrationTicketUpsertWithWhereUniqueWithoutEventInput | RegistrationTicketUpsertWithWhereUniqueWithoutEventInput[]
+    createMany?: RegistrationTicketCreateManyEventInputEnvelope
+    set?: RegistrationTicketWhereUniqueInput | RegistrationTicketWhereUniqueInput[]
+    disconnect?: RegistrationTicketWhereUniqueInput | RegistrationTicketWhereUniqueInput[]
+    delete?: RegistrationTicketWhereUniqueInput | RegistrationTicketWhereUniqueInput[]
+    connect?: RegistrationTicketWhereUniqueInput | RegistrationTicketWhereUniqueInput[]
+    update?: RegistrationTicketUpdateWithWhereUniqueWithoutEventInput | RegistrationTicketUpdateWithWhereUniqueWithoutEventInput[]
+    updateMany?: RegistrationTicketUpdateManyWithWhereWithoutEventInput | RegistrationTicketUpdateManyWithWhereWithoutEventInput[]
+    deleteMany?: RegistrationTicketScalarWhereInput | RegistrationTicketScalarWhereInput[]
   }
 
   export type EventCreateNestedOneWithoutZonesInput = {
@@ -37041,6 +37264,12 @@ export namespace Prisma {
     connect?: VehicleWhereUniqueInput
   }
 
+  export type EventCreateNestedOneWithoutRegistrationTicketsInput = {
+    create?: XOR<EventCreateWithoutRegistrationTicketsInput, EventUncheckedCreateWithoutRegistrationTicketsInput>
+    connectOrCreate?: EventCreateOrConnectWithoutRegistrationTicketsInput
+    connect?: EventWhereUniqueInput
+  }
+
   export type VehicleUpdateOneRequiredWithoutRegistrationTicketsNestedInput = {
     create?: XOR<VehicleCreateWithoutRegistrationTicketsInput, VehicleUncheckedCreateWithoutRegistrationTicketsInput>
     connectOrCreate?: VehicleCreateOrConnectWithoutRegistrationTicketsInput
@@ -37049,10 +37278,18 @@ export namespace Prisma {
     update?: XOR<XOR<VehicleUpdateToOneWithWhereWithoutRegistrationTicketsInput, VehicleUpdateWithoutRegistrationTicketsInput>, VehicleUncheckedUpdateWithoutRegistrationTicketsInput>
   }
 
+  export type EventUpdateOneRequiredWithoutRegistrationTicketsNestedInput = {
+    create?: XOR<EventCreateWithoutRegistrationTicketsInput, EventUncheckedCreateWithoutRegistrationTicketsInput>
+    connectOrCreate?: EventCreateOrConnectWithoutRegistrationTicketsInput
+    upsert?: EventUpsertWithoutRegistrationTicketsInput
+    connect?: EventWhereUniqueInput
+    update?: XOR<XOR<EventUpdateToOneWithWhereWithoutRegistrationTicketsInput, EventUpdateWithoutRegistrationTicketsInput>, EventUncheckedUpdateWithoutRegistrationTicketsInput>
+  }
+
   export type NestedStringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
-    in?: string[]
-    notIn?: string[]
+    in?: string[] | ListStringFieldRefInput<$PrismaModel>
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel>
     lt?: string | StringFieldRefInput<$PrismaModel>
     lte?: string | StringFieldRefInput<$PrismaModel>
     gt?: string | StringFieldRefInput<$PrismaModel>
@@ -37065,8 +37302,8 @@ export namespace Prisma {
 
   export type NestedStringNullableFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | null
-    notIn?: string[] | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
     lt?: string | StringFieldRefInput<$PrismaModel>
     lte?: string | StringFieldRefInput<$PrismaModel>
     gt?: string | StringFieldRefInput<$PrismaModel>
@@ -37084,8 +37321,8 @@ export namespace Prisma {
 
   export type NestedDateTimeFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    in?: Date[] | string[]
-    notIn?: Date[] | string[]
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
     lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
@@ -37095,8 +37332,8 @@ export namespace Prisma {
 
   export type NestedStringWithAggregatesFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
-    in?: string[]
-    notIn?: string[]
+    in?: string[] | ListStringFieldRefInput<$PrismaModel>
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel>
     lt?: string | StringFieldRefInput<$PrismaModel>
     lte?: string | StringFieldRefInput<$PrismaModel>
     gt?: string | StringFieldRefInput<$PrismaModel>
@@ -37112,8 +37349,8 @@ export namespace Prisma {
 
   export type NestedIntFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[]
-    notIn?: number[]
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
     lt?: number | IntFieldRefInput<$PrismaModel>
     lte?: number | IntFieldRefInput<$PrismaModel>
     gt?: number | IntFieldRefInput<$PrismaModel>
@@ -37123,8 +37360,8 @@ export namespace Prisma {
 
   export type NestedStringNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | null
-    notIn?: string[] | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
     lt?: string | StringFieldRefInput<$PrismaModel>
     lte?: string | StringFieldRefInput<$PrismaModel>
     gt?: string | StringFieldRefInput<$PrismaModel>
@@ -37140,8 +37377,8 @@ export namespace Prisma {
 
   export type NestedIntNullableFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | null
-    notIn?: number[] | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
     lt?: number | IntFieldRefInput<$PrismaModel>
     lte?: number | IntFieldRefInput<$PrismaModel>
     gt?: number | IntFieldRefInput<$PrismaModel>
@@ -37159,8 +37396,8 @@ export namespace Prisma {
 
   export type NestedDateTimeWithAggregatesFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    in?: Date[] | string[]
-    notIn?: Date[] | string[]
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
     lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
@@ -37173,8 +37410,8 @@ export namespace Prisma {
 
   export type NestedFloatFilter<$PrismaModel = never> = {
     equals?: number | FloatFieldRefInput<$PrismaModel>
-    in?: number[]
-    notIn?: number[]
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
     lt?: number | FloatFieldRefInput<$PrismaModel>
     lte?: number | FloatFieldRefInput<$PrismaModel>
     gt?: number | FloatFieldRefInput<$PrismaModel>
@@ -37184,8 +37421,8 @@ export namespace Prisma {
 
   export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[]
-    notIn?: number[]
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
     lt?: number | IntFieldRefInput<$PrismaModel>
     lte?: number | IntFieldRefInput<$PrismaModel>
     gt?: number | IntFieldRefInput<$PrismaModel>
@@ -37200,8 +37437,8 @@ export namespace Prisma {
 
   export type NestedFloatWithAggregatesFilter<$PrismaModel = never> = {
     equals?: number | FloatFieldRefInput<$PrismaModel>
-    in?: number[]
-    notIn?: number[]
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
     lt?: number | FloatFieldRefInput<$PrismaModel>
     lte?: number | FloatFieldRefInput<$PrismaModel>
     gt?: number | FloatFieldRefInput<$PrismaModel>
@@ -37216,8 +37453,8 @@ export namespace Prisma {
 
   export type NestedFloatNullableFilter<$PrismaModel = never> = {
     equals?: number | FloatFieldRefInput<$PrismaModel> | null
-    in?: number[] | null
-    notIn?: number[] | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
     lt?: number | FloatFieldRefInput<$PrismaModel>
     lte?: number | FloatFieldRefInput<$PrismaModel>
     gt?: number | FloatFieldRefInput<$PrismaModel>
@@ -37227,8 +37464,8 @@ export namespace Prisma {
 
   export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | null
-    notIn?: Date[] | string[] | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
     lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
@@ -37238,8 +37475,8 @@ export namespace Prisma {
 
   export type NestedFloatNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: number | FloatFieldRefInput<$PrismaModel> | null
-    in?: number[] | null
-    notIn?: number[] | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
     lt?: number | FloatFieldRefInput<$PrismaModel>
     lte?: number | FloatFieldRefInput<$PrismaModel>
     gt?: number | FloatFieldRefInput<$PrismaModel>
@@ -37254,8 +37491,8 @@ export namespace Prisma {
 
   export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | null
-    notIn?: Date[] | string[] | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
     lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
@@ -37268,8 +37505,8 @@ export namespace Prisma {
 
   export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | null
-    notIn?: number[] | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
     lt?: number | IntFieldRefInput<$PrismaModel>
     lte?: number | IntFieldRefInput<$PrismaModel>
     gt?: number | IntFieldRefInput<$PrismaModel>
@@ -37290,13 +37527,18 @@ export namespace Prisma {
 
   export type NestedJsonNullableFilterBase<$PrismaModel = never> = {
     equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
-    path?: string
+    path?: string[]
     mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
     string_contains?: string | StringFieldRefInput<$PrismaModel>
     string_starts_with?: string | StringFieldRefInput<$PrismaModel>
     string_ends_with?: string | StringFieldRefInput<$PrismaModel>
     array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
     array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
     not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
   }
 
@@ -37367,6 +37609,7 @@ export namespace Prisma {
 
   export type VehicleCreateManyOwnerInputEnvelope = {
     data: VehicleCreateManyOwnerInput | VehicleCreateManyOwnerInput[]
+    skipDuplicates?: boolean
   }
 
   export type BookingCreateWithoutAgentInput = {
@@ -37400,6 +37643,7 @@ export namespace Prisma {
 
   export type BookingCreateManyAgentInputEnvelope = {
     data: BookingCreateManyAgentInput | BookingCreateManyAgentInput[]
+    skipDuplicates?: boolean
   }
 
   export type OfferCreateWithoutBuyerInput = {
@@ -37427,6 +37671,7 @@ export namespace Prisma {
 
   export type OfferCreateManyBuyerInputEnvelope = {
     data: OfferCreateManyBuyerInput | OfferCreateManyBuyerInput[]
+    skipDuplicates?: boolean
   }
 
   export type MessageCreateWithoutSenderInput = {
@@ -37456,6 +37701,7 @@ export namespace Prisma {
 
   export type MessageCreateManySenderInputEnvelope = {
     data: MessageCreateManySenderInput | MessageCreateManySenderInput[]
+    skipDuplicates?: boolean
   }
 
   export type MessageCreateWithoutReceiverInput = {
@@ -37485,6 +37731,7 @@ export namespace Prisma {
 
   export type MessageCreateManyReceiverInputEnvelope = {
     data: MessageCreateManyReceiverInput | MessageCreateManyReceiverInput[]
+    skipDuplicates?: boolean
   }
 
   export type TransactionCreateWithoutUserInput = {
@@ -37512,6 +37759,7 @@ export namespace Prisma {
 
   export type TransactionCreateManyUserInputEnvelope = {
     data: TransactionCreateManyUserInput | TransactionCreateManyUserInput[]
+    skipDuplicates?: boolean
   }
 
   export type FavoriteCreateWithoutUserInput = {
@@ -37533,6 +37781,7 @@ export namespace Prisma {
 
   export type FavoriteCreateManyUserInputEnvelope = {
     data: FavoriteCreateManyUserInput | FavoriteCreateManyUserInput[]
+    skipDuplicates?: boolean
   }
 
   export type AuditLogCreateWithoutAdminInput = {
@@ -37554,6 +37803,7 @@ export namespace Prisma {
 
   export type AuditLogCreateManyAdminInputEnvelope = {
     data: AuditLogCreateManyAdminInput | AuditLogCreateManyAdminInput[]
+    skipDuplicates?: boolean
   }
 
   export type GarageJobCreateWithoutOwnerInput = {
@@ -37579,6 +37829,7 @@ export namespace Prisma {
 
   export type GarageJobCreateManyOwnerInputEnvelope = {
     data: GarageJobCreateManyOwnerInput | GarageJobCreateManyOwnerInput[]
+    skipDuplicates?: boolean
   }
 
   export type CollegeLeadCreateWithoutUserInput = {
@@ -37600,6 +37851,7 @@ export namespace Prisma {
 
   export type CollegeLeadCreateManyUserInputEnvelope = {
     data: CollegeLeadCreateManyUserInput | CollegeLeadCreateManyUserInput[]
+    skipDuplicates?: boolean
   }
 
   export type CashLogCreateWithoutAgentInput = {
@@ -37623,6 +37875,7 @@ export namespace Prisma {
 
   export type CashLogCreateManyAgentInputEnvelope = {
     data: CashLogCreateManyAgentInput | CashLogCreateManyAgentInput[]
+    skipDuplicates?: boolean
   }
 
   export type StolenVehicleCreateWithoutReportedByInput = {
@@ -37642,6 +37895,7 @@ export namespace Prisma {
 
   export type StolenVehicleCreateManyReportedByInputEnvelope = {
     data: StolenVehicleCreateManyReportedByInput | StolenVehicleCreateManyReportedByInput[]
+    skipDuplicates?: boolean
   }
 
   export type SupportTicketCreateWithoutUserInput = {
@@ -37665,6 +37919,7 @@ export namespace Prisma {
 
   export type SupportTicketCreateManyUserInputEnvelope = {
     data: SupportTicketCreateManyUserInput | SupportTicketCreateManyUserInput[]
+    skipDuplicates?: boolean
   }
 
   export type VehicleUpsertWithWhereUniqueWithoutOwnerInput = {
@@ -38324,6 +38579,57 @@ export namespace Prisma {
 
   export type ZoneCreateManyEventInputEnvelope = {
     data: ZoneCreateManyEventInput | ZoneCreateManyEventInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type RegistrationTicketCreateWithoutEventInput = {
+    id?: string
+    serialNumber?: number
+    ticketId: string
+    regNumber: string
+    make: string
+    model: string
+    year: number
+    ownerName: string
+    ownerPhone: string
+    ownerIdNumber?: string | null
+    amountPaid?: number | null
+    zoneName: string
+    status?: string
+    qrData: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    vehicle: VehicleCreateNestedOneWithoutRegistrationTicketsInput
+  }
+
+  export type RegistrationTicketUncheckedCreateWithoutEventInput = {
+    id?: string
+    serialNumber?: number
+    ticketId: string
+    vehicleId: string
+    regNumber: string
+    make: string
+    model: string
+    year: number
+    ownerName: string
+    ownerPhone: string
+    ownerIdNumber?: string | null
+    amountPaid?: number | null
+    zoneName: string
+    status?: string
+    qrData: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type RegistrationTicketCreateOrConnectWithoutEventInput = {
+    where: RegistrationTicketWhereUniqueInput
+    create: XOR<RegistrationTicketCreateWithoutEventInput, RegistrationTicketUncheckedCreateWithoutEventInput>
+  }
+
+  export type RegistrationTicketCreateManyEventInputEnvelope = {
+    data: RegistrationTicketCreateManyEventInput | RegistrationTicketCreateManyEventInput[]
+    skipDuplicates?: boolean
   }
 
   export type ZoneUpsertWithWhereUniqueWithoutEventInput = {
@@ -38354,12 +38660,53 @@ export namespace Prisma {
     price?: FloatFilter<"Zone"> | number
   }
 
+  export type RegistrationTicketUpsertWithWhereUniqueWithoutEventInput = {
+    where: RegistrationTicketWhereUniqueInput
+    update: XOR<RegistrationTicketUpdateWithoutEventInput, RegistrationTicketUncheckedUpdateWithoutEventInput>
+    create: XOR<RegistrationTicketCreateWithoutEventInput, RegistrationTicketUncheckedCreateWithoutEventInput>
+  }
+
+  export type RegistrationTicketUpdateWithWhereUniqueWithoutEventInput = {
+    where: RegistrationTicketWhereUniqueInput
+    data: XOR<RegistrationTicketUpdateWithoutEventInput, RegistrationTicketUncheckedUpdateWithoutEventInput>
+  }
+
+  export type RegistrationTicketUpdateManyWithWhereWithoutEventInput = {
+    where: RegistrationTicketScalarWhereInput
+    data: XOR<RegistrationTicketUpdateManyMutationInput, RegistrationTicketUncheckedUpdateManyWithoutEventInput>
+  }
+
+  export type RegistrationTicketScalarWhereInput = {
+    AND?: RegistrationTicketScalarWhereInput | RegistrationTicketScalarWhereInput[]
+    OR?: RegistrationTicketScalarWhereInput[]
+    NOT?: RegistrationTicketScalarWhereInput | RegistrationTicketScalarWhereInput[]
+    id?: StringFilter<"RegistrationTicket"> | string
+    serialNumber?: IntFilter<"RegistrationTicket"> | number
+    ticketId?: StringFilter<"RegistrationTicket"> | string
+    vehicleId?: StringFilter<"RegistrationTicket"> | string
+    eventId?: StringFilter<"RegistrationTicket"> | string
+    regNumber?: StringFilter<"RegistrationTicket"> | string
+    make?: StringFilter<"RegistrationTicket"> | string
+    model?: StringFilter<"RegistrationTicket"> | string
+    year?: IntFilter<"RegistrationTicket"> | number
+    ownerName?: StringFilter<"RegistrationTicket"> | string
+    ownerPhone?: StringFilter<"RegistrationTicket"> | string
+    ownerIdNumber?: StringNullableFilter<"RegistrationTicket"> | string | null
+    amountPaid?: FloatNullableFilter<"RegistrationTicket"> | number | null
+    zoneName?: StringFilter<"RegistrationTicket"> | string
+    status?: StringFilter<"RegistrationTicket"> | string
+    qrData?: StringFilter<"RegistrationTicket"> | string
+    createdAt?: DateTimeFilter<"RegistrationTicket"> | Date | string
+    updatedAt?: DateTimeFilter<"RegistrationTicket"> | Date | string
+  }
+
   export type EventCreateWithoutZonesInput = {
     id?: string
     name: string
     location: string
     isActive?: boolean
     createdAt?: Date | string
+    registrationTickets?: RegistrationTicketCreateNestedManyWithoutEventInput
   }
 
   export type EventUncheckedCreateWithoutZonesInput = {
@@ -38368,6 +38715,7 @@ export namespace Prisma {
     location: string
     isActive?: boolean
     createdAt?: Date | string
+    registrationTickets?: RegistrationTicketUncheckedCreateNestedManyWithoutEventInput
   }
 
   export type EventCreateOrConnectWithoutZonesInput = {
@@ -38406,6 +38754,7 @@ export namespace Prisma {
 
   export type BookingCreateManyZoneInputEnvelope = {
     data: BookingCreateManyZoneInput | BookingCreateManyZoneInput[]
+    skipDuplicates?: boolean
   }
 
   export type VehicleCreateWithoutZoneInput = {
@@ -38475,6 +38824,7 @@ export namespace Prisma {
 
   export type VehicleCreateManyZoneInputEnvelope = {
     data: VehicleCreateManyZoneInput | VehicleCreateManyZoneInput[]
+    skipDuplicates?: boolean
   }
 
   export type EventUpsertWithoutZonesInput = {
@@ -38494,6 +38844,7 @@ export namespace Prisma {
     location?: StringFieldUpdateOperationsInput | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    registrationTickets?: RegistrationTicketUpdateManyWithoutEventNestedInput
   }
 
   export type EventUncheckedUpdateWithoutZonesInput = {
@@ -38502,6 +38853,7 @@ export namespace Prisma {
     location?: StringFieldUpdateOperationsInput | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    registrationTickets?: RegistrationTicketUncheckedUpdateManyWithoutEventNestedInput
   }
 
   export type BookingUpsertWithWhereUniqueWithoutZoneInput = {
@@ -39104,6 +39456,7 @@ export namespace Prisma {
 
   export type BookingCreateManyVehicleInputEnvelope = {
     data: BookingCreateManyVehicleInput | BookingCreateManyVehicleInput[]
+    skipDuplicates?: boolean
   }
 
   export type OfferCreateWithoutVehicleInput = {
@@ -39131,6 +39484,7 @@ export namespace Prisma {
 
   export type OfferCreateManyVehicleInputEnvelope = {
     data: OfferCreateManyVehicleInput | OfferCreateManyVehicleInput[]
+    skipDuplicates?: boolean
   }
 
   export type GarageJobCreateWithoutVehicleInput = {
@@ -39156,6 +39510,7 @@ export namespace Prisma {
 
   export type GarageJobCreateManyVehicleInputEnvelope = {
     data: GarageJobCreateManyVehicleInput | GarageJobCreateManyVehicleInput[]
+    skipDuplicates?: boolean
   }
 
   export type VehicleViewCreateWithoutVehicleInput = {
@@ -39177,6 +39532,7 @@ export namespace Prisma {
 
   export type VehicleViewCreateManyVehicleInputEnvelope = {
     data: VehicleViewCreateManyVehicleInput | VehicleViewCreateManyVehicleInput[]
+    skipDuplicates?: boolean
   }
 
   export type MessageCreateWithoutVehicleInput = {
@@ -39206,6 +39562,7 @@ export namespace Prisma {
 
   export type MessageCreateManyVehicleInputEnvelope = {
     data: MessageCreateManyVehicleInput | MessageCreateManyVehicleInput[]
+    skipDuplicates?: boolean
   }
 
   export type FavoriteCreateWithoutVehicleInput = {
@@ -39227,6 +39584,7 @@ export namespace Prisma {
 
   export type FavoriteCreateManyVehicleInputEnvelope = {
     data: FavoriteCreateManyVehicleInput | FavoriteCreateManyVehicleInput[]
+    skipDuplicates?: boolean
   }
 
   export type RegistrationTicketCreateWithoutVehicleInput = {
@@ -39246,12 +39604,14 @@ export namespace Prisma {
     qrData: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    event: EventCreateNestedOneWithoutRegistrationTicketsInput
   }
 
   export type RegistrationTicketUncheckedCreateWithoutVehicleInput = {
     id?: string
     serialNumber?: number
     ticketId: string
+    eventId: string
     regNumber: string
     make: string
     model: string
@@ -39274,6 +39634,7 @@ export namespace Prisma {
 
   export type RegistrationTicketCreateManyVehicleInputEnvelope = {
     data: RegistrationTicketCreateManyVehicleInput | RegistrationTicketCreateManyVehicleInput[]
+    skipDuplicates?: boolean
   }
 
   export type ProfileUpsertWithoutVehiclesInput = {
@@ -39525,29 +39886,6 @@ export namespace Prisma {
     data: XOR<RegistrationTicketUpdateManyMutationInput, RegistrationTicketUncheckedUpdateManyWithoutVehicleInput>
   }
 
-  export type RegistrationTicketScalarWhereInput = {
-    AND?: RegistrationTicketScalarWhereInput | RegistrationTicketScalarWhereInput[]
-    OR?: RegistrationTicketScalarWhereInput[]
-    NOT?: RegistrationTicketScalarWhereInput | RegistrationTicketScalarWhereInput[]
-    id?: StringFilter<"RegistrationTicket"> | string
-    serialNumber?: IntFilter<"RegistrationTicket"> | number
-    ticketId?: StringFilter<"RegistrationTicket"> | string
-    vehicleId?: StringFilter<"RegistrationTicket"> | string
-    regNumber?: StringFilter<"RegistrationTicket"> | string
-    make?: StringFilter<"RegistrationTicket"> | string
-    model?: StringFilter<"RegistrationTicket"> | string
-    year?: IntFilter<"RegistrationTicket"> | number
-    ownerName?: StringFilter<"RegistrationTicket"> | string
-    ownerPhone?: StringFilter<"RegistrationTicket"> | string
-    ownerIdNumber?: StringNullableFilter<"RegistrationTicket"> | string | null
-    amountPaid?: FloatNullableFilter<"RegistrationTicket"> | number | null
-    zoneName?: StringFilter<"RegistrationTicket"> | string
-    status?: StringFilter<"RegistrationTicket"> | string
-    qrData?: StringFilter<"RegistrationTicket"> | string
-    createdAt?: DateTimeFilter<"RegistrationTicket"> | Date | string
-    updatedAt?: DateTimeFilter<"RegistrationTicket"> | Date | string
-  }
-
   export type VehicleCreateWithoutOrganizationInput = {
     id?: string
     regNumber: string
@@ -39615,6 +39953,7 @@ export namespace Prisma {
 
   export type VehicleCreateManyOrganizationInputEnvelope = {
     data: VehicleCreateManyOrganizationInput | VehicleCreateManyOrganizationInput[]
+    skipDuplicates?: boolean
   }
 
   export type VehicleUpsertWithWhereUniqueWithoutOrganizationInput = {
@@ -39920,6 +40259,7 @@ export namespace Prisma {
 
   export type MessageCreateManyOfferInputEnvelope = {
     data: MessageCreateManyOfferInput | MessageCreateManyOfferInput[]
+    skipDuplicates?: boolean
   }
 
   export type VehicleUpsertWithoutOffersInput = {
@@ -41659,6 +41999,29 @@ export namespace Prisma {
     create: XOR<VehicleCreateWithoutRegistrationTicketsInput, VehicleUncheckedCreateWithoutRegistrationTicketsInput>
   }
 
+  export type EventCreateWithoutRegistrationTicketsInput = {
+    id?: string
+    name: string
+    location: string
+    isActive?: boolean
+    createdAt?: Date | string
+    zones?: ZoneCreateNestedManyWithoutEventInput
+  }
+
+  export type EventUncheckedCreateWithoutRegistrationTicketsInput = {
+    id?: string
+    name: string
+    location: string
+    isActive?: boolean
+    createdAt?: Date | string
+    zones?: ZoneUncheckedCreateNestedManyWithoutEventInput
+  }
+
+  export type EventCreateOrConnectWithoutRegistrationTicketsInput = {
+    where: EventWhereUniqueInput
+    create: XOR<EventCreateWithoutRegistrationTicketsInput, EventUncheckedCreateWithoutRegistrationTicketsInput>
+  }
+
   export type VehicleUpsertWithoutRegistrationTicketsInput = {
     update: XOR<VehicleUpdateWithoutRegistrationTicketsInput, VehicleUncheckedUpdateWithoutRegistrationTicketsInput>
     create: XOR<VehicleCreateWithoutRegistrationTicketsInput, VehicleUncheckedCreateWithoutRegistrationTicketsInput>
@@ -41728,6 +42091,35 @@ export namespace Prisma {
     views?: VehicleViewUncheckedUpdateManyWithoutVehicleNestedInput
     messages?: MessageUncheckedUpdateManyWithoutVehicleNestedInput
     favorites?: FavoriteUncheckedUpdateManyWithoutVehicleNestedInput
+  }
+
+  export type EventUpsertWithoutRegistrationTicketsInput = {
+    update: XOR<EventUpdateWithoutRegistrationTicketsInput, EventUncheckedUpdateWithoutRegistrationTicketsInput>
+    create: XOR<EventCreateWithoutRegistrationTicketsInput, EventUncheckedCreateWithoutRegistrationTicketsInput>
+    where?: EventWhereInput
+  }
+
+  export type EventUpdateToOneWithWhereWithoutRegistrationTicketsInput = {
+    where?: EventWhereInput
+    data: XOR<EventUpdateWithoutRegistrationTicketsInput, EventUncheckedUpdateWithoutRegistrationTicketsInput>
+  }
+
+  export type EventUpdateWithoutRegistrationTicketsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    location?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    zones?: ZoneUpdateManyWithoutEventNestedInput
+  }
+
+  export type EventUncheckedUpdateWithoutRegistrationTicketsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    location?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    zones?: ZoneUncheckedUpdateManyWithoutEventNestedInput
   }
 
   export type VehicleCreateManyOwnerInput = {
@@ -42220,6 +42612,26 @@ export namespace Prisma {
     price: number
   }
 
+  export type RegistrationTicketCreateManyEventInput = {
+    id?: string
+    serialNumber?: number
+    ticketId: string
+    vehicleId: string
+    regNumber: string
+    make: string
+    model: string
+    year: number
+    ownerName: string
+    ownerPhone: string
+    ownerIdNumber?: string | null
+    amountPaid?: number | null
+    zoneName: string
+    status?: string
+    qrData: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
   export type ZoneUpdateWithoutEventInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
@@ -42246,6 +42658,66 @@ export namespace Prisma {
     capacity?: IntFieldUpdateOperationsInput | number
     occupancy?: IntFieldUpdateOperationsInput | number
     price?: FloatFieldUpdateOperationsInput | number
+  }
+
+  export type RegistrationTicketUpdateWithoutEventInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    serialNumber?: IntFieldUpdateOperationsInput | number
+    ticketId?: StringFieldUpdateOperationsInput | string
+    regNumber?: StringFieldUpdateOperationsInput | string
+    make?: StringFieldUpdateOperationsInput | string
+    model?: StringFieldUpdateOperationsInput | string
+    year?: IntFieldUpdateOperationsInput | number
+    ownerName?: StringFieldUpdateOperationsInput | string
+    ownerPhone?: StringFieldUpdateOperationsInput | string
+    ownerIdNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    amountPaid?: NullableFloatFieldUpdateOperationsInput | number | null
+    zoneName?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    qrData?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    vehicle?: VehicleUpdateOneRequiredWithoutRegistrationTicketsNestedInput
+  }
+
+  export type RegistrationTicketUncheckedUpdateWithoutEventInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    serialNumber?: IntFieldUpdateOperationsInput | number
+    ticketId?: StringFieldUpdateOperationsInput | string
+    vehicleId?: StringFieldUpdateOperationsInput | string
+    regNumber?: StringFieldUpdateOperationsInput | string
+    make?: StringFieldUpdateOperationsInput | string
+    model?: StringFieldUpdateOperationsInput | string
+    year?: IntFieldUpdateOperationsInput | number
+    ownerName?: StringFieldUpdateOperationsInput | string
+    ownerPhone?: StringFieldUpdateOperationsInput | string
+    ownerIdNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    amountPaid?: NullableFloatFieldUpdateOperationsInput | number | null
+    zoneName?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    qrData?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type RegistrationTicketUncheckedUpdateManyWithoutEventInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    serialNumber?: IntFieldUpdateOperationsInput | number
+    ticketId?: StringFieldUpdateOperationsInput | string
+    vehicleId?: StringFieldUpdateOperationsInput | string
+    regNumber?: StringFieldUpdateOperationsInput | string
+    make?: StringFieldUpdateOperationsInput | string
+    model?: StringFieldUpdateOperationsInput | string
+    year?: IntFieldUpdateOperationsInput | number
+    ownerName?: StringFieldUpdateOperationsInput | string
+    ownerPhone?: StringFieldUpdateOperationsInput | string
+    ownerIdNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    amountPaid?: NullableFloatFieldUpdateOperationsInput | number | null
+    zoneName?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    qrData?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type BookingCreateManyZoneInput = {
@@ -42453,6 +42925,7 @@ export namespace Prisma {
     id?: string
     serialNumber?: number
     ticketId: string
+    eventId: string
     regNumber: string
     make: string
     model: string
@@ -42636,12 +43109,14 @@ export namespace Prisma {
     qrData?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    event?: EventUpdateOneRequiredWithoutRegistrationTicketsNestedInput
   }
 
   export type RegistrationTicketUncheckedUpdateWithoutVehicleInput = {
     id?: StringFieldUpdateOperationsInput | string
     serialNumber?: IntFieldUpdateOperationsInput | number
     ticketId?: StringFieldUpdateOperationsInput | string
+    eventId?: StringFieldUpdateOperationsInput | string
     regNumber?: StringFieldUpdateOperationsInput | string
     make?: StringFieldUpdateOperationsInput | string
     model?: StringFieldUpdateOperationsInput | string
@@ -42661,6 +43136,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     serialNumber?: IntFieldUpdateOperationsInput | number
     ticketId?: StringFieldUpdateOperationsInput | string
+    eventId?: StringFieldUpdateOperationsInput | string
     regNumber?: StringFieldUpdateOperationsInput | string
     make?: StringFieldUpdateOperationsInput | string
     model?: StringFieldUpdateOperationsInput | string

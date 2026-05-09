@@ -5,7 +5,7 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -55,12 +55,13 @@ model Favorite {
 
 // B. Bazaar & Spatial Operations
 model Event {
-  id        String   @id @default(uuid())
-  name      String
-  location  String
-  isActive  Boolean  @default(true)
-  zones     Zone[]
-  createdAt DateTime @default(now())
+  id                  String               @id @default(uuid())
+  name                String
+  location            String
+  isActive            Boolean              @default(true)
+  zones               Zone[]
+  registrationTickets RegistrationTicket[]
+  createdAt           DateTime             @default(now())
 }
 
 model Zone {
@@ -302,6 +303,8 @@ model RegistrationTicket {
   ticketId      String   @unique
   vehicleId     String
   vehicle       Vehicle  @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+  eventId       String
+  event         Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
   regNumber     String
   make          String
   model         String
