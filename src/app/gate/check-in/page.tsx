@@ -590,7 +590,7 @@ export default function GateCheckIn() {
                   <p className="text-6xl font-black tracking-tighter mb-8">KES {selectedZone?.price || 0}</p>
                   
                   {errorMessage && (
-                    <div className="nm-inset bg-black/40 p-4 text-white text-[9px] font-black uppercase tracking-widest text-center">
+                    <div className="nm-inset bg-black/40 p-4 text-black text-[9px] font-black uppercase tracking-widest text-center">
                       CRITICAL ERROR: {errorMessage}
                     </div>
                   )}
