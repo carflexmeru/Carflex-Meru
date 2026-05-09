@@ -195,6 +195,7 @@ export async function POST(req: Request) {
         serial_number: nextSerial,
         ticket_id: ticketId,
         vehicle_id: vehicle.id,
+        event_id: zone.event_id,
         reg_number: cleanPlate,
         make: vehicle.make || "Unknown",
         model: vehicle.model || "Pending",
