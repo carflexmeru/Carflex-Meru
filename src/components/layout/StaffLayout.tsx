@@ -23,7 +23,7 @@ export default function StaffLayout({ children }: StaffLayoutProps) {
   const router = useRouter();
   const pathname = usePathname();
 
-  // Load persistence nodes
+  // Initial state load (mount only)
   useEffect(() => {
     const savedTheme = localStorage.getItem("staff_theme") as "light" | "dark";
     if (savedTheme) setTheme(savedTheme);
@@ -33,7 +33,11 @@ export default function StaffLayout({ children }: StaffLayoutProps) {
     setAgentType(type);
     if (savedEvent) setActiveEvent(savedEvent);
     else localStorage.setItem("carflex_staff_event", "meru-10th-2026");
+  }, []);
 
+  // Auth check on route change
+  useEffect(() => {
+    const type = localStorage.getItem("carflex_staff_type");
     if (!type && pathname !== "/staff/login") {
       router.push("/staff/login");
     }
