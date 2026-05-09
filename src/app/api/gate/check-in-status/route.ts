@@ -22,7 +22,7 @@ export async function GET(request: Request) {
       orderBy: { checkInAt: "desc" }
     });
 
-    if (booking) {
+    if (booking && booking.vehicleId) {
       const ticket = await prisma.registrationTicket.findFirst({
         where: { vehicleId: booking.vehicleId },
         orderBy: { createdAt: "desc" }
