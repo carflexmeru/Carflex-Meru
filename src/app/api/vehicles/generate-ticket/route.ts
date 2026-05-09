@@ -1,6 +1,16 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
 import { supabase } from "@/lib/supabase";
+
+async function nextSerialNumber() {
+  const { data, error } = await supabase
+    .from("registration_tickets")
+    .select("serial_number")
+    .order("serial_number", { ascending: false })
+    .limit(1);
+
+  if (error) throw error;
+  return (data?.[0]?.serial_number || 0) + 1;
+}
 
 export async function POST(request: Request) {
   try {
@@ -11,138 +21,115 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Missing vehicle ID" }, { status: 400 });
     }
 
-    const vehicle = await prisma.vehicle.findUnique({
-      where: { id: vehicleId },
-      include: { 
-        owner: {
-          select: {
-            id: true,
-            name: true,
-            phone: true,
-            idNumber: true
-          }
-        },
-        zone: {
-          select: {
-            id: true,
-            name: true,
-            price: true,
-            eventId: true
-          }
-        }
-      }
-    });
+    const { data: vehicleRows, error: vehicleError } = await supabase
+      .from("vehicles")
+      .select("id,reg_number,make,model,year,status,is_verified,owner_id,zone_id")
+      .eq("id", vehicleId)
+      .limit(1);
 
+    if (vehicleError) throw vehicleError;
+
+    const vehicle = vehicleRows?.[0];
     if (!vehicle) {
       return NextResponse.json({ error: "Vehicle not found" }, { status: 404 });
     }
 
-    if (!vehicle.isVerified) {
+    if (!vehicle.is_verified) {
       return NextResponse.json({ error: "Vehicle not verified" }, { status: 400 });
     }
 
-    // Ensure vehicle has an event
-    if (!vehicle.zone?.eventId) {
+    const { data: zoneRows, error: zoneError } = await supabase
+      .from("zones")
+      .select("id,name,price,event_id")
+      .eq("id", vehicle.zone_id || "")
+      .limit(1);
+
+    if (zoneError) throw zoneError;
+
+    const zone = zoneRows?.[0];
+    if (!zone?.event_id) {
       return NextResponse.json({ error: "Vehicle must be assigned to an event zone" }, { status: 400 });
     }
 
-    // Get the next serial number
-    const lastTicket = await prisma.registrationTicket.findFirst({
-      orderBy: { serialNumber: 'desc' }
-    });
-    const nextSerial = (lastTicket?.serialNumber || 0) + 1;
-    const formattedSerial = nextSerial.toString().padStart(4, '0');
-    
-    // Generate a human-readable sequential ticket ID
-    const ticketId = `CFX-${formattedSerial}`;
-    
-    // Create ticket record
-    const ticket = await prisma.registrationTicket.create({
-      data: {
-        ticketId,
-        serialNumber: nextSerial,
-        vehicleId,
-        eventId: vehicle.zone!.eventId,
-        regNumber: vehicle.regNumber,
+    const { data: ownerRows, error: ownerError } = await supabase
+      .from("profiles")
+      .select("id,name,phone,id_number")
+      .eq("id", vehicle.owner_id || "")
+      .limit(1);
+
+    if (ownerError) throw ownerError;
+
+    const owner = ownerRows?.[0] || null;
+
+    const nextSerial = await nextSerialNumber();
+    const ticketId = `CFX-${nextSerial.toString().padStart(4, "0")}`;
+    const qrData = `${new URL(request.url).origin}/gate/ticket/${ticketId}`;
+
+    const { data: ticket, error: ticketError } = await supabase
+      .from("registration_tickets")
+      .insert({
+        ticket_id: ticketId,
+        serial_number: nextSerial,
+        vehicle_id: vehicle.id,
+        event_id: zone.event_id,
+        reg_number: vehicle.reg_number,
         make: vehicle.make || "Unknown",
         model: vehicle.model || "Unknown",
         year: vehicle.year || new Date().getFullYear(),
-        ownerName: vehicle.owner?.name || "Unknown",
-        ownerPhone: vehicle.owner?.phone || "",
-        ownerIdNumber: vehicle.owner?.idNumber || "",
-        amountPaid: vehicle.zone?.price || 0,
-        zoneName: vehicle.zone?.name || "General",
+        owner_name: owner?.name || "Unknown",
+        owner_phone: owner?.phone || "",
+        owner_id_number: owner?.id_number || "",
+        amount_paid: zone.price || 0,
+        zone_name: zone.name || "General",
         status: "active",
-        qrData: `${new URL(request.url).origin}/gate/ticket/${ticketId}`,
-      }
-    });
+        qr_data: qrData,
+      })
+      .select("*")
+      .single();
+
+    if (ticketError) throw ticketError;
 
     await supabase.from("vehicles").upsert({
       id: vehicle.id,
-      reg_number: vehicle.regNumber,
+      reg_number: vehicle.reg_number,
       make: vehicle.make || "Unknown",
       model: vehicle.model || "Unknown",
       year: vehicle.year || new Date().getFullYear(),
-      price: vehicle.zone?.price || 0,
-      zone_id: vehicle.zone?.id || null,
-      owner_id: vehicle.owner?.id || null,
+      price: zone.price || 0,
+      zone_id: zone.id || null,
+      owner_id: owner?.id || null,
       status: "active",
       is_verified: true,
-      at_event: Boolean(vehicle.zone?.eventId),
-      event_name: vehicle.zone?.eventId || null,
+      at_event: Boolean(zone.event_id),
+      event_name: zone.event_id || null,
     });
-
-    await supabase.from("registration_tickets").upsert({
-      ticket_id: ticket.ticketId,
-      serial_number: nextSerial,
-      vehicle_id: vehicle.id,
-      event_id: vehicle.zone!.eventId,
-      reg_number: ticket.regNumber,
-      make: ticket.make,
-      model: ticket.model,
-      year: ticket.year,
-      owner_name: ticket.ownerName,
-      owner_phone: ticket.ownerPhone,
-      owner_id_number: ticket.ownerIdNumber,
-      amount_paid: ticket.amountPaid,
-      zone_name: ticket.zoneName,
-      status: ticket.status,
-      qr_data: ticket.qrData,
-    });
-
-    // Generate QR code data URL (using a simple QR code service)
-    const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(ticket.qrData)}`;
 
     return NextResponse.json({
       success: true,
       ticket: {
-        ticketId: ticket.ticketId,
-        vehicleId: ticket.vehicleId,
-        regNumber: ticket.regNumber,
+        ticketId: ticket.ticket_id,
+        vehicleId: ticket.vehicle_id,
+        regNumber: ticket.reg_number,
         make: ticket.make,
         model: ticket.model,
         year: ticket.year,
-        ownerName: ticket.ownerName,
-        ownerPhone: ticket.ownerPhone,
-        ownerIdNumber: ticket.ownerIdNumber,
-        amountPaid: ticket.amountPaid,
-        zoneName: ticket.zoneName,
-        createdAt: ticket.createdAt,
-        qrCodeUrl,
-        printUrl: `/api/vehicles/print-ticket/${ticket.ticketId}`
-      }
+        ownerName: ticket.owner_name,
+        ownerPhone: ticket.owner_phone,
+        ownerIdNumber: ticket.owner_id_number,
+        amountPaid: ticket.amount_paid,
+        zoneName: ticket.zone_name,
+        createdAt: ticket.created_at,
+        qrCodeUrl: `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(ticket.qr_data)}`,
+        printUrl: `/api/vehicles/print-ticket/${ticket.ticket_id}`,
+      },
     });
   } catch (error) {
     console.error("Ticket generation error:", error);
-    
-    // Provide more specific error messages
+
     if (error instanceof Error) {
-      if (error.message.includes("Unique constraint failed")) {
-        return NextResponse.json({ error: "Ticket already exists for this vehicle" }, { status: 400 });
-      }
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
-    
+
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   }
 }

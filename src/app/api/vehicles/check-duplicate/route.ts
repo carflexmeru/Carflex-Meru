@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+import { supabase } from "@/lib/supabase";
 
 export async function POST(request: Request) {
   try {
@@ -12,42 +12,34 @@ export async function POST(request: Request) {
       );
     }
 
-    // Check if vehicle with this registration number already exists
-    const existingVehicle = await prisma.vehicle.findFirst({
-      where: {
-        regNumber: regNumber.toUpperCase()
-      },
-      include: {
-        owner: {
-          select: {
-            id: true,
-            name: true,
-            phone: true
-          }
-        }
-      }
-    });
+    const { data: existingVehicle, error } = await supabase
+      .from("vehicles")
+      .select("id,reg_number,make,model,year,price,status,created_at,owner_id")
+      .eq("reg_number", regNumber.toUpperCase())
+      .limit(1);
 
-    if (existingVehicle) {
+    if (error) throw error;
+
+    if (existingVehicle?.[0]) {
       return NextResponse.json({
         isDuplicate: true,
         existingVehicle: {
-          id: existingVehicle.id,
-          regNumber: existingVehicle.regNumber,
-          make: existingVehicle.make,
-          model: existingVehicle.model,
-          year: existingVehicle.year,
-          price: existingVehicle.price,
-          status: existingVehicle.status,
-          owner: existingVehicle.owner,
-          createdAt: existingVehicle.createdAt
-        }
+          id: existingVehicle[0].id,
+          regNumber: existingVehicle[0].reg_number,
+          make: existingVehicle[0].make,
+          model: existingVehicle[0].model,
+          year: existingVehicle[0].year,
+          price: existingVehicle[0].price,
+          status: existingVehicle[0].status,
+          owner: null,
+          createdAt: existingVehicle[0].created_at,
+        },
       });
     }
 
     return NextResponse.json({
       isDuplicate: false,
-      existingVehicle: null
+      existingVehicle: null,
     });
   } catch (error: any) {
     console.error("Duplicate check error:", error);
