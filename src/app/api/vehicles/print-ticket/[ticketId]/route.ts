@@ -1,6 +1,15 @@
 import { NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
 
+function formatText(value: unknown) {
+  return typeof value === "string" && value.trim() ? value.trim() : "";
+}
+
+function formatYear(value: unknown) {
+  const year = typeof value === "number" ? value : Number(value);
+  return Number.isFinite(year) && year > 0 ? String(year) : "";
+}
+
 export async function GET(
   request: Request,
   { params }: { params: Promise<{ ticketId: string }> }
@@ -174,23 +183,23 @@ export async function GET(
               </div>
               <div class="detail-row">
                 <span class="detail-label">Vehicle:</span>
-                <span class="detail-value">${ticket.year} ${ticket.make} ${ticket.model}</span>
+                <span class="detail-value">${[formatYear(ticket.year), formatText(ticket.make), formatText(ticket.model)].filter(Boolean).join(" ")}</span>
               </div>
               <div class="detail-row">
                 <span class="detail-label">Owner Name:</span>
-                <span class="detail-value">${ticket.owner_name}</span>
+                <span class="detail-value">${formatText(ticket.owner_name)}</span>
               </div>
               <div class="detail-row">
                 <span class="detail-label">ID Number:</span>
-                <span class="detail-value">${ticket.owner_id_number || "N/A"}</span>
+                <span class="detail-value">${formatText(ticket.owner_id_number)}</span>
               </div>
               <div class="detail-row">
                 <span class="detail-label">Phone:</span>
-                <span class="detail-value">${ticket.owner_phone}</span>
+                <span class="detail-value">${formatText(ticket.owner_phone)}</span>
               </div>
               <div class="detail-row">
                 <span class="detail-label">Market Zone:</span>
-                <span class="detail-value" style="color: #E60000;">${ticket.zone_name}</span>
+                <span class="detail-value" style="color: #E60000;">${formatText(ticket.zone_name)}</span>
               </div>
               <div class="detail-row" style="background: rgba(230, 0, 0, 0.05); margin: 0 -12px; padding: 12px 12px; font-size: 18px; font-weight: 900;">
                 <span class="detail-label">Amount Paid:</span>
