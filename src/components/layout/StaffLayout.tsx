@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 
 interface NavLink {
   label: string;
@@ -18,7 +19,6 @@ export default function StaffLayout({ children }: StaffLayoutProps) {
   const [theme, setTheme] = useState<"light" | "dark">("dark");
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const [agentType, setAgentType] = useState<string | null>(null);
-  const [agentName, setAgentName] = useState<string | null>(null);
   const [activeEvent, setActiveEvent] = useState<string>("meru-10th-2026");
   const router = useRouter();
   const pathname = usePathname();
@@ -29,10 +29,8 @@ export default function StaffLayout({ children }: StaffLayoutProps) {
     if (savedTheme) setTheme(savedTheme);
     
     const type = localStorage.getItem("carflex_staff_type");
-    const name = localStorage.getItem("carflex_staff_name");
     const savedEvent = localStorage.getItem("carflex_staff_event");
     setAgentType(type);
-    setAgentName(name);
     if (savedEvent) setActiveEvent(savedEvent);
     else localStorage.setItem("carflex_staff_event", "meru-10th-2026");
 
@@ -130,7 +128,7 @@ export default function StaffLayout({ children }: StaffLayoutProps) {
       <aside className="hidden md:flex fixed left-0 top-0 h-full z-50 w-20 xl:w-64 bg-[var(--sidebar)] border-r border-[var(--glass-border)] transition-all duration-300 flex-col items-center xl:items-stretch py-8">
         <div className="mb-12 px-4 xl:px-6 flex items-center justify-center xl:justify-start">
           <div className="w-14 h-14 bg-primary/10 rounded-xl flex items-center justify-center">
-            <img src="/logo.png" alt="CARFLEX" className="w-10 h-auto object-contain" />
+            <Image src="/logo.png" alt="CARFLEX" width={40} height={40} className="w-10 h-auto object-contain" />
           </div>
           <span className="hidden xl:inline ml-3 text-xl font-black uppercase tracking-tighter">
             Staff <span className="text-primary italic">Portal</span>
@@ -141,10 +139,10 @@ export default function StaffLayout({ children }: StaffLayoutProps) {
           <p className="text-[8px] font-black uppercase tracking-[0.3em] text-zinc-500 mb-2">Active Event</p>
           <div className="rounded-2xl border border-[var(--glass-border)] bg-[var(--surface)] p-3">
             <select
+              aria-label="Active Event"
               value={activeEvent || ""}
               onChange={(e) => setActiveEvent(e.target.value)}
-              className="w-full bg-transparent text-[10px] font-black uppercase tracking-widest outline-none"
-              style={{ color: "var(--foreground)" }}
+              className="w-full bg-transparent text-[10px] font-black uppercase tracking-widest outline-none text-[var(--foreground)]"
             >
               <option value="">Select Event</option>
               <option value="meru-2026">Meru Car Bazaar</option>
@@ -211,7 +209,7 @@ export default function StaffLayout({ children }: StaffLayoutProps) {
       <header className="md:hidden fixed top-0 left-0 w-full z-40 bg-[var(--sidebar)] border-b border-[var(--glass-border)] px-4 py-3 flex justify-between items-center">
         <div className="flex items-center gap-3 min-w-0">
           <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center">
-            <img src="/logo.png" alt="CARFLEX" className="w-8 h-auto object-contain" />
+            <Image src="/logo.png" alt="CARFLEX" width={32} height={32} className="w-8 h-auto object-contain" />
           </div>
           <span className="min-w-0 font-black uppercase tracking-tighter text-[11px] leading-none">
             STAFF <span className="text-primary italic">PORTAL</span>
@@ -232,10 +230,10 @@ export default function StaffLayout({ children }: StaffLayoutProps) {
           <div className="rounded-2xl border border-[var(--glass-border)] bg-[var(--surface)] p-4">
             <p className="text-[8px] font-black uppercase tracking-[0.3em] text-zinc-500 mb-2">Active Event</p>
             <select
+              aria-label="Active Event"
               value={activeEvent || ""}
               onChange={(e) => setActiveEvent(e.target.value)}
-              className="w-full bg-transparent text-[10px] font-black uppercase tracking-widest outline-none"
-              style={{ color: "var(--foreground)" }}
+              className="w-full bg-transparent text-[10px] font-black uppercase tracking-widest outline-none text-[var(--foreground)]"
             >
               <option value="">Select Event</option>
               <option value="meru-2026">Meru Car Bazaar</option>
