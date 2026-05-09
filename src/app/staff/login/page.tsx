@@ -128,6 +128,31 @@ export default function StaffLogin() {
           <form onSubmit={handleLogin} className="space-y-7">
             <div className="space-y-3">
               <label className="text-[10px] font-black uppercase tracking-widest px-2" style={{ color: mutedText }}>
+                Operational Division
+              </label>
+              <div
+                className="nm-inset"
+                style={{
+                  backgroundColor: fieldBg,
+                  border: `1px solid ${fieldBorder}`,
+                }}
+              >
+                <select
+                  className="w-full bg-transparent p-5 md:p-6 font-black uppercase text-lg md:text-xl tracking-tighter outline-none cursor-pointer border-none"
+                  style={{ color: fieldText }}
+                  value={type}
+                  onChange={(e) => setType(e.target.value)}
+                >
+                  <option value="REGISTRATION_AGENT">REGISTRATION_AGENT</option>
+                  <option value="GATE_VERIFICATION_AGENT">GATE_VERIFICATION_AGENT</option>
+                  <option value="GROUND_VERIFICATION_AGENT">GROUND_VERIFICATION_AGENT</option>
+                  <option value="EXIT_COMMAND_AGENT">EXIT_COMMAND_AGENT</option>
+                </select>
+              </div>
+            </div>
+
+            <div className="space-y-3">
+              <label className="text-[10px] font-black uppercase tracking-widest px-2" style={{ color: mutedText }}>
                 Email Address
               </label>
               <div
