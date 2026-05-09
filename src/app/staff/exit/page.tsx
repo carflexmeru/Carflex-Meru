@@ -14,8 +14,6 @@ interface Vehicle {
   ownerPhone?: string;
   zoneName?: string;
   amountPaid?: number;
-  owner?: { name: string; phone: string };
-  zone?: { name: string; price: number };
 }
 
 export default function ExitHubPage() {
@@ -40,29 +38,44 @@ export default function ExitHubPage() {
       const res = await fetch(`/api/vehicles/approved${qs}`);
       const data = await res.json();
       if (Array.isArray(data)) {
-        setVehicles(data);
+        setVehicles(data.map((vehicle: any) => ({
+          id: vehicle.id,
+          regNumber: vehicle.reg_number || vehicle.regNumber || "",
+          make: vehicle.make || "",
+          model: vehicle.model || "",
+          year: Number(vehicle.year) || 0,
+          ownerName: vehicle.owner_name || vehicle.ownerName || "INDIVIDUAL_OWNER",
+          ownerPhone: vehicle.owner_phone || vehicle.ownerPhone || "",
+          zoneName: vehicle.zone_name || vehicle.zoneName || "UNASSIGNED",
+          amountPaid: Number(vehicle.amount_paid || vehicle.amountPaid) || 0,
+        })));
+      } else {
+        setVehicles([]);
       }
     } catch (err) {
       console.error(err);
+      setVehicles([]);
     } finally {
       setLoading(false);
     }
   };
 
   const handleShowQR = (vehicle: Vehicle) => {
-    const transformedVehicle = {
-      ...vehicle,
-      ownerName: vehicle.ownerName || vehicle.owner?.name || "INDIVIDUAL_OWNER",
-      ownerPhone: vehicle.ownerPhone || vehicle.owner?.phone || "",
-      zoneName: vehicle.zoneName || vehicle.zone?.name || "UNASSIGNED",
-      amountPaid: vehicle.amountPaid || 0
-    };
-    setQrModal({ isOpen: true, vehicle: transformedVehicle as any });
+    setQrModal({
+      isOpen: true,
+      vehicle: {
+        ...vehicle,
+        ownerName: vehicle.ownerName || "INDIVIDUAL_OWNER",
+        ownerPhone: vehicle.ownerPhone || "",
+        zoneName: vehicle.zoneName || "UNASSIGNED",
+        amountPaid: vehicle.amountPaid || 0,
+      } as any,
+    });
   };
 
   const filteredVehicles = vehicles.filter(v =>
-    v.regNumber.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    v.owner?.name.toLowerCase().includes(searchQuery.toLowerCase())
+    (v.regNumber || "").toLowerCase().includes(searchQuery.toLowerCase()) ||
+    (v.ownerName || "").toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (
@@ -133,7 +146,7 @@ export default function ExitHubPage() {
                     </div>
                     <div className="min-w-0">
                       <p className="mb-1 truncate text-[9px] font-black uppercase text-zinc-500">
-                        {v.owner?.name || "INDIVIDUAL_OWNER"}
+                        {v.ownerName || "INDIVIDUAL_OWNER"}
                       </p>
                       <p className="break-words text-2xl font-black uppercase tracking-tighter text-foreground sm:text-3xl">
                         {v.regNumber}
@@ -147,7 +160,7 @@ export default function ExitHubPage() {
                         Zone
                       </p>
                       <p className="text-lg font-black uppercase tracking-tight text-foreground sm:text-xl">
-                        {v.zone?.name || "UNASSIGNED"}
+                        {v.zoneName || "UNASSIGNED"}
                       </p>
                     </div>
 

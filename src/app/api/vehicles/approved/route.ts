@@ -10,8 +10,7 @@ export async function GET(request: Request) {
       .from("vehicles")
       .select("id,reg_number,make,model,year,status,is_verified,at_event,event_name,created_at,owner_id,zone_id")
       .eq("status", "active")
-      .eq("is_verified", true)
-      .order("created_at", { ascending: false });
+      .eq("is_verified", true);
 
     if (eventName) {
       query = query.eq("event_name", eventName);
