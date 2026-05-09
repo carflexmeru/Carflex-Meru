@@ -13,6 +13,12 @@ function normalizePhone(phone: string) {
 async function resolveEvent(eventName?: string) {
   const existing = await prisma.event.findMany({
     where: eventName ? { name: eventName } : { isActive: true },
+    select: {
+      id: true,
+      name: true,
+      isActive: true,
+      location: true,
+    },
     take: 1,
   });
 

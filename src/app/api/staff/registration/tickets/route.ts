@@ -1,11 +1,86 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+import { supabase } from "@/lib/supabase";
 
 function normalizePhone(phone: string) {
   const compact = phone.replace(/\s+/g, "");
   if (compact.startsWith("0")) return `+254${compact.slice(1)}`;
   if (compact.startsWith("+")) return compact;
   return `+${compact}`;
+}
+
+async function resolveEvent(eventName?: string) {
+  const query = supabase
+    .from("events")
+    .select("id,name,is_active,location")
+    .limit(1);
+
+  const { data: existing, error } = await (eventName
+    ? query.eq("name", eventName)
+    : query.eq("is_active", true));
+
+  if (error) throw error;
+  if (existing?.[0]) return existing[0];
+
+  const { data: created, error: createError } = await supabase
+    .from("events")
+    .insert({
+      name: eventName || "Manual Registration Event",
+      location: "Carflex Event Ground",
+      is_active: true,
+    })
+    .select("id,name,is_active,location")
+    .single();
+
+  if (createError) throw createError;
+  return created;
+}
+
+async function nextSerialNumber() {
+  const { data, error } = await supabase
+    .from("registration_tickets")
+    .select("serial_number")
+    .order("serial_number", { ascending: false })
+    .limit(1);
+
+  if (error) throw error;
+  return (data?.[0]?.serial_number || 0) + 1;
+}
+
+async function resolveVehicle(params: {
+  regNumber: string;
+  make: string;
+  model: string;
+  year: number;
+  ticketAmount: number;
+  eventName?: string;
+}) {
+  const { data: existing, error } = await supabase
+    .from("vehicles")
+    .select("id,reg_number,make,model,year")
+    .eq("reg_number", params.regNumber)
+    .limit(1);
+
+  if (error) throw error;
+  if (existing?.[0]) return existing[0];
+
+  const { data: created, error: createError } = await supabase
+    .from("vehicles")
+    .insert({
+      reg_number: params.regNumber,
+      make: params.make || "",
+      model: params.model || "",
+      year: params.year || null,
+      price: params.ticketAmount || 0,
+      status: "active",
+      is_verified: true,
+      at_event: true,
+      event_name: params.eventName || null,
+    })
+    .select("id,reg_number,make,model,year")
+    .single();
+
+  if (createError) throw createError;
+  return created;
 }
 
 export async function POST(req: Request) {
@@ -41,98 +116,72 @@ export async function POST(req: Request) {
     const vehicleYear = year ? Number(year) : 0;
     const ticketAmount = amountPaid ? Number(amountPaid) : 0;
 
-    let event = (
-      await prisma.event.findMany({
-        where: { isActive: true },
-        take: 1,
-      })
-    )[0];
+    const event = await resolveEvent(eventName);
+    const vehicle = await resolveVehicle({
+      regNumber: cleanRegNumber,
+      make: makeValue,
+      model: modelValue,
+      year: vehicleYear,
+      ticketAmount,
+      eventName,
+    });
+    const serialNumber = await nextSerialNumber();
+    const ticketId = `CFX-${serialNumber.toString().padStart(4, "0")}`;
 
-    if (!event) {
-      event = await prisma.event.create({
-        data: {
-          name: eventName || "Manual Registration Event",
-          location: "Carflex Event Ground",
-          isActive: true,
-        },
-      });
-    }
-
-    const existingVehicle = await prisma.vehicle.findFirst({
-      where: { regNumber: cleanRegNumber },
+    const qrData = JSON.stringify({
+      ticketId,
+      regNumber: cleanRegNumber,
+      ownerName,
+      ownerPhone: normalizedPhone,
+      ownerIdNumber: ownerIdNumber || "",
+      zoneName: zoneValue || "",
+      amountPaid: ticketAmount,
+      eventName: eventName || "",
+      processName: processName || "Registration ticket",
+      notes: notes || "",
+      issuedAt: new Date().toISOString(),
     });
 
-    const vehicle =
-      existingVehicle ??
-      (await prisma.vehicle.create({
-        data: {
-          regNumber: cleanRegNumber,
-          make: makeValue || "",
-          model: modelValue || "",
-          year: vehicleYear,
-          price: ticketAmount,
-          status: "active",
-          isVerified: true,
-          atEvent: true,
-          eventName: eventName || null,
-        },
-      }));
-
-    const lastTicket = await prisma.registrationTicket.findFirst({
-      orderBy: { serialNumber: "desc" },
-    });
-
-    const nextSerial = (lastTicket?.serialNumber || 0) + 1;
-    const ticketId = `CFX-${nextSerial.toString().padStart(4, "0")}`;
-
-    const ticket = await prisma.registrationTicket.create({
-      data: {
-        ticketId,
-        serialNumber: nextSerial,
-        vehicleId: vehicle.id,
-        eventId: event.id,
-        regNumber: cleanRegNumber,
+    const { data: ticket, error: ticketError } = await supabase
+      .from("registration_tickets")
+      .insert({
+        ticket_id: ticketId,
+        serial_number: serialNumber,
+        vehicle_id: vehicle.id,
+        event_id: event.id,
+        reg_number: cleanRegNumber,
         make: makeValue || vehicle.make || "",
         model: modelValue || vehicle.model || "",
-        year: vehicleYear,
-        ownerName,
-        ownerPhone: normalizedPhone,
-        ownerIdNumber: ownerIdNumber || null,
-        amountPaid: ticketAmount,
-        zoneName: zoneValue || "",
+        year: vehicleYear || null,
+        owner_name: ownerName,
+        owner_phone: normalizedPhone,
+        owner_id_number: ownerIdNumber || null,
+        amount_paid: ticketAmount,
+        zone_name: zoneValue || "",
         status: "active",
-        qrData: JSON.stringify({
-          ticketId,
-          regNumber: cleanRegNumber,
-          ownerName,
-          ownerPhone: normalizedPhone,
-          ownerIdNumber: ownerIdNumber || "",
-          zoneName: zoneValue || "",
-          amountPaid: ticketAmount,
-          eventName: eventName || "",
-          processName: processName || "Registration ticket",
-          notes: notes || "",
-          issuedAt: new Date().toISOString(),
-        }),
-      },
-    });
+        qr_data: qrData,
+      })
+      .select("ticket_id,serial_number,vehicle_id,reg_number,make,model,year,owner_name,owner_phone,owner_id_number,amount_paid,zone_name,qr_data")
+      .single();
+
+    if (ticketError) throw ticketError;
 
     return NextResponse.json({
       success: true,
       ticket: {
-        ticketId: ticket.ticketId,
-        vehicleId: ticket.vehicleId,
-        regNumber: ticket.regNumber,
+        ticketId: ticket.ticket_id,
+        vehicleId: ticket.vehicle_id,
+        regNumber: ticket.reg_number,
         make: ticket.make,
         model: ticket.model,
         year: ticket.year,
-        ownerName: ticket.ownerName,
-        ownerPhone: ticket.ownerPhone,
-        ownerIdNumber: ticket.ownerIdNumber,
-        amountPaid: ticket.amountPaid,
-        zoneName: ticket.zoneName,
-        qrCodeUrl: `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(ticket.qrData)}`,
-        printUrl: `/api/vehicles/print-ticket/${ticket.ticketId}`,
+        ownerName: ticket.owner_name,
+        ownerPhone: ticket.owner_phone,
+        ownerIdNumber: ticket.owner_id_number,
+        amountPaid: ticket.amount_paid,
+        zoneName: ticket.zone_name,
+        qrCodeUrl: `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(ticket.qr_data)}`,
+        printUrl: `/api/vehicles/print-ticket/${ticket.ticket_id}`,
       },
     });
   } catch (error) {
