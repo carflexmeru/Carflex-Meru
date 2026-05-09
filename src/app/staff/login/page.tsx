@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 
 export default function StaffLogin() {
   const [type, setType] = useState("REGISTRATION_AGENT");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -26,20 +27,22 @@ export default function StaffLogin() {
     setError("");
 
     try {
-      const res = await fetch("/api/staff/login", {
+      const res = await fetch("/api/staff/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ type, password }),
+        body: JSON.stringify({ email, password }),
       });
 
       const data = await res.json();
 
       if (data.success) {
-        localStorage.setItem("carflex_staff_type", type);
-        localStorage.setItem("carflex_staff_name", data.agentName);
+        localStorage.setItem("carflex_staff_type", data.user.type);
+        localStorage.setItem("carflex_staff_name", data.user.name);
+        localStorage.setItem("carflex_staff_email", data.user.email);
+        localStorage.setItem("carflex_staff_id", data.user.id);
         router.push(data.redirectPath);
       } else {
-        setError("AUTHENTICATION_FAILED: ACCESS DENIED");
+        setError(data.error || "AUTHENTICATION_FAILED: ACCESS DENIED");
       }
     } catch {
       setError("COMMUNICATION_ERROR: LINK SEVERED");
@@ -125,7 +128,7 @@ export default function StaffLogin() {
           <form onSubmit={handleLogin} className="space-y-7">
             <div className="space-y-3">
               <label className="text-[10px] font-black uppercase tracking-widest px-2" style={{ color: mutedText }}>
-                Operational Division
+                Email Address
               </label>
               <div
                 className="nm-inset"
@@ -134,23 +137,21 @@ export default function StaffLogin() {
                   border: `1px solid ${fieldBorder}`,
                 }}
               >
-                <select
-                  className="w-full bg-transparent p-5 md:p-6 font-black uppercase text-lg md:text-xl tracking-tighter outline-none cursor-pointer border-none"
+                <input
+                  type="email"
+                  required
+                  placeholder="staff@carflex.com"
+                  className="w-full bg-transparent p-5 md:p-6 font-black uppercase text-lg md:text-xl tracking-tighter outline-none border-none placeholder:text-zinc-500"
                   style={{ color: fieldText }}
-                  value={type}
-                  onChange={(e) => setType(e.target.value)}
-                >
-                  <option value="REGISTRATION_AGENT">REGISTRATION_AGENT</option>
-                  <option value="GATE_VERIFICATION_AGENT">GATE_VERIFICATION_AGENT</option>
-                  <option value="GROUND_VERIFICATION_AGENT">GROUND_VERIFICATION_AGENT</option>
-                  <option value="EXIT_COMMAND_AGENT">EXIT_COMMAND_AGENT</option>
-                </select>
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
               </div>
             </div>
 
             <div className="space-y-3">
               <label className="text-[10px] font-black uppercase tracking-widest px-2" style={{ color: mutedText }}>
-                Access Frequency Code
+                Password
               </label>
               <div
                 className="nm-inset flex items-center pr-4 relative"
@@ -162,7 +163,7 @@ export default function StaffLogin() {
                 <input
                   type={showPassword ? "text" : "password"}
                   placeholder="PASSWORD_REQUIRED"
-                  className="staff-field w-full bg-transparent p-5 md:p-6 font-black uppercase text-lg md:text-xl tracking-[0.28em] outline-none border-none"
+                  className="staff-field w-full bg-transparent p-5 md:p-6 font-black uppercase text-lg md:text-xl tracking-[0.28em] outline-none border-none placeholder:text-zinc-500"
                   style={{ color: fieldText }}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
