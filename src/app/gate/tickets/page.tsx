@@ -41,20 +41,20 @@ export default function RegisteredTicketsPage() {
         if (data.success) {
           setTickets(
             (Array.isArray(data.tickets) ? data.tickets : []).map((ticket: Partial<Ticket>) => ({
-              id: normalizeText(ticket.id),
-              ticketId: normalizeText(ticket.ticketId),
-              regNumber: normalizeText(ticket.regNumber),
-              make: normalizeText(ticket.make),
-              model: normalizeText(ticket.model),
-              year: Number(ticket.year) || 0,
-              ownerName: normalizeText(ticket.ownerName),
-              ownerPhone: normalizeText(ticket.ownerPhone),
-              ownerIdNumber: normalizeText(ticket.ownerIdNumber),
-              zoneName: normalizeText(ticket.zoneName),
-              amountPaid: Number(ticket.amountPaid) || 0,
-              status: normalizeText(ticket.status),
-              qrData: normalizeText(ticket.qrData),
-              createdAt: normalizeText(ticket.createdAt),
+              id: normalizeText((ticket as any).id),
+              ticketId: normalizeText((ticket as any).ticket_id || (ticket as any).ticketId),
+              regNumber: normalizeText((ticket as any).reg_number || (ticket as any).regNumber),
+              make: normalizeText((ticket as any).make),
+              model: normalizeText((ticket as any).model),
+              year: Number((ticket as any).year) || 0,
+              ownerName: normalizeText((ticket as any).owner_name || (ticket as any).ownerName),
+              ownerPhone: normalizeText((ticket as any).owner_phone || (ticket as any).ownerPhone),
+              ownerIdNumber: normalizeText((ticket as any).owner_id_number || (ticket as any).ownerIdNumber),
+              zoneName: normalizeText((ticket as any).zone_name || (ticket as any).zoneName),
+              amountPaid: Number((ticket as any).amount_paid || (ticket as any).amountPaid) || 0,
+              status: normalizeText((ticket as any).status),
+              qrData: normalizeText((ticket as any).qr_data || (ticket as any).qrData),
+              createdAt: normalizeText((ticket as any).created_at || (ticket as any).createdAt),
             }))
           );
         }
@@ -180,7 +180,7 @@ export default function RegisteredTicketsPage() {
           <div className="nm-card p-6 border-l-4 border-zinc-700">
             <p className="text-[8px] font-black uppercase tracking-widest text-zinc-500 mb-2">Revenue Collected</p>
             <p className="text-3xl font-black text-foreground tracking-tighter">
-              KSH {tickets.reduce((acc, t) => acc + (t.amountPaid || 0), 0).toLocaleString()}
+        KSH {tickets.reduce((acc, t) => acc + (Number(t.amountPaid) || 0), 0).toLocaleString()}
             </p>
           </div>
           <div className="nm-card p-6 border-l-4 border-zinc-700">
