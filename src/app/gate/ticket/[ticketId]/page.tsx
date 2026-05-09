@@ -29,6 +29,8 @@ export default function TicketPage({
   const [loading, setLoading] = useState(true);
   const [ticket, setTicket] = useState<Ticket | null>(null);
   const [error, setError] = useState("");
+  const [editingPrice, setEditingPrice] = useState(false);
+  const [newPrice, setNewPrice] = useState<string>("");
 
   useEffect(() => {
     async function fetchTicket() {
@@ -42,6 +44,7 @@ export default function TicketPage({
 
         if (data.success) {
           setTicket(data.ticket);
+          setNewPrice(data.ticket.amountPaid?.toString() || "0");
         } else {
           setError(data.error || "Ticket not found");
         }
@@ -57,6 +60,30 @@ export default function TicketPage({
     }
   }, [ticketId]);
 
+  const handleUpdatePrice = async () => {
+    if (!ticket || !newPrice) return;
+
+    try {
+      const res = await fetch(`/api/vehicles/ticket/${ticketId}/update-price`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ amountPaid: parseFloat(newPrice) })
+      });
+
+      const data = await res.json();
+
+      if (data.success) {
+        setTicket({ ...ticket, amountPaid: parseFloat(newPrice) });
+        setEditingPrice(false);
+        setError("");
+      } else {
+        setError(data.error || "Failed to update price");
+      }
+    } catch (err) {
+      setError("Error updating price");
+    }
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-surface flex flex-col items-center justify-center p-6">
@@ -69,17 +96,26 @@ export default function TicketPage({
   if (error || !ticket) {
     return (
       <div className="min-h-screen bg-surface flex flex-col items-center justify-center p-6 text-center">
-        <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mb-4">
-          <span className="material-symbols-outlined text-primary">error</span>
+        <div className="max-w-md w-full nm-card p-8 space-y-6 border border-primary/20">
+          <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto">
+            <span className="material-symbols-outlined text-primary text-3xl">error</span>
+          </div>
+          <div className="space-y-2">
+            <h2 className="text-2xl font-black text-foreground uppercase tracking-tighter">Error</h2>
+            <p className="text-[11px] font-bold text-zinc-500 uppercase tracking-widest">Unable to load ticket</p>
+          </div>
+          <div className="nm-inset p-4 bg-primary/5 border border-primary/20 rounded">
+            <p className="text-[10px] text-zinc-400 break-words whitespace-normal leading-relaxed">
+              {error || "Ticket not found"}
+            </p>
+          </div>
+          <button
+            onClick={() => router.push("/gate/check-in")}
+            className="nm-card w-full px-8 py-4 text-primary font-black uppercase text-xs hover:bg-primary/5 transition-all"
+          >
+            BACK TO CHECK-IN
+          </button>
         </div>
-        <h2 className="text-xl font-black text-white uppercase mb-2">Error</h2>
-        <p className="text-zinc-500 mb-6">{error || "Ticket not found"}</p>
-        <button
-          onClick={() => router.push("/gate/check-in")}
-          className="nm-card px-8 py-4 text-primary font-black uppercase text-xs"
-        >
-          BACK TO CHECK-IN
-        </button>
       </div>
     );
   }
@@ -113,6 +149,18 @@ export default function TicketPage({
         </div>
 
         {/* Ticket Content */}
+        {error && (
+          <div className="nm-inset p-4 bg-primary/10 border border-primary/30 rounded space-y-2">
+            <div className="flex items-start gap-3">
+              <span className="material-symbols-outlined text-primary text-lg flex-shrink-0 mt-0.5">warning</span>
+              <div>
+                <p className="text-[9px] font-black text-primary uppercase tracking-widest mb-1">Update Error</p>
+                <p className="text-[10px] text-zinc-300 break-words whitespace-normal">{error}</p>
+              </div>
+            </div>
+          </div>
+        )}
+        
         <div className="nm-inset p-6 md:p-8 space-y-6 bg-primary/5 border border-primary/20">
           <div className="nm-inset p-4 md:p-6 space-y-2">
             <p className="text-[9px] font-black text-zinc-500 uppercase tracking-widest">Ticket Number</p>
@@ -163,7 +211,45 @@ export default function TicketPage({
               </div>
               <div className="flex justify-between items-center border-t border-primary/20 pt-4 bg-primary/5 -mx-6 md:-mx-8 px-6 md:px-8 py-4 mt-6">
                 <span className="text-zinc-500 font-bold uppercase tracking-wider">Amount Paid:</span>
-                <span className="text-primary font-black text-xl">KES {ticket.amountPaid?.toLocaleString()}</span>
+                {editingPrice ? (
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="number"
+                      value={newPrice}
+                      onChange={(e) => setNewPrice(e.target.value)}
+                      className="bg-primary/20 border border-primary/40 rounded px-3 py-1 text-primary font-black text-lg w-32 text-right"
+                      placeholder="0"
+                    />
+                    <button
+                      onClick={handleUpdatePrice}
+                      className="text-primary hover:text-primary/80 transition-colors"
+                      title="Save"
+                    >
+                      <span className="material-symbols-outlined text-sm">check</span>
+                    </button>
+                    <button
+                      onClick={() => {
+                        setEditingPrice(false);
+                        setNewPrice(ticket.amountPaid?.toString() || "0");
+                      }}
+                      className="text-zinc-500 hover:text-zinc-400 transition-colors"
+                      title="Cancel"
+                    >
+                      <span className="material-symbols-outlined text-sm">close</span>
+                    </button>
+                  </div>
+                ) : (
+                  <div className="flex items-center gap-3">
+                    <span className="text-primary font-black text-xl">KES {ticket.amountPaid?.toLocaleString()}</span>
+                    <button
+                      onClick={() => setEditingPrice(true)}
+                      className="text-zinc-500 hover:text-primary transition-colors"
+                      title="Edit price"
+                    >
+                      <span className="material-symbols-outlined text-sm">edit</span>
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
           </div>

@@ -42,6 +42,8 @@ export default function RegistrationTicketModal({
   const [ticket, setTicket] = useState<Ticket | null>(null);
   const [error, setError] = useState("");
   const hasGenerated = useRef<string | null>(null);
+  const [editingPrice, setEditingPrice] = useState(false);
+  const [newPrice, setNewPrice] = useState<string>("");
 
   const handleGenerateTicket = useCallback(async () => {
     if (!vehicleId) return;
@@ -60,6 +62,7 @@ export default function RegistrationTicketModal({
 
       if (data.success) {
         setTicket(data.ticket);
+        setNewPrice(data.ticket.amountPaid?.toString() || "0");
       } else {
         setError(data.error || "Failed to generate ticket");
       }
@@ -81,6 +84,30 @@ export default function RegistrationTicketModal({
       hasGenerated.current = null;
     }
   }, [isOpen, autoGenerate, vehicleId, handleGenerateTicket]);
+
+  const handleUpdatePrice = async () => {
+    if (!ticket || !newPrice) return;
+
+    try {
+      const res = await fetch(`/api/vehicles/ticket/${ticket.ticketId}/update-price`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ amountPaid: parseFloat(newPrice) })
+      });
+
+      const data = await res.json();
+
+      if (data.success) {
+        setTicket({ ...ticket, amountPaid: parseFloat(newPrice) });
+        setEditingPrice(false);
+        setError("");
+      } else {
+        setError(data.error || "Failed to update price");
+      }
+    } catch (err) {
+      setError("Error updating price");
+    }
+  };
 
   const handleDownloadQR = async () => {
     if (!ticket) return;
@@ -176,8 +203,14 @@ export default function RegistrationTicketModal({
             )}
 
             {error && (
-              <div className="nm-inset bg-primary/10 p-4 text-primary text-[9px] font-black uppercase tracking-widest text-center">
-                {error}
+              <div className="nm-inset bg-primary/10 p-4 border border-primary/30 rounded space-y-2">
+                <div className="flex items-start gap-3">
+                  <span className="material-symbols-outlined text-primary text-lg flex-shrink-0">warning</span>
+                  <div className="flex-1">
+                    <p className="text-[9px] font-black text-primary uppercase tracking-widest mb-1">Error</p>
+                    <p className="text-[10px] text-zinc-300 break-words whitespace-normal">{error}</p>
+                  </div>
+                </div>
               </div>
             )}
 
@@ -258,7 +291,45 @@ export default function RegistrationTicketModal({
                   </div>
                   <div className="flex justify-between items-center border-t border-primary/20 pt-3 bg-primary/5 -mx-4 md:-mx-8 px-4 md:px-8 py-3 mt-4">
                     <span className="text-zinc-500 font-bold uppercase tracking-wider">Amount Paid:</span>
-                    <span className="text-primary font-black text-lg">KSH {ticket.amountPaid?.toLocaleString()}</span>
+                    {editingPrice ? (
+                      <div className="flex items-center gap-2">
+                        <input
+                          type="number"
+                          value={newPrice}
+                          onChange={(e) => setNewPrice(e.target.value)}
+                          className="bg-primary/20 border border-primary/40 rounded px-2 py-1 text-primary font-black text-sm w-24 text-right"
+                          placeholder="0"
+                        />
+                        <button
+                          onClick={handleUpdatePrice}
+                          className="text-primary hover:text-primary/80 transition-colors"
+                          title="Save"
+                        >
+                          <span className="material-symbols-outlined text-xs">check</span>
+                        </button>
+                        <button
+                          onClick={() => {
+                            setEditingPrice(false);
+                            setNewPrice(ticket.amountPaid?.toString() || "0");
+                          }}
+                          className="text-zinc-500 hover:text-zinc-400 transition-colors"
+                          title="Cancel"
+                        >
+                          <span className="material-symbols-outlined text-xs">close</span>
+                        </button>
+                      </div>
+                    ) : (
+                      <div className="flex items-center gap-2">
+                        <span className="text-primary font-black text-lg">KSH {ticket.amountPaid?.toLocaleString()}</span>
+                        <button
+                          onClick={() => setEditingPrice(true)}
+                          className="text-zinc-500 hover:text-primary transition-colors"
+                          title="Edit price"
+                        >
+                          <span className="material-symbols-outlined text-xs">edit</span>
+                        </button>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
