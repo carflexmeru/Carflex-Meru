@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+import { supabase } from "@/lib/supabase";
 
 export async function POST(request: Request) {
   try {
@@ -9,24 +9,28 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Vehicle ID required" }, { status: 400 });
     }
 
-    // 1. Finalize the asset in the database
-    const updatedVehicle = await prisma.vehicle.update({
-      where: { id: vehicleId },
-      data: {
+    const { data: updatedRows, error: updateError } = await supabase
+      .from("vehicles")
+      .update({
         status: "exited",
-        isVerified: false, // Reset verification for next entry
-        updatedAt: new Date()
-      }
-    });
+        is_verified: false,
+      })
+      .eq("id", vehicleId)
+      .select("id,reg_number,make,model,year,status,is_verified")
+      .limit(1);
 
-    // 2. Record the exit in the Audit Registry
-    await prisma.actionLog.create({
-      data: {
-        actionType: "FINAL_DEPARTURE",
-        agentName: "EXIT_COMMAND_GATE",
-        description: `Asset ${updatedVehicle.regNumber} successfully exited the bazaar.`,
-        metadata: { vehicleId, plate: updatedVehicle.regNumber }
-      }
+    if (updateError) throw updateError;
+
+    const updatedVehicle = updatedRows?.[0];
+    if (!updatedVehicle) {
+      return NextResponse.json({ error: "Vehicle not found" }, { status: 404 });
+    }
+
+    await supabase.from("action_logs").insert({
+      action_type: "FINAL_DEPARTURE",
+      agent_name: "EXIT_COMMAND_GATE",
+      description: `Asset ${updatedVehicle.reg_number} successfully exited the bazaar.`,
+      metadata: { vehicleId, plate: updatedVehicle.reg_number },
     });
 
     return NextResponse.json({ success: true, vehicle: updatedVehicle });

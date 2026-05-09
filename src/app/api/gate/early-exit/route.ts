@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
 import crypto from "crypto";
+import { supabase } from "@/lib/supabase";
 
 export async function POST(request: Request) {
   try {
@@ -10,31 +10,31 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Vehicle ID and Reason required" }, { status: 400 });
     }
 
-    // 1. Get the latest active booking
-    const booking = await prisma.booking.findFirst({
-      where: { vehicleId, exitAt: null },
-      orderBy: { checkInAt: "desc" }
-    });
+    const { data: bookingRows, error: bookingError } = await supabase
+      .from("bookings")
+      .select("id,vehicle_id,exit_at,check_in_at")
+      .eq("vehicle_id", vehicleId)
+      .is("exit_at", null)
+      .order("check_in_at", { ascending: false })
+      .limit(1);
 
+    if (bookingError) throw bookingError;
+
+    const booking = bookingRows?.[0];
     if (!booking) {
       return NextResponse.json({ error: "No active booking found for this vehicle" }, { status: 404 });
     }
 
-    // 2. Generate Exit Pass QR (Mock JWT for now)
     const qrHash = crypto.randomBytes(32).toString("hex");
 
-    const exitPass = await prisma.exitPass.create({
-      data: {
-        bookingId: booking.id,
-        qrJwtHash: qrHash,
-      }
+    const { error: exitPassError } = await supabase.from("exit_passes").insert({
+      booking_id: booking.id,
+      qr_jwt_hash: qrHash,
     });
+    if (exitPassError) throw exitPassError;
 
-    // 3. Log the early exit
-    await prisma.auditLog.create({
-      data: {
-        action: `EARLY_EXIT_REQUESTED: Vehicle ${vehicleId}. Reason: ${reason}`,
-      }
+    await supabase.from("audit_logs").insert({
+      action: `EARLY_EXIT_REQUESTED: Vehicle ${vehicleId}. Reason: ${reason}`,
     });
 
     return NextResponse.json({ success: true, qrHash });
