@@ -77,7 +77,7 @@ export async function POST(req: Request) {
       if (createError || !newProfile) {
         console.error("PROFILE_CREATE_ERROR:", createError);
         return NextResponse.json(
-          { error: "Failed to create profile" },
+          { error: `Failed to create profile: ${createError?.message || "Unknown error"}` },
           { status: 500 }
         );
       }
