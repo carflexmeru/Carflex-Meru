@@ -18,6 +18,7 @@ export async function GET(request: Request) {
       return {
         id: ticket.id,
         ticketId: ticket.ticket_id,
+        vehicleId: ticket.vehicle_id,
         regNumber: ticket.reg_number,
         make: ticket.make,
         model: ticket.model,

@@ -7,6 +7,7 @@ import { useState, useEffect } from "react";
 interface Vehicle {
   id: string;
   ticketId?: string;
+  vehicleId?: string;
   regNumber: string;
   make: string;
   model: string;
@@ -88,7 +89,7 @@ export default function GateDashboard() {
       const res = await fetch(`/api/vehicles/verify`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id, status: "approved" }),
+        body: JSON.stringify({ vehicleId: id, id, status: "approved" }),
       });
       if (res.ok) fetchData();
     } catch (err) {
@@ -262,7 +263,7 @@ export default function GateDashboard() {
                       <div className="flex gap-2">
                         {activeTab === "pending" ? (
                           <button
-                            onClick={() => handleVerify(v.id)}
+                            onClick={() => handleVerify(v.vehicleId || v.id)}
                             className="nm-card w-full border-none bg-primary px-6 py-4 text-[10px] font-black uppercase tracking-widest text-white shadow-[0_10px_20px_rgba(230,0,0,0.3)] transition-all hover:scale-[1.02] active:scale-95 sm:w-auto sm:px-8"
                           >
                             Authorize Entry

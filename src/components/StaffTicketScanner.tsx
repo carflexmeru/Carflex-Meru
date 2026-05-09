@@ -16,6 +16,8 @@ type Ticket = {
   amountPaid: number;
   zoneName: string;
   eventName?: string;
+  createdAt?: string;
+  issuedAt?: string;
   paymentMethod?: string;
   qrCodeUrl: string;
   printUrl: string;
@@ -23,6 +25,11 @@ type Ticket = {
 
 const displayText = (value?: string | null) => (value && value.trim() ? value.trim() : "");
 const displayYear = (value?: number | null) => (value && value > 0 ? String(value) : "");
+const displayDateTime = (value?: string | null) => {
+  if (!value) return "";
+  const date = new Date(value);
+  return Number.isNaN(date.getTime()) ? "" : date.toLocaleString();
+};
 
 export default function StaffTicketScanner({ title }: { title: string }) {
   const videoRef = useRef<HTMLVideoElement | null>(null);
@@ -235,12 +242,28 @@ export default function StaffTicketScanner({ title }: { title: string }) {
                     <span className="font-black uppercase">{ticket.ownerName}</span>
                   </div>
                   <div className="flex justify-between gap-3">
+                    <span className="text-[9px] font-black uppercase tracking-widest text-zinc-500">ID Number</span>
+                    <span className="font-black uppercase">{displayText(ticket.ownerIdNumber) || "N/A"}</span>
+                  </div>
+                  <div className="flex justify-between gap-3">
+                    <span className="text-[9px] font-black uppercase tracking-widest text-zinc-500">Phone</span>
+                    <span className="font-black uppercase">{displayText(ticket.ownerPhone) || "N/A"}</span>
+                  </div>
+                  <div className="flex justify-between gap-3">
                     <span className="text-[9px] font-black uppercase tracking-widest text-zinc-500">Zone</span>
                     <span className="font-black uppercase text-primary">{displayText(ticket.zoneName)}</span>
                   </div>
                   <div className="flex justify-between gap-3">
                     <span className="text-[9px] font-black uppercase tracking-widest text-zinc-500">Event</span>
                     <span className="font-black uppercase">{displayText(ticket.eventName)}</span>
+                  </div>
+                  <div className="flex justify-between gap-3">
+                    <span className="text-[9px] font-black uppercase tracking-widest text-zinc-500">Event Date</span>
+                    <span className="font-black uppercase">{displayDateTime(ticket.createdAt) || "N/A"}</span>
+                  </div>
+                  <div className="flex justify-between gap-3">
+                    <span className="text-[9px] font-black uppercase tracking-widest text-zinc-500">Registration Time</span>
+                    <span className="font-black uppercase">{displayDateTime(ticket.issuedAt || ticket.createdAt) || "N/A"}</span>
                   </div>
                   <div className="flex justify-between gap-3">
                     <span className="text-[9px] font-black uppercase tracking-widest text-zinc-500">Amount</span>

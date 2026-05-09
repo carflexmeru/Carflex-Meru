@@ -30,11 +30,42 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const id = body.id || body.vehicleId;
+    const id = body.id || body.vehicleId || body.ticketId || body.regNumber;
     const status = body.status || "active";
 
     if (!id) {
       return NextResponse.json({ error: "Missing vehicle ID" }, { status: 400 });
+    }
+
+    let vehicleId = body.vehicleId || body.id;
+    let resolvedPlate = body.regNumber || "";
+
+    if (!vehicleId && body.ticketId) {
+      const { data: ticketRows, error: ticketError } = await supabase
+        .from("registration_tickets")
+        .select("vehicle_id,reg_number,ticket_id")
+        .eq("ticket_id", body.ticketId)
+        .limit(1);
+
+      if (ticketError) throw ticketError;
+      const ticket = ticketRows?.[0];
+      vehicleId = ticket?.vehicle_id || null;
+      resolvedPlate = ticket?.reg_number || resolvedPlate;
+    }
+
+    if (!vehicleId && resolvedPlate) {
+      const { data: vehicleRows, error: lookupError } = await supabase
+        .from("vehicles")
+        .select("id,reg_number")
+        .eq("reg_number", resolvedPlate.toUpperCase())
+        .limit(1);
+
+      if (lookupError) throw lookupError;
+      vehicleId = vehicleRows?.[0]?.id || null;
+    }
+
+    if (!vehicleId) {
+      return NextResponse.json({ error: "Vehicle not found" }, { status: 404 });
     }
 
     const { data: updatedRows, error: updateError } = await supabase
@@ -43,7 +74,7 @@ export async function POST(request: Request) {
         is_verified: true,
         status,
       })
-      .eq("id", id)
+      .eq("id", vehicleId)
       .select("id,reg_number,make,model,year,price,status,is_verified,created_at,owner_id,zone_id")
       .limit(1);
 
@@ -75,15 +106,15 @@ export async function POST(request: Request) {
       .from("action_logs")
       .select("id")
       .eq("action_type", "AUTHORIZE_ENTRY")
-      .ilike("description", `%${id}%`)
+      .ilike("description", `%${vehicleId}%`)
       .limit(1);
 
     if (!existingLog?.length) {
       await supabase.from("action_logs").insert({
         action_type: "AUTHORIZE_ENTRY",
         agent_name: "GATE_TERMINAL",
-        description: `Asset ${updatedVehicle.reg_number} (ID: ${id}) was authorized for entry.`,
-        metadata: { vehicleId: id, plate: updatedVehicle.reg_number },
+        description: `Asset ${updatedVehicle.reg_number} (ID: ${vehicleId}) was authorized for entry.`,
+        metadata: { vehicleId, plate: updatedVehicle.reg_number },
       });
     }
 

@@ -143,3 +143,8 @@ html {
 [data-theme='light'] .staff-field::placeholder {
   color: rgba(31, 26, 23, 0.36);
 }
+
+[data-theme='light'] .registration-create-btn,
+[data-theme='light'] .registration-create-btn:disabled {
+  color: #1f1a17 !important;
+}

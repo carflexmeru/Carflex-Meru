@@ -24,6 +24,7 @@ export default function RegistrationTicketsPage() {
     processName: "Manual registration",
     notes: "",
   });
+  const restoreKey = "registration_tickets_cache";
 
   useEffect(() => {
     const syncEvent = () => setActiveEvent(localStorage.getItem("carflex_staff_event") || "");
@@ -31,6 +32,19 @@ export default function RegistrationTicketsPage() {
     window.addEventListener("staffeventchange", syncEvent);
     return () => window.removeEventListener("staffeventchange", syncEvent);
   }, []);
+
+  const restoreSession = () => {
+    const saved = localStorage.getItem(restoreKey);
+    if (saved) {
+      setForm(JSON.parse(saved));
+    }
+  };
+
+  useEffect(() => {
+    if (form.regNumber || form.ownerPhone) {
+      localStorage.setItem(restoreKey, JSON.stringify(form));
+    }
+  }, [form, restoreKey]);
 
   const updateField = (key: string, value: string) => {
     setForm((prev) => ({ ...prev, [key]: value }));
@@ -72,12 +86,24 @@ export default function RegistrationTicketsPage() {
             <span className="h-2 w-2 rounded-full bg-primary shadow-[0_0_10px_#E60000]" />
             Active Event: {activeEvent || "None selected"}
           </div>
-          <h1 className="text-[2.7rem] sm:text-5xl md:text-6xl font-black uppercase tracking-tighter leading-[0.88] text-foreground max-w-[12ch]">
-            TICKETS <br /> <span className="text-stroke italic">CREATOR.</span>
-          </h1>
-          <p className="max-w-[34ch] text-zinc-500 font-bold uppercase tracking-widest text-[9px] md:text-[10px] leading-relaxed">
-            Manual ticket issuance for event entries using the same registration details and event process.
-          </p>
+          <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+            <div>
+              <h1 className="text-[2.7rem] sm:text-5xl md:text-6xl font-black uppercase tracking-tighter leading-[0.88] text-foreground max-w-[12ch]">
+                TICKETS <br /> <span className="text-stroke italic">CREATOR.</span>
+              </h1>
+              <p className="max-w-[34ch] text-zinc-500 font-bold uppercase tracking-widest text-[9px] md:text-[10px] leading-relaxed">
+                Manual ticket issuance for event entries using the same registration details and event process.
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={restoreSession}
+              className="nm-card inline-flex w-fit items-center justify-center gap-2 bg-[var(--surface)] px-4 py-3 text-[10px] font-black uppercase tracking-widest text-foreground transition-all hover:scale-[1.02] border border-[var(--glass-border)]"
+            >
+              <span className="material-symbols-outlined text-sm">history</span>
+              Restore Last Entry
+            </button>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-[1.3fr_0.7fr] gap-6">
@@ -131,7 +157,7 @@ export default function RegistrationTicketsPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className="nm-card inline-flex items-center justify-center gap-2 bg-primary px-5 py-4 text-[10px] font-black uppercase tracking-widest text-white transition-all hover:scale-[1.02] disabled:bg-primary/35 disabled:text-white disabled:shadow-none disabled:cursor-not-allowed disabled:hover:scale-100"
+                className="registration-create-btn nm-card inline-flex items-center justify-center gap-2 bg-primary px-5 py-4 text-[10px] font-black uppercase tracking-widest text-white transition-all hover:scale-[1.02] disabled:bg-primary/35 disabled:text-white disabled:shadow-none disabled:cursor-not-allowed disabled:hover:scale-100"
               >
                 <span className="material-symbols-outlined text-sm">confirmation_number</span>
                 {loading ? "CREATING..." : "CREATE TICKET"}
