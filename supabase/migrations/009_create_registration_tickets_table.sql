@@ -34,9 +34,13 @@ ALTER TABLE registration_tickets ENABLE ROW LEVEL SECURITY;
 -- Create RLS policies
 DROP POLICY IF EXISTS "Anyone can view registration tickets" ON registration_tickets;
 DROP POLICY IF EXISTS "Users can insert registration tickets" ON registration_tickets;
+DROP POLICY IF EXISTS "Users can update registration tickets" ON registration_tickets;
 
 CREATE POLICY "Anyone can view registration tickets" ON registration_tickets
   FOR SELECT USING (TRUE);
 
 CREATE POLICY "Users can insert registration tickets" ON registration_tickets
   FOR INSERT WITH CHECK (TRUE);
+
+CREATE POLICY "Users can update registration tickets" ON registration_tickets
+  FOR UPDATE USING (TRUE) WITH CHECK (TRUE);
