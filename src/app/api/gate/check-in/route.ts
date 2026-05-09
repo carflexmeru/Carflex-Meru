@@ -24,41 +24,56 @@ export async function POST(req: Request) {
       normalizedPhone = "+" + normalizedPhone;
     }
 
-    // 1. Verify zone exists - try by ID first, then by name
+    // 1. Get or create zone
     let zone = null;
-    let zoneError = null;
     
-    // Try to find by ID (UUID)
-    const { data: zoneById, error: idError } = await supabase
+    // Try to find zone by ID or name
+    const { data: existingZone } = await supabase
       .from("zones")
       .select("*")
-      .eq("id", zoneId)
+      .or(`id.eq.${zoneId},name.eq.${zoneId}`)
       .maybeSingle();
     
-    if (zoneById) {
-      zone = zoneById;
-    } else if (!idError) {
-      // If no error but no result, try by name
-      const { data: zoneByName, error: nameError } = await supabase
-        .from("zones")
-        .select("*")
-        .eq("name", zoneId)
-        .maybeSingle();
-      
-      if (zoneByName) {
-        zone = zoneByName;
-      } else {
-        zoneError = nameError;
-      }
+    if (existingZone) {
+      zone = existingZone;
     } else {
-      zoneError = idError;
-    }
-
-    if (zoneError || !zone) {
-      return NextResponse.json(
-        { error: `Zone not found: ${zoneId}` },
-        { status: 400 }
-      );
+      // Zone doesn't exist, create it for the default event
+      // First, get or create the default event
+      const { data: events } = await supabase
+        .from("events")
+        .select("id")
+        .eq("is_active", true)
+        .limit(1);
+      
+      const eventId = events?.[0]?.id;
+      
+      if (!eventId) {
+        return NextResponse.json(
+          { error: "No active event found to create zone in" },
+          { status: 400 }
+        );
+      }
+      
+      // Create the new zone
+      const { data: newZone, error: createError } = await supabase
+        .from("zones")
+        .insert({
+          event_id: eventId,
+          name: zoneId,
+          capacity: 100,
+          price: 0
+        })
+        .select()
+        .single();
+      
+      if (createError || !newZone) {
+        return NextResponse.json(
+          { error: `Failed to create zone: ${createError?.message || "Unknown error"}` },
+          { status: 400 }
+        );
+      }
+      
+      zone = newZone;
     }
 
     // 2. Resolve or Create Profile
