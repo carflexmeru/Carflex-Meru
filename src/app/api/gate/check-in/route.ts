@@ -1,5 +1,4 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
 import { initiateStkPush } from "@/lib/daraja";
 import { supabase } from "@/lib/supabase";
 
@@ -11,46 +10,60 @@ function normalizePhone(phone: string) {
 }
 
 async function resolveEvent(eventName?: string) {
-  const existing = await prisma.event.findMany({
-    where: eventName ? { name: eventName } : { isActive: true },
-    select: {
-      id: true,
-      name: true,
-      isActive: true,
-      location: true,
-    },
-    take: 1,
-  });
+  const query = supabase.from("events").select("id,name,is_active,location").limit(1);
+  const { data: existing, error } = await (eventName ? query.eq("name", eventName) : query.eq("is_active", true));
+  if (error) throw error;
+  if (existing?.[0]) return existing[0];
 
-  if (existing[0]) return existing[0];
-
-  return prisma.event.create({
-    data: {
+  const { data: created, error: createError } = await supabase
+    .from("events")
+    .insert({
       name: eventName || "Meru Car Bazaar",
       location: "Carflex Event Ground",
-      isActive: true,
-    },
-  });
+      is_active: true,
+    })
+    .select("id,name,is_active,location")
+    .single();
+
+  if (createError) throw createError;
+  return created;
 }
 
 async function resolveZone(zoneInput: string, eventId: string) {
-  const found = await prisma.zone.findFirst({
-    where: {
-      OR: [{ id: zoneInput }, { name: zoneInput }],
-      eventId,
-    },
-  });
+  const { data: found, error } = await supabase
+    .from("zones")
+    .select("id,event_id,name,capacity,price")
+    .eq("event_id", eventId)
+    .or(`id.eq.${zoneInput},name.eq.${zoneInput}`)
+    .limit(1);
 
-  if (found) return found;
+  if (error) throw error;
+  if (found?.[0]) return found[0];
 
-  return prisma.zone.create({
-    data: {
-      eventId,
+  const { data: created, error: createError } = await supabase
+    .from("zones")
+    .insert({
+      event_id: eventId,
       name: zoneInput,
       capacity: 100,
       price: 0,
-    },
-  });
+    })
+    .select("id,event_id,name,capacity,price")
+    .single();
+
+  if (createError) throw createError;
+  return created;
+}
+
+async function nextSerialNumber() {
+  const { data, error } = await supabase
+    .from("registration_tickets")
+    .select("serial_number")
+    .order("serial_number", { ascending: false })
+    .limit(1);
+
+  if (error) throw error;
+  return (data?.[0]?.serial_number || 0) + 1;
 }
 
 async function createTicket(params: {
@@ -69,106 +82,62 @@ async function createTicket(params: {
   const event = await resolveEvent(params.eventName);
   const zone = await resolveZone(params.zoneId, event.id);
 
-  const owner =
-    (await prisma.profile.findFirst({
-      where: {
-        OR: [{ phone: normalizedPhone }, ...(params.idNumber ? [{ idNumber: params.idNumber }] : [])],
-      },
-    })) ||
-    (await prisma.profile.create({
-      data: {
-        phone: normalizedPhone,
-        idNumber: params.idNumber || null,
-        role: "vendor",
-      },
-    }));
+  const { data: matchedOwner, error: ownerError } = await supabase
+    .from("profiles")
+    .select("id,phone,name,id_number")
+    .or(`phone.eq.${normalizedPhone}${params.idNumber ? `,id_number.eq.${params.idNumber}` : ""}`)
+    .limit(1);
 
-  const vehicle =
-    (await prisma.vehicle.findFirst({
-      where: { regNumber: cleanPlate },
-    })) ||
-    (await prisma.vehicle.create({
-      data: {
-        regNumber: cleanPlate,
+  if (ownerError) throw ownerError;
+
+  let owner = matchedOwner?.[0];
+  if (!owner) {
+    const { data: createdOwner, error: createOwnerError } = await supabase
+      .from("profiles")
+      .insert({
+        phone: normalizedPhone,
+        id_number: params.idNumber || null,
+        role: "vendor",
+      })
+      .select("id,phone,name,id_number")
+      .single();
+
+    if (createOwnerError) throw createOwnerError;
+    owner = createdOwner;
+  }
+
+  const { data: vehicleMatches, error: vehicleError } = await supabase
+    .from("vehicles")
+    .select("id,reg_number,make,model,year")
+    .eq("reg_number", cleanPlate)
+    .limit(1);
+
+  if (vehicleError) throw vehicleError;
+
+  let vehicle = vehicleMatches?.[0];
+  if (!vehicle) {
+    const { data: createdVehicle, error: createVehicleError } = await supabase
+      .from("vehicles")
+      .insert({
+        reg_number: cleanPlate,
         make: "Unknown",
         model: "Pending",
         year: new Date().getFullYear(),
         price: zone.price || 0,
-        zoneId: zone.id,
-        ownerId: owner.id,
+        zone_id: zone.id,
+        owner_id: owner.id,
         status: params.paymentStatus === "paid" ? "active" : "draft",
-        isVerified: true,
-        atEvent: Boolean(params.eventName),
-        eventName: params.eventName || null,
-      },
-    }));
+        is_verified: true,
+        at_event: Boolean(params.eventName),
+        event_name: params.eventName || null,
+      })
+      .select("id,reg_number,make,model,year")
+      .single();
 
-  await prisma.booking.updateMany({
-    where: {
-      vehicleId: vehicle.id,
-      exitAt: null,
-    },
-    data: {
-      exitAt: new Date(),
-    },
-  });
-
-  const booking = await prisma.booking.create({
-    data: {
-      vehicleId: vehicle.id,
-      zoneId: zone.id,
-      paymentStatus: params.paymentStatus,
-      paymentMethod: params.paymentMethod,
-      paymentAmount: zone.price || 0,
-    },
-  });
-
-  const lastTicket = await prisma.registrationTicket.findFirst({
-    orderBy: { serialNumber: "desc" },
-  });
-  const nextSerial = (lastTicket?.serialNumber || 0) + 1;
-  const ticketId = `CFX-${nextSerial.toString().padStart(4, "0")}`;
-
-  const ticket = await prisma.registrationTicket.create({
-    data: {
-      ticketId,
-      serialNumber: nextSerial,
-      vehicleId: vehicle.id,
-      eventId: event.id,
-      regNumber: cleanPlate,
-      make: vehicle.make || "Unknown",
-      model: vehicle.model || "Pending",
-      year: vehicle.year || new Date().getFullYear(),
-      ownerName: params.name || owner.name || "Unknown",
-      ownerPhone: normalizedPhone,
-      ownerIdNumber: params.idNumber || owner.idNumber || null,
-      amountPaid: zone.price || 0,
-      zoneName: zone.name || "General",
-      status: params.paymentStatus === "paid" ? "active" : "pending",
-      qrData: JSON.stringify({
-        ticketId,
-        regNumber: cleanPlate,
-        ownerName: params.name || owner.name || "Unknown",
-        ownerPhone: normalizedPhone,
-        ownerIdNumber: params.idNumber || owner.idNumber || "",
-        zoneName: zone.name || "General",
-        amountPaid: zone.price || 0,
-        eventName: params.eventName || event.name,
-        paymentMethod: params.paymentMethod,
-        paymentStatus: params.paymentStatus,
-        metadata: params.metadata || {},
-        issuedAt: new Date().toISOString(),
-      }),
-    },
-  });
-
-  await supabase.from("vehicles").upsert(
-    {
-      id: vehicle.id,
-      reg_number: cleanPlate,
-      make: vehicle.make || "Unknown",
-      model: vehicle.model || "Pending",
-      year: vehicle.year || new Date().getFullYear(),
+    if (createVehicleError) throw createVehicleError;
+    vehicle = createdVehicle;
+  } else {
+    await supabase.from("vehicles").update({
       price: zone.price || 0,
       zone_id: zone.id,
       owner_id: owner.id,
@@ -176,42 +145,71 @@ async function createTicket(params: {
       is_verified: true,
       at_event: Boolean(params.eventName),
       event_name: params.eventName || null,
-    },
-    { onConflict: "id" }
-  );
+    }).eq("id", vehicle.id);
+  }
 
-  await supabase.from("bookings").upsert(
-    {
-      id: booking.id,
+  await supabase
+    .from("bookings")
+    .update({ exit_at: new Date().toISOString() })
+    .eq("vehicle_id", vehicle.id)
+    .is("exit_at", null);
+
+  const { data: booking, error: bookingError } = await supabase
+    .from("bookings")
+    .insert({
       vehicle_id: vehicle.id,
       zone_id: zone.id,
       payment_status: params.paymentStatus,
       payment_method: params.paymentMethod,
       payment_amount: zone.price || 0,
-    },
-    { onConflict: "id" }
-  );
+    })
+    .select("id,vehicle_id,zone_id,payment_status,payment_method,payment_amount,check_in_at")
+    .single();
 
-  await supabase.from("registration_tickets").upsert(
-    {
-      ticket_id: ticket.ticketId,
+  if (bookingError) throw bookingError;
+
+  const nextSerial = await nextSerialNumber();
+  const ticketId = `CFX-${nextSerial.toString().padStart(4, "0")}`;
+  const issuedAt = new Date().toISOString();
+  const ownerName = params.name || owner.name || "Unknown";
+  const qrData = JSON.stringify({
+    ticketId,
+    regNumber: cleanPlate,
+    ownerName,
+    ownerPhone: normalizedPhone,
+    ownerIdNumber: params.idNumber || owner.id_number || "",
+    zoneName: zone.name || "General",
+    amountPaid: zone.price || 0,
+    eventName: params.eventName || event.name,
+    paymentMethod: params.paymentMethod,
+    paymentStatus: params.paymentStatus,
+    metadata: params.metadata || {},
+    issuedAt,
+  });
+
+  const { data: ticket, error: ticketError } = await supabase
+    .from("registration_tickets")
+    .insert({
+      ticket_id: ticketId,
       serial_number: nextSerial,
       vehicle_id: vehicle.id,
       event_id: event.id,
       reg_number: cleanPlate,
-      make: ticket.make,
-      model: ticket.model,
-      year: ticket.year,
-      owner_name: ticket.ownerName,
-      owner_phone: ticket.ownerPhone,
-      owner_id_number: ticket.ownerIdNumber,
-      amount_paid: ticket.amountPaid,
-      zone_name: ticket.zoneName,
-      status: ticket.status,
-      qr_data: ticket.qrData,
-    },
-    { onConflict: "ticket_id" }
-  );
+      make: vehicle.make || "Unknown",
+      model: vehicle.model || "Pending",
+      year: vehicle.year || new Date().getFullYear(),
+      owner_name: ownerName,
+      owner_phone: normalizedPhone,
+      owner_id_number: params.idNumber || owner.id_number || null,
+      amount_paid: zone.price || 0,
+      zone_name: zone.name || "General",
+      status: params.paymentStatus === "paid" ? "active" : "pending",
+      qr_data: qrData,
+    })
+    .select("*")
+    .single();
+
+  if (ticketError) throw ticketError;
 
   return { ticket, booking };
 }
@@ -261,8 +259,8 @@ export async function POST(req: Request) {
       success: true,
       data: {
         booking,
-        ticketId: ticket.ticketId,
-        vehicleId: ticket.vehicleId,
+        ticketId: ticket.ticket_id,
+        vehicleId: ticket.vehicle_id,
       },
     });
   } catch (error) {
