@@ -19,7 +19,22 @@ export async function GET(request: Request) {
     const { data: pendingVehicles, error } = await query;
     if (error) throw error;
 
-    return NextResponse.json(pendingVehicles || []);
+    const formattedVehicles = (pendingVehicles || []).map((v: any) => ({
+      id: v.id,
+      regNumber: v.reg_number,
+      make: v.make,
+      model: v.model,
+      year: v.year,
+      status: v.status,
+      isVerified: v.is_verified,
+      atEvent: v.at_event,
+      eventName: v.event_name,
+      createdAt: v.created_at,
+      ownerId: v.owner_id,
+      zoneId: v.zone_id,
+    }));
+
+    return NextResponse.json(formattedVehicles);
   } catch (error) {
     console.error("Error fetching pending vehicles:", error);
     return NextResponse.json({ error: "Failed to fetch pending vehicles" }, { status: 500 });
