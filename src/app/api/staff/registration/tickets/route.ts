@@ -41,9 +41,12 @@ export async function POST(req: Request) {
     const vehicleYear = year ? Number(year) : 0;
     const ticketAmount = amountPaid ? Number(amountPaid) : 0;
 
-    let event = await prisma.event.findFirst({
-      where: { isActive: true },
-    });
+    let event = (
+      await prisma.event.findMany({
+        where: { isActive: true },
+        take: 1,
+      })
+    )[0];
 
     if (!event) {
       event = await prisma.event.create({
