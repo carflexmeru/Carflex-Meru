@@ -153,7 +153,7 @@ export async function POST(req: Request) {
         .from("vehicles")
         .update({
           owner_id: owner.id, // Ensure owner is linked
-          zone_id: zoneId,
+          zone_id: zone.id,
           at_event: Boolean(eventName),
           status: "draft",
           is_verified: true
@@ -172,7 +172,7 @@ export async function POST(req: Request) {
           model: "Pending",
           year: new Date().getFullYear(),
           price: 0,
-          zone_id: zoneId,
+          zone_id: zone.id,
           at_event: Boolean(eventName),
           status: "draft",
           is_verified: true
@@ -199,7 +199,7 @@ export async function POST(req: Request) {
       .from("bookings")
       .insert({
         vehicle_id: vehicle.id,
-        zone_id: zoneId,
+        zone_id: zone.id,
         payment_status: paymentStatus || "paid",
         payment_method: paymentMethod || "cash",
       })
