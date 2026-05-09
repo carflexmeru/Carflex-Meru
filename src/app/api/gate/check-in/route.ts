@@ -1,12 +1,220 @@
 import { NextResponse } from "next/server";
+import { prisma } from "@/lib/prisma";
+import { initiateStkPush } from "@/lib/daraja";
 import { supabase } from "@/lib/supabase";
+
+function normalizePhone(phone: string) {
+  const compact = phone.replace(/\s+/g, "");
+  if (compact.startsWith("0")) return `+254${compact.slice(1)}`;
+  if (compact.startsWith("+")) return compact;
+  return `+${compact}`;
+}
+
+async function resolveEvent(eventName?: string) {
+  const existing = await prisma.event.findFirst({
+    where: eventName ? { name: eventName } : { isActive: true },
+    orderBy: { createdAt: "desc" },
+  });
+
+  if (existing) return existing;
+
+  return prisma.event.create({
+    data: {
+      name: eventName || "Meru Car Bazaar",
+      location: "Carflex Event Ground",
+      isActive: true,
+    },
+  });
+}
+
+async function resolveZone(zoneInput: string, eventId: string) {
+  const found = await prisma.zone.findFirst({
+    where: {
+      OR: [{ id: zoneInput }, { name: zoneInput }],
+      eventId,
+    },
+  });
+
+  if (found) return found;
+
+  return prisma.zone.create({
+    data: {
+      eventId,
+      name: zoneInput,
+      capacity: 100,
+      price: 0,
+    },
+  });
+}
+
+async function createTicket(params: {
+  plate: string;
+  phone: string;
+  idNumber?: string;
+  name?: string;
+  zoneId: string;
+  paymentMethod: "cash" | "mpesa" | "paybill";
+  paymentStatus: "paid" | "pending";
+  eventName?: string;
+  metadata?: Record<string, unknown>;
+}) {
+  const cleanPlate = params.plate.toUpperCase().trim();
+  const normalizedPhone = normalizePhone(params.phone);
+  const event = await resolveEvent(params.eventName);
+  const zone = await resolveZone(params.zoneId, event.id);
+
+  const owner =
+    (await prisma.profile.findFirst({
+      where: {
+        OR: [{ phone: normalizedPhone }, ...(params.idNumber ? [{ idNumber: params.idNumber }] : [])],
+      },
+    })) ||
+    (await prisma.profile.create({
+      data: {
+        phone: normalizedPhone,
+        idNumber: params.idNumber || null,
+        role: "vendor",
+      },
+    }));
+
+  const vehicle =
+    (await prisma.vehicle.findFirst({
+      where: { regNumber: cleanPlate },
+    })) ||
+    (await prisma.vehicle.create({
+      data: {
+        regNumber: cleanPlate,
+        make: "Unknown",
+        model: "Pending",
+        year: new Date().getFullYear(),
+        price: zone.price || 0,
+        zoneId: zone.id,
+        ownerId: owner.id,
+        status: params.paymentStatus === "paid" ? "active" : "draft",
+        isVerified: true,
+        atEvent: Boolean(params.eventName),
+        eventName: params.eventName || null,
+      },
+    }));
+
+  await prisma.booking.updateMany({
+    where: {
+      vehicleId: vehicle.id,
+      exitAt: null,
+    },
+    data: {
+      exitAt: new Date(),
+    },
+  });
+
+  const booking = await prisma.booking.create({
+    data: {
+      vehicleId: vehicle.id,
+      zoneId: zone.id,
+      paymentStatus: params.paymentStatus,
+      paymentMethod: params.paymentMethod,
+      paymentAmount: zone.price || 0,
+    },
+  });
+
+  const lastTicket = await prisma.registrationTicket.findFirst({
+    orderBy: { serialNumber: "desc" },
+  });
+  const nextSerial = (lastTicket?.serialNumber || 0) + 1;
+  const ticketId = `CFX-${nextSerial.toString().padStart(4, "0")}`;
+
+  const ticket = await prisma.registrationTicket.create({
+    data: {
+      ticketId,
+      serialNumber: nextSerial,
+      vehicleId: vehicle.id,
+      eventId: event.id,
+      regNumber: cleanPlate,
+      make: vehicle.make || "Unknown",
+      model: vehicle.model || "Pending",
+      year: vehicle.year || new Date().getFullYear(),
+      ownerName: params.name || owner.name || "Unknown",
+      ownerPhone: normalizedPhone,
+      ownerIdNumber: params.idNumber || owner.idNumber || null,
+      amountPaid: zone.price || 0,
+      zoneName: zone.name || "General",
+      status: params.paymentStatus === "paid" ? "active" : "pending",
+      qrData: JSON.stringify({
+        ticketId,
+        regNumber: cleanPlate,
+        ownerName: params.name || owner.name || "Unknown",
+        ownerPhone: normalizedPhone,
+        ownerIdNumber: params.idNumber || owner.idNumber || "",
+        zoneName: zone.name || "General",
+        amountPaid: zone.price || 0,
+        eventName: params.eventName || event.name,
+        paymentMethod: params.paymentMethod,
+        paymentStatus: params.paymentStatus,
+        metadata: params.metadata || {},
+        issuedAt: new Date().toISOString(),
+      }),
+    },
+  });
+
+  await supabase.from("vehicles").upsert(
+    {
+      id: vehicle.id,
+      reg_number: cleanPlate,
+      make: vehicle.make || "Unknown",
+      model: vehicle.model || "Pending",
+      year: vehicle.year || new Date().getFullYear(),
+      price: zone.price || 0,
+      zone_id: zone.id,
+      owner_id: owner.id,
+      status: params.paymentStatus === "paid" ? "active" : "draft",
+      is_verified: true,
+      at_event: Boolean(params.eventName),
+      event_name: params.eventName || null,
+    },
+    { onConflict: "id" }
+  );
+
+  await supabase.from("bookings").upsert(
+    {
+      id: booking.id,
+      vehicle_id: vehicle.id,
+      zone_id: zone.id,
+      payment_status: params.paymentStatus,
+      payment_method: params.paymentMethod,
+      payment_amount: zone.price || 0,
+    },
+    { onConflict: "id" }
+  );
+
+  await supabase.from("registration_tickets").upsert(
+    {
+      ticket_id: ticket.ticketId,
+      serial_number: nextSerial,
+      vehicle_id: vehicle.id,
+      event_id: event.id,
+      reg_number: cleanPlate,
+      make: ticket.make,
+      model: ticket.model,
+      year: ticket.year,
+      owner_name: ticket.ownerName,
+      owner_phone: ticket.ownerPhone,
+      owner_id_number: ticket.ownerIdNumber,
+      amount_paid: ticket.amountPaid,
+      zone_name: ticket.zoneName,
+      status: ticket.status,
+      qr_data: ticket.qrData,
+    },
+    { onConflict: "ticket_id" }
+  );
+
+  return { ticket, booking };
+}
 
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { plate, idNumber, phone, zoneId, paymentMethod, paymentStatus, name, eventName } = body;
+    const { plate, idNumber, phone, zoneId, paymentMethod, paymentStatus, name, eventName, metadata } = body;
 
-    // Validate required fields
     if (!plate || !phone || !zoneId) {
       return NextResponse.json(
         { error: "Missing required fields: plate, phone, and zoneId" },
@@ -14,257 +222,42 @@ export async function POST(req: Request) {
       );
     }
 
-    const cleanPlate = plate.toUpperCase();
-    
-    // NORMALIZE PHONE: Ensure consistent format (e.g., 07... becomes +254...)
-    let normalizedPhone = phone.replace(/\s+/g, "");
-    if (normalizedPhone.startsWith("0")) {
-      normalizedPhone = "+254" + normalizedPhone.substring(1);
-    } else if (!normalizedPhone.startsWith("+")) {
-      normalizedPhone = "+" + normalizedPhone;
-    }
-
-    // 1. Get or create zone
-    let zone = null;
-    
-    // Try to find zone by ID or name
-    const { data: existingZone } = await supabase
-      .from("zones")
-      .select("*")
-      .or(`id.eq.${zoneId},name.eq.${zoneId}`)
-      .maybeSingle();
-    
-    if (existingZone) {
-      zone = existingZone;
-    } else {
-      // Zone doesn't exist, create it for the default event
-      // First, get or create the default event
-      const { data: events } = await supabase
-        .from("events")
-        .select("id")
-        .eq("is_active", true)
-        .limit(1);
-      
-      const eventId = events?.[0]?.id;
-      
-      if (!eventId) {
+    if (paymentMethod === "mpesa") {
+      const pushResponse = await initiateStkPush(phone, 0, plate.toUpperCase().trim());
+      if (pushResponse.ResponseCode !== "0") {
         return NextResponse.json(
-          { error: "No active event found to create zone in" },
-          { status: 400 }
-        );
-      }
-      
-      // Create the new zone
-      const { data: newZone, error: createError } = await supabase
-        .from("zones")
-        .insert({
-          event_id: eventId,
-          name: zoneId,
-          capacity: 100,
-          price: 0
-        })
-        .select()
-        .single();
-      
-      if (createError || !newZone) {
-        return NextResponse.json(
-          { error: `Failed to create zone: ${createError?.message || "Unknown error"}` },
-          { status: 400 }
-        );
-      }
-      
-      zone = newZone;
-    }
-
-    // 2. Resolve or Create Profile
-    // We search by phone first, then ID number to avoid .or() complexity and ambiguity
-    let owner = null;
-    
-    // Search by phone
-    const { data: phoneMatch } = await supabase
-      .from("profiles")
-      .select("*")
-      .eq("phone", normalizedPhone)
-      .maybeSingle();
-    
-    owner = phoneMatch;
-
-    // If no phone match, search by ID number
-    if (!owner && idNumber) {
-      const { data: idMatch } = await supabase
-        .from("profiles")
-        .select("*")
-        .eq("id_number", idNumber)
-        .maybeSingle();
-      owner = idMatch;
-    }
-
-    if (!owner) {
-      // Create new profile with explicit UUID
-      const profileId = crypto.randomUUID();
-      const { data: newProfile, error: createError } = await supabase
-        .from("profiles")
-        .insert({
-          id: profileId,
-          phone: normalizedPhone,
-          id_number: idNumber || null,
-          role: "vendor",
-        })
-        .select()
-        .maybeSingle();
-
-      if (createError || !newProfile) {
-        console.error("PROFILE_CREATE_ERROR:", createError);
-        return NextResponse.json(
-          { error: `Failed to create profile: ${createError?.message || "Unknown error"}` },
+          { error: pushResponse.errorMessage || "M-Pesa integration error." },
           { status: 500 }
         );
       }
 
-      owner = newProfile;
-    } else {
-      // Update profile if needed
-      const updateData: Record<string, any> = {};
-      if (owner.role !== "vendor") updateData.role = "vendor";
-      if (idNumber && !owner.id_number) updateData.id_number = idNumber;
-
-      if (Object.keys(updateData).length > 0) {
-        await supabase
-          .from("profiles")
-          .update(updateData)
-          .eq("id", owner.id);
-      }
-    }
-
-    // 3. Find or Create Vehicle
-    let { data: vehicle, error: vehicleFetchError } = await supabase
-      .from("vehicles")
-      .select("*")
-      .eq("reg_number", cleanPlate)
-      .maybeSingle();
-
-    if (vehicleFetchError) {
-       console.error("VEHICLE_FETCH_ERROR:", vehicleFetchError);
-    }
-
-    if (vehicle) {
-      // Update existing vehicle
-      const { error: updateVehicleError } = await supabase
-        .from("vehicles")
-        .update({
-          owner_id: owner.id, // Ensure owner is linked
-          zone_id: zone.id,
-          at_event: Boolean(eventName),
-          status: "draft",
-          is_verified: true
-        })
-        .eq("id", vehicle.id);
-        
-      if (updateVehicleError) console.error("VEHICLE_UPDATE_ERROR:", updateVehicleError);
-    } else {
-      // Create new vehicle
-      const { data: newVehicle, error: createVehicleError } = await supabase
-        .from("vehicles")
-        .insert({
-          owner_id: owner.id,
-          reg_number: cleanPlate,
-          make: "Unknown",
-          model: "Pending",
-          year: new Date().getFullYear(),
-          price: 0,
-          zone_id: zone.id,
-          at_event: Boolean(eventName),
-          status: "draft",
-          is_verified: true
-        })
-        .select()
-        .maybeSingle();
-
-      if (createVehicleError || !newVehicle) {
-        console.error("VEHICLE_CREATE_ERROR:", createVehicleError);
-        return NextResponse.json({ error: `Failed to create vehicle record: ${createVehicleError?.message || "Unknown error"}` }, { status: 500 });
-      }
-      vehicle = newVehicle;
-    }
-
-    // 4. Clear previous active bookings for this vehicle
-    await supabase
-      .from("bookings")
-      .update({ exit_at: new Date().toISOString() })
-      .eq("vehicle_id", vehicle.id)
-      .is("exit_at", null);
-
-    // 5. Create Booking
-    const { data: booking, error: bookingError } = await supabase
-      .from("bookings")
-      .insert({
-        vehicle_id: vehicle.id,
-        zone_id: zone.id,
-        payment_status: paymentStatus || "paid",
-        payment_method: paymentMethod || "cash",
-      })
-      .select()
-      .maybeSingle();
-      
-    if (bookingError || !booking) {
-       console.error("BOOKING_CREATE_ERROR:", bookingError);
-       return NextResponse.json({ 
-         error: `Failed to create booking record: ${bookingError?.message || "Unknown error"}`,
-         details: bookingError?.message || "No error message provided"
-       }, { status: 500 });
-    }
-
-    // 6. Generate Ticket
-    // Get last serial number
-    const { data: lastTicket } = await supabase
-      .from("registration_tickets")
-      .select("serial_number")
-      .order("serial_number", { ascending: false })
-      .limit(1)
-      .maybeSingle();
-
-    const nextSerial = ((lastTicket?.serial_number || 0) + 1);
-    const formattedSerial = nextSerial.toString().padStart(4, '0');
-    const ticketId = `CFX-${formattedSerial}`;
-
-    const { data: ticket, error: ticketError } = await supabase
-      .from("registration_tickets")
-      .insert({
-        serial_number: nextSerial,
-        ticket_id: ticketId,
-        vehicle_id: vehicle.id,
-        event_id: zone.event_id,
-        reg_number: cleanPlate,
-        make: vehicle.make || "Unknown",
-        model: vehicle.model || "Pending",
-        year: vehicle.year || 2024,
-        owner_name: name || owner.name || "Unknown",
-        owner_phone: owner.phone,
-        owner_id_number: owner.id_number,
-        amount_paid: zone.price || 0,
-        zone_name: zone.name || "General",
-        status: "active",
-        qr_data: { ticketId } // Pass object directly
-      })
-      .select()
-      .maybeSingle();
-
-    if (ticketError || !ticket) {
-      console.error("TICKET_CREATE_ERROR:", ticketError);
-      return NextResponse.json({ 
-        success: true, 
-        warning: `Booking created but ticket generation failed: ${ticketError?.message || "Unknown error"}`,
-        data: { vehicle, booking } 
+      return NextResponse.json({
+        success: true,
+        message: "STK Push Initiated to Phone.",
+        merchantRequestId: pushResponse.MerchantRequestID,
+        checkoutRequestId: pushResponse.CheckoutRequestID,
       });
     }
 
-    return NextResponse.json({ 
-      success: true, 
-      data: { 
-        vehicle, 
-        booking, 
-        ticketId: ticket.ticket_id 
-      } 
+    const { ticket, booking } = await createTicket({
+      plate,
+      phone,
+      idNumber,
+      name,
+      zoneId,
+      paymentMethod: (paymentMethod || "cash") as "cash" | "mpesa" | "paybill",
+      paymentStatus: (paymentStatus || "paid") as "paid" | "pending",
+      eventName,
+      metadata,
+    });
+
+    return NextResponse.json({
+      success: true,
+      data: {
+        booking,
+        ticketId: ticket.ticketId,
+        vehicleId: ticket.vehicleId,
+      },
     });
   } catch (error) {
     console.error("CHECKIN_ERROR:", error);

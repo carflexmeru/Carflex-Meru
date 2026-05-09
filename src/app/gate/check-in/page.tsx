@@ -299,12 +299,12 @@ export default function GateCheckIn() {
             <span className="h-2 w-2 rounded-full bg-primary shadow-[0_0_10px_#E60000]" />
             Active Event: {activeEvent || "None selected"}
           </div>
-          <h2 className="text-5xl md:text-7xl font-black text-foreground tracking-tighter uppercase leading-none">FAST-GATE <br/> <span className="text-primary italic">PROTOCOL.</span></h2>
+          <h2 className="text-5xl md:text-7xl font-black text-foreground tracking-tighter uppercase leading-none">CHECK-IN <br/> <span className="text-primary italic">TICKET FLOW.</span></h2>
           
           <div className="flex flex-wrap gap-4 mt-8">
             <div className="nm-inset inline-flex items-center gap-2 px-4 py-1.5 w-fit">
               <span className="w-2 h-2 bg-primary rounded-full animate-pulse shadow-[0_0_10px_#E60000]"></span>
-              <span className="text-zinc-500 text-[10px] font-black uppercase tracking-[0.3em]">Single Vehicle Mode</span>
+              <span className="text-zinc-500 text-[10px] font-black uppercase tracking-[0.3em]">Single Vehicle Check-In</span>
             </div>
             
             <button 
@@ -312,7 +312,7 @@ export default function GateCheckIn() {
               className="nm-card px-6 py-2 text-[10px] font-black text-foreground uppercase tracking-widest hover:text-primary transition-all flex items-center gap-2 border-none"
             >
               <span className="material-symbols-outlined text-sm">group_work</span>
-              Switch to Fleet Manifest
+              Open Fleet Manifest
             </button>
 
             <button
@@ -324,7 +324,7 @@ export default function GateCheckIn() {
               className="nm-card px-6 py-2 text-[10px] font-black text-foreground uppercase tracking-widest hover:text-primary transition-all flex items-center gap-2 border-none"
             >
               <span className="material-symbols-outlined text-sm">event_busy</span>
-              Exit Event
+              Clear Event
             </button>
 
             <button 
@@ -332,7 +332,7 @@ export default function GateCheckIn() {
               className="nm-card px-6 py-2 text-[10px] font-black text-zinc-500 uppercase tracking-widest hover:text-white transition-all flex items-center gap-2 border-none"
             >
               <span className="material-symbols-outlined text-sm">history</span>
-              Reload Last Data
+              Restore Last Entry
             </button>
           </div>
         </div>
@@ -361,12 +361,12 @@ export default function GateCheckIn() {
               <div className="nm-card p-10 space-y-8 relative overflow-hidden group">
                 <div className="flex items-center gap-4 mb-2">
                    <span className="material-symbols-outlined text-primary text-xl">fingerprint</span>
-                   <h3 className="text-zinc-500 text-[10px] font-black uppercase tracking-[0.2em]">Subject Identity</h3>
+                   <h3 className="text-zinc-500 text-[10px] font-black uppercase tracking-[0.2em]">Vehicle Details</h3>
                 </div>
                 
                 <div className="space-y-8">
                   <div className="flex flex-col gap-3">
-                    <label htmlFor="plate-input" className="text-zinc-400 text-[10px] font-black uppercase tracking-widest px-2">Plate Identification</label>
+                    <label htmlFor="plate-input" className="text-zinc-400 text-[10px] font-black uppercase tracking-widest px-2">Registration Number</label>
                     <div className="nm-inset">
                       <input
                         required
@@ -385,7 +385,7 @@ export default function GateCheckIn() {
                   </div>
 
                   <div className="flex flex-col gap-3">
-                    <label htmlFor="name-input" className="text-zinc-400 text-[10px] font-black uppercase tracking-widest px-2">Official Name (As in ID)</label>
+                    <label htmlFor="name-input" className="text-zinc-400 text-[10px] font-black uppercase tracking-widest px-2">Owner Name</label>
                     <div className="nm-inset">
                       <input
                         required
@@ -400,7 +400,7 @@ export default function GateCheckIn() {
                   </div>
 
                   <div className="flex flex-col gap-3">
-                    <label htmlFor="id-input" className="text-zinc-400 text-[10px] font-black uppercase tracking-widest px-2">National ID Archive</label>
+                    <label htmlFor="id-input" className="text-zinc-400 text-[10px] font-black uppercase tracking-widest px-2">ID Number</label>
                     <div className="nm-inset">
                       <input
                         required
@@ -419,11 +419,11 @@ export default function GateCheckIn() {
               <div className="nm-card p-10 space-y-8 relative overflow-hidden group">
                 <div className="flex items-center gap-4 mb-2">
                    <span className="material-symbols-outlined text-primary text-xl">payments</span>
-                   <h3 className="text-zinc-500 text-[10px] font-black uppercase tracking-[0.2em]">Financial Node</h3>
+                   <h3 className="text-zinc-500 text-[10px] font-black uppercase tracking-[0.2em]">Payment Method</h3>
                 </div>
                 
                 <div className="flex flex-col gap-3">
-                  <label htmlFor="payment-method-select" className="text-zinc-400 text-[10px] font-black uppercase tracking-widest px-2">Payment Protocol</label>
+                  <label htmlFor="payment-method-select" className="text-zinc-400 text-[10px] font-black uppercase tracking-widest px-2">How is this ticket being paid for?</label>
                   <div className="nm-inset p-2 rounded-2xl relative">
                     <select 
                       id="payment-method-select"
@@ -432,8 +432,8 @@ export default function GateCheckIn() {
                       onChange={(e) => setPaymentMethod(e.target.value as "cash" | "mpesa" | "paybill")}
                       className="w-full bg-transparent p-4 text-foreground font-black text-[10px] uppercase tracking-widest outline-none border-none appearance-none cursor-pointer"
                     >
-                      <option value="mpesa" className="bg-zinc-800 text-white">STK Push (M-Pesa)</option>
-                      <option value="cash" className="bg-zinc-800 text-white">Physical Cash</option>
+                      <option value="mpesa" className="bg-zinc-800 text-white">M-Pesa STK Push</option>
+                      <option value="cash" className="bg-zinc-800 text-white">Cash Payment</option>
                       <option value="paybill" className="bg-zinc-800 text-white">Manual Paybill</option>
                     </select>
                     <div className="absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none">
@@ -484,7 +484,7 @@ export default function GateCheckIn() {
                         </button>
                         <div className="nm-inset p-6 flex items-center justify-center gap-4">
                           <span className="w-2 h-2 bg-primary rounded-full animate-pulse shadow-[0_0_10px_#E60000]"></span>
-                          <span className="text-[9px] font-black uppercase tracking-[0.2em] text-zinc-500">Uplink Active: Waiting for PIN...</span>
+                          <span className="text-[9px] font-black uppercase tracking-[0.2em] text-zinc-500">Waiting for payment confirmation...</span>
                         </div>
                       </div>
                     ) : (
@@ -493,7 +493,7 @@ export default function GateCheckIn() {
                         disabled={isLoading}
                         className="nm-card w-full !bg-primary text-white py-6 font-black uppercase tracking-widest text-[10px] shadow-[0_10px_30px_rgba(230,0,0,0.3)] hover:scale-[1.02] active:scale-95 transition-all border-none disabled:opacity-50"
                       >
-                        {isLoading ? "INITIATING UPLINK..." : (status === "pushing" ? "INITIATING UPLINK..." : "INITIATE STK PUSH")}
+                        {isLoading ? "PROCESSING..." : (status === "pushing" ? "PROCESSING..." : "START PAYMENT")}
                       </button>
                     )}
                   </div>
@@ -505,7 +505,7 @@ export default function GateCheckIn() {
                     disabled={isLoading}
                     className="nm-card w-full bg-white text-black py-6 font-black uppercase tracking-widest text-[10px] shadow-[0_10px_30px_rgba(255,255,255,0.1)] hover:scale-[1.02] active:scale-95 transition-all border-none disabled:opacity-50"
                   >
-                    {isLoading ? "AUTHORIZING..." : "AUTHORIZE CASH ENTRY"}
+                    {isLoading ? "PROCESSING..." : "CREATE CASH TICKET"}
                   </button>
                 )}
 
@@ -536,7 +536,7 @@ export default function GateCheckIn() {
                       disabled={isLoading}
                       className="nm-card w-full !bg-primary text-white py-6 font-black uppercase tracking-widest text-[10px] shadow-[0_10px_30px_rgba(230,0,0,0.3)] hover:scale-[1.02] active:scale-95 transition-all border-none disabled:opacity-50"
                     >
-                      {isLoading ? "AUTHORIZING..." : "AUTHORIZE PAYBILL ENTRY"}
+                      {isLoading ? "PROCESSING..." : "CREATE PAYBILL TICKET"}
                     </button>
                   </div>
                 )}
@@ -549,7 +549,7 @@ export default function GateCheckIn() {
                 className="nm-card w-full p-6 text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500 hover:text-white hover:bg-white/5 transition-all flex items-center justify-center gap-3 border-none disabled:opacity-50"
               >
                 <span className="material-symbols-outlined text-lg">history_toggle_off</span>
-                {isLoading ? "PROCESSING..." : "Defer to Ground Waitlist"}
+                {isLoading ? "PROCESSING..." : "Send to Ground Waitlist"}
               </button>
             </div>
 

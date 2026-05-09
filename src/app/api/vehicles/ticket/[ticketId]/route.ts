@@ -19,10 +19,17 @@ export async function GET(
     // Generate QR code data URL
     const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(ticket.qrData)}`;
 
+    let eventName = "";
+    try {
+      const parsed = JSON.parse(ticket.qrData);
+      eventName = parsed?.eventName || "";
+    } catch {}
+
     return NextResponse.json({
       success: true,
       ticket: {
         ...ticket,
+        eventName,
         qrCodeUrl,
         printUrl: `/api/vehicles/print-ticket/${ticket.ticketId}`
       }

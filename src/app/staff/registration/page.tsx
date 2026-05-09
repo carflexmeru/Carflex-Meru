@@ -6,6 +6,7 @@ import { useState, useEffect } from "react";
 
 export default function RegistrationDashboard() {
   const [vehicles, setVehicles] = useState<any[]>([]);
+  const [approvedVehicles, setApprovedVehicles] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeEvent, setActiveEvent] = useState("meru-10th-2026");
 
@@ -14,7 +15,15 @@ export default function RegistrationDashboard() {
     syncEvent();
     window.addEventListener("staffeventchange", syncEvent);
     fetchPendingVehicles();
-    return () => window.removeEventListener("staffeventchange", syncEvent);
+    fetchApprovedVehicles();
+    const interval = setInterval(() => {
+      fetchPendingVehicles();
+      fetchApprovedVehicles();
+    }, 15000);
+    return () => {
+      window.removeEventListener("staffeventchange", syncEvent);
+      clearInterval(interval);
+    };
   }, []);
 
   const fetchPendingVehicles = async () => {
@@ -35,6 +44,23 @@ export default function RegistrationDashboard() {
       setVehicles([]);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchApprovedVehicles = async () => {
+    try {
+      const qs = activeEvent ? `?eventName=${encodeURIComponent(activeEvent)}` : "";
+      const res = await fetch(`/api/vehicles/approved${qs}`);
+      const data = await res.json();
+
+      if (Array.isArray(data)) {
+        setApprovedVehicles(data);
+      } else {
+        setApprovedVehicles([]);
+      }
+    } catch (err) {
+      console.error(err);
+      setApprovedVehicles([]);
     }
   };
 
@@ -113,6 +139,41 @@ export default function RegistrationDashboard() {
            </div>
 
            <div className="space-y-6 md:space-y-8">
+              <div className="nm-card p-6 sm:p-8 md:p-10 bg-primary/5 border-none relative overflow-hidden group">
+                 <div className="absolute -right-8 -bottom-8 opacity-10 group-hover:scale-110 transition-transform duration-700">
+                    <span className="material-symbols-outlined text-[150px]">verified</span>
+                 </div>
+                 <h3 className="text-zinc-500 text-[10px] font-black uppercase tracking-widest mb-4">Approved Queue</h3>
+                 <div className="relative z-10">
+                    <p className="text-5xl sm:text-6xl font-black text-foreground tracking-tighter">{approvedVehicles.length}</p>
+                    <p className="text-zinc-400 font-bold uppercase tracking-widest text-[10px] mt-2">Visible to all staff after gate approval</p>
+                 </div>
+                 <div className="relative z-10 mt-6 space-y-2 max-h-64 overflow-y-auto pr-1">
+                    {approvedVehicles.length === 0 ? (
+                      <div className="nm-inset p-4 text-[10px] font-black uppercase tracking-widest text-zinc-600">
+                        No approved vehicles yet.
+                      </div>
+                    ) : (
+                      approvedVehicles.slice(0, 6).map((vehicle) => (
+                        <div key={vehicle.id} className="nm-inset p-4 flex items-center justify-between gap-4">
+                          <div className="min-w-0">
+                            <p className="text-[9px] font-black uppercase tracking-widest text-zinc-500">
+                              {vehicle.owner?.name || "INDIVIDUAL_OWNER"}
+                            </p>
+                            <p className="text-sm font-black text-foreground break-words">{vehicle.regNumber}</p>
+                          </div>
+                          <div className="text-right shrink-0">
+                            <p className="text-[9px] font-black uppercase tracking-widest text-primary">
+                              {vehicle.zone?.name || "UNASSIGNED"}
+                            </p>
+                            <p className="text-[8px] uppercase text-zinc-500 mt-1">Approved</p>
+                          </div>
+                        </div>
+                      ))
+                    )}
+                 </div>
+              </div>
+
               <div className="nm-card p-6 sm:p-8 md:p-10 bg-primary/5 border-none relative overflow-hidden group">
                  <div className="absolute -right-8 -bottom-8 opacity-10 group-hover:scale-110 transition-transform duration-700">
                     <span className="material-symbols-outlined text-[150px]">inventory_2</span>

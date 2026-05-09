@@ -44,6 +44,8 @@ export default function RegistrationTicketModal({
   const hasGenerated = useRef<string | null>(null);
   const [editingPrice, setEditingPrice] = useState(false);
   const [newPrice, setNewPrice] = useState<string>("");
+  const [showQrPreview, setShowQrPreview] = useState(false);
+  const [sharing, setSharing] = useState(false);
 
   const handleGenerateTicket = useCallback(async () => {
     if (!vehicleId) return;
@@ -125,6 +127,29 @@ export default function RegistrationTicketModal({
       document.body.removeChild(a);
     } catch (err) {
       console.error("Download QR error:", err);
+    }
+  };
+
+  const handleShareTicket = async () => {
+    if (!ticket) return;
+
+    const shareUrl = `${window.location.origin}/gate/ticket/${ticket.ticketId}`;
+    try {
+      setSharing(true);
+      if (navigator.share) {
+        await navigator.share({
+          title: `Carflex Ticket ${ticket.ticketId}`,
+          text: `Ticket ${ticket.ticketId} for ${ticket.regNumber}`,
+          url: shareUrl,
+        });
+      } else {
+        await navigator.clipboard.writeText(shareUrl);
+        alert("Ticket link copied to clipboard.");
+      }
+    } catch (err) {
+      console.error("Share ticket error:", err);
+    } finally {
+      setSharing(false);
     }
   };
 
@@ -251,7 +276,12 @@ export default function RegistrationTicketModal({
 
               <div className="flex flex-col md:flex-row gap-4 md:gap-6 items-center md:items-start">
                 {/* QR Code Preview */}
-                <div className="nm-inset p-3 md:p-4 bg-white flex-shrink-0">
+                <button
+                  type="button"
+                  onClick={() => setShowQrPreview(true)}
+                  className="nm-inset relative p-3 md:p-4 bg-white flex-shrink-0 cursor-zoom-in"
+                  title="View QR code"
+                >
                   <Image
                     src={ticket.qrCodeUrl}
                     alt="QR Code"
@@ -260,7 +290,7 @@ export default function RegistrationTicketModal({
                     className="w-32 h-32 md:w-48 md:h-48"
                     unoptimized
                   />
-                </div>
+                </button>
 
                 <div className="flex-1 w-full space-y-3 md:space-y-4 text-[10px] md:text-[11px]">
                   <div className="flex justify-between items-center">
@@ -353,14 +383,62 @@ export default function RegistrationTicketModal({
               </button>
             </div>
 
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <button
+                onClick={handleDownloadQR}
+                className="nm-card text-foreground py-5 font-black uppercase tracking-[0.2em] text-xs hover:bg-foreground/5 transition-all border-none flex items-center justify-center gap-2"
+              >
+                <span className="material-symbols-outlined text-sm">qr_code_2</span>
+                Download QR
+              </button>
+              <button
+                onClick={handleShareTicket}
+                disabled={sharing}
+                className="nm-card text-foreground py-5 font-black uppercase tracking-[0.2em] text-xs hover:bg-foreground/5 transition-all border-none flex items-center justify-center gap-2 disabled:opacity-50"
+              >
+                <span className="material-symbols-outlined text-sm">share</span>
+                {sharing ? "Sharing..." : "Share Ticket"}
+              </button>
+            </div>
+
             <button
               onClick={onClose}
               className="w-full nm-card text-zinc-500 hover:text-foreground py-5 font-black uppercase tracking-[0.2em] text-xs hover:bg-foreground/5 transition-all border-none"
             >
-              CLOSE
+            CLOSE
             </button>
           </>
         )}
+
+      {showQrPreview && ticket && (
+        <div className="fixed inset-0 z-[120] flex items-center justify-center bg-black/85 p-4 print:hidden backdrop-blur-md">
+          <div className="nm-card w-full max-w-md space-y-4 bg-white p-4 md:p-6">
+            <div className="flex items-center justify-between">
+              <h3 className="text-xs font-black uppercase tracking-widest text-zinc-700">QR Preview</h3>
+              <button onClick={() => setShowQrPreview(false)} className="text-zinc-500 hover:text-foreground">
+                <span className="material-symbols-outlined">close</span>
+              </button>
+            </div>
+            <div className="relative aspect-square w-full bg-white border border-zinc-200">
+              <Image
+                src={ticket.qrCodeUrl}
+                alt={`QR Code for ${ticket.ticketId}`}
+                fill
+                className="object-contain p-2"
+                unoptimized
+              />
+            </div>
+            <div className="flex gap-3">
+              <button onClick={handleDownloadQR} className="nm-card flex-1 px-4 py-3 text-[9px] font-black uppercase tracking-widest hover:text-primary">
+                Download
+              </button>
+              <button onClick={handleShareTicket} className="nm-card flex-1 px-4 py-3 text-[9px] font-black uppercase tracking-widest hover:text-primary">
+                Share
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       </div>
     </div>
   );

@@ -31,6 +31,8 @@ export default function TicketPage({
   const [error, setError] = useState("");
   const [editingPrice, setEditingPrice] = useState(false);
   const [newPrice, setNewPrice] = useState<string>("");
+  const [showQrPreview, setShowQrPreview] = useState(false);
+  const [sharing, setSharing] = useState(false);
 
   useEffect(() => {
     async function fetchTicket() {
@@ -81,6 +83,46 @@ export default function TicketPage({
       }
     } catch (err) {
       setError("Error updating price");
+    }
+  };
+
+  const downloadQrCode = async () => {
+    if (!ticket) return;
+
+    const response = await fetch(ticket.qrCodeUrl);
+    const blob = await response.blob();
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `qr-${ticket.ticketId}.png`;
+    document.body.appendChild(a);
+    a.click();
+    window.URL.revokeObjectURL(url);
+    document.body.removeChild(a);
+  };
+
+  const shareTicket = async () => {
+    if (!ticket) return;
+
+    const shareUrl = `${window.location.origin}/gate/ticket/${ticket.ticketId}`;
+    const shareData = {
+      title: `Carflex Ticket ${ticket.ticketId}`,
+      text: `Ticket ${ticket.ticketId} for ${ticket.regNumber}`,
+      url: shareUrl,
+    };
+
+    try {
+      setSharing(true);
+      if (navigator.share) {
+        await navigator.share(shareData);
+      } else {
+        await navigator.clipboard.writeText(shareUrl);
+        alert("Ticket link copied to clipboard.");
+      }
+    } catch (err) {
+      console.error("Share failed:", err);
+    } finally {
+      setSharing(false);
     }
   };
 
@@ -158,6 +200,19 @@ export default function TicketPage({
           >
             Print Ticket
           </button>
+          <button
+            onClick={downloadQrCode}
+            className="nm-card px-6 py-2 text-[10px] font-black uppercase tracking-widest hover:text-primary"
+          >
+            Download QR
+          </button>
+          <button
+            onClick={shareTicket}
+            disabled={sharing}
+            className="nm-card px-6 py-2 text-[10px] font-black uppercase tracking-widest hover:text-primary disabled:opacity-50"
+          >
+            {sharing ? "Sharing..." : "Share Ticket"}
+          </button>
         </div>
       </div>
 
@@ -175,7 +230,12 @@ export default function TicketPage({
           
           {/* QR Section */}
           <div className="qr-section flex-shrink-0 w-full md:w-[300px] text-center p-6 bg-[#f9f9f9] border border-[#ddd]">
-            <div className="relative w-[260px] h-[260px] mx-auto bg-white p-2 border border-[#eee]">
+            <button
+              type="button"
+              onClick={() => setShowQrPreview(true)}
+              className="relative w-[260px] h-[260px] mx-auto bg-white p-2 border border-[#eee] cursor-zoom-in"
+              title="Show QR code"
+            >
               <Image
                 src={ticket.qrCodeUrl}
                 alt="QR Code"
@@ -183,10 +243,18 @@ export default function TicketPage({
                 className="object-contain"
                 unoptimized
               />
-            </div>
+            </button>
             <p className="text-[10px] font-black mt-4 uppercase text-[#666] tracking-wider leading-relaxed">
               Scan for immediate <br/> verification
             </p>
+            <div className="mt-4 flex flex-wrap gap-2 justify-center">
+              <button onClick={downloadQrCode} className="nm-card px-4 py-2 text-[9px] font-black uppercase tracking-widest hover:text-primary">
+                Download QR
+              </button>
+              <button onClick={shareTicket} className="nm-card px-4 py-2 text-[9px] font-black uppercase tracking-widest hover:text-primary">
+                Share
+              </button>
+            </div>
           </div>
 
           {/* Details Section */}
@@ -253,6 +321,36 @@ export default function TicketPage({
         </div>
       </div>
       
+      {showQrPreview && (
+        <div className="fixed inset-0 z-[120] flex items-center justify-center bg-black/85 p-4 print:hidden backdrop-blur-md">
+          <div className="nm-card w-full max-w-md space-y-4 bg-white p-4 md:p-6">
+            <div className="flex items-center justify-between">
+              <h3 className="text-xs font-black uppercase tracking-widest text-zinc-700">QR Preview</h3>
+              <button onClick={() => setShowQrPreview(false)} className="text-zinc-500 hover:text-foreground">
+                <span className="material-symbols-outlined">close</span>
+              </button>
+            </div>
+            <div className="relative aspect-square w-full bg-white border border-zinc-200">
+              <Image
+                src={ticket.qrCodeUrl}
+                alt={`QR Code for ${ticket.ticketId}`}
+                fill
+                className="object-contain p-2"
+                unoptimized
+              />
+            </div>
+            <div className="flex gap-3">
+              <button onClick={downloadQrCode} className="nm-card flex-1 px-4 py-3 text-[9px] font-black uppercase tracking-widest hover:text-primary">
+                Download
+              </button>
+              <button onClick={shareTicket} className="nm-card flex-1 px-4 py-3 text-[9px] font-black uppercase tracking-widest hover:text-primary">
+                Share
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <p className="mt-12 text-zinc-400 text-[10px] font-black uppercase tracking-[0.4em] text-center print:hidden">
         Meru Showground 2024 • Ops Protocol v2.4
       </p>

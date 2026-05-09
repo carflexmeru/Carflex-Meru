@@ -89,6 +89,24 @@ export default function RegisteredTicketsPage() {
     }
   };
 
+  const handleShareTicket = async (ticket: Ticket) => {
+    const shareUrl = `${window.location.origin}/gate/ticket/${ticket.ticketId}`;
+    try {
+      if (navigator.share) {
+        await navigator.share({
+          title: `Carflex Ticket ${ticket.ticketId}`,
+          text: `Ticket ${ticket.ticketId} for ${ticket.regNumber}`,
+          url: shareUrl,
+        });
+      } else {
+        await navigator.clipboard.writeText(shareUrl);
+        alert("Ticket link copied to clipboard.");
+      }
+    } catch (err) {
+      console.error("Share ticket error:", err);
+    }
+  };
+
   const filteredTickets = tickets.filter(ticket => 
     ticket.regNumber.toLowerCase().includes(searchTerm.toLowerCase()) ||
     ticket.ticketId.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -215,6 +233,13 @@ export default function RegisteredTicketsPage() {
                           >
                             <span className="material-symbols-outlined text-sm">download</span>
                           </button>
+                          <button
+                            onClick={() => handleShareTicket(ticket)}
+                            className="nm-inset p-2 rounded-lg text-zinc-500 hover:text-primary transition-colors flex items-center justify-center w-10 h-10"
+                            title="Share Ticket"
+                          >
+                            <span className="material-symbols-outlined text-sm">share</span>
+                          </button>
                           <Link
                             href={`/gate/ticket/${ticket.ticketId}`}
                             className="nm-inset p-2 rounded-lg text-zinc-500 hover:text-primary transition-colors flex items-center justify-center w-10 h-10"
@@ -298,6 +323,13 @@ export default function RegisteredTicketsPage() {
                   >
                     <span className="material-symbols-outlined text-lg">download</span>
                     <span className="text-[7px] font-black uppercase tracking-widest">Download</span>
+                  </button>
+                  <button
+                    onClick={() => handleShareTicket(ticket)}
+                    className="nm-card p-3 text-zinc-500 hover:text-primary transition-colors flex flex-col items-center justify-center gap-1"
+                  >
+                    <span className="material-symbols-outlined text-lg">share</span>
+                    <span className="text-[7px] font-black uppercase tracking-widest">Share</span>
                   </button>
                   <Link
                     href={`/gate/ticket/${ticket.ticketId}`}

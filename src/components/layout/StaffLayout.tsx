@@ -68,6 +68,8 @@ export default function StaffLayout({ children }: StaffLayoutProps) {
         return [
           { label: "Main Site", href: "/", icon: "home" },
           { label: "Check-in", href: "/gate/check-in", icon: "stadium" },
+          { label: "Tickets", href: "/staff/registration/tickets", icon: "confirmation_number" },
+          { label: "Scanner", href: "/staff/registration/scanner", icon: "qr_code_scanner" },
           { label: "Registered Tickets", href: "/gate/tickets", icon: "confirmation_number" },
           { label: "Fleet Manifest", href: "/gate/fleet", icon: "group_work" },
           { label: "Waitlist", href: "/staff/registration/waitlist", icon: "pending_actions" },
@@ -78,6 +80,7 @@ export default function StaffLayout({ children }: StaffLayoutProps) {
         return [
           { label: "Main Site", href: "/", icon: "home" },
           { label: "Gate Command", href: "/staff/gate", icon: "verified_user" },
+          { label: "Scanner", href: "/staff/gate/scanner", icon: "qr_code_scanner" },
           { label: "Ground Intel", href: "/staff/ground", icon: "location_searching" },
           { label: "Logs", href: "/staff/gate/logs", icon: "history" },
           { label: "Transactions", href: "/staff/gate/transactions", icon: "receipt_long" },
@@ -86,6 +89,7 @@ export default function StaffLayout({ children }: StaffLayoutProps) {
         return [
           { label: "Main Site", href: "/", icon: "home" },
           { label: "Ground Intel", href: "/staff/ground", icon: "location_searching" },
+          { label: "Scanner", href: "/staff/ground/scanner", icon: "qr_code_scanner" },
           { label: "Security", href: "/staff/security", icon: "security" },
           { label: "Logs", href: "/staff/ground/logs", icon: "history" },
           { label: "Transactions", href: "/staff/ground/transactions", icon: "account_balance_wallet" },
@@ -94,6 +98,7 @@ export default function StaffLayout({ children }: StaffLayoutProps) {
         return [
           { label: "Main Site", href: "/", icon: "home" },
           { label: "Exit Command", href: "/staff/exit", icon: "door_open" },
+          { label: "Scanner", href: "/staff/exit/scanner", icon: "qr_code_scanner" },
           { label: "Inside Manifest", href: "/staff/exit/manifest", icon: "format_list_bulleted" },
           { label: "Overtime Reconciliation", href: "/staff/exit/overtime", icon: "history_toggle_off" },
           { label: "Departure Logs", href: "/staff/exit/logs", icon: "history" },
@@ -105,6 +110,8 @@ export default function StaffLayout({ children }: StaffLayoutProps) {
           return [
             { label: "Main Site", href: "/", icon: "home" },
             { label: "Check-in", href: "/gate/check-in", icon: "stadium" },
+            { label: "Tickets", href: "/staff/registration/tickets", icon: "confirmation_number" },
+            { label: "Scanner", href: "/staff/gate/scanner", icon: "qr_code_scanner" },
             { label: "Registered Tickets", href: "/gate/tickets", icon: "confirmation_number" },
           ];
         }

@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { supabase } from "@/lib/supabase";
 
 export async function POST(request: Request) {
   try {
@@ -74,6 +75,39 @@ export async function POST(request: Request) {
         status: "active",
         qrData: `${new URL(request.url).origin}/gate/ticket/${ticketId}`,
       }
+    });
+
+    await supabase.from("vehicles").upsert({
+      id: vehicle.id,
+      reg_number: vehicle.regNumber,
+      make: vehicle.make || "Unknown",
+      model: vehicle.model || "Unknown",
+      year: vehicle.year || new Date().getFullYear(),
+      price: vehicle.zone?.price || 0,
+      zone_id: vehicle.zone?.id || null,
+      owner_id: vehicle.owner?.id || null,
+      status: "active",
+      is_verified: true,
+      at_event: Boolean(vehicle.zone?.eventId),
+      event_name: vehicle.zone?.eventId || null,
+    });
+
+    await supabase.from("registration_tickets").upsert({
+      ticket_id: ticket.ticketId,
+      serial_number: nextSerial,
+      vehicle_id: vehicle.id,
+      event_id: vehicle.zone!.eventId,
+      reg_number: ticket.regNumber,
+      make: ticket.make,
+      model: ticket.model,
+      year: ticket.year,
+      owner_name: ticket.ownerName,
+      owner_phone: ticket.ownerPhone,
+      owner_id_number: ticket.ownerIdNumber,
+      amount_paid: ticket.amountPaid,
+      zone_name: ticket.zoneName,
+      status: ticket.status,
+      qr_data: ticket.qrData,
     });
 
     // Generate QR code data URL (using a simple QR code service)
