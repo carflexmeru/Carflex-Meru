@@ -61,6 +61,9 @@ export default function GateDashboard() {
       const manifestData = await manifestRes.json();
       if (Array.isArray(manifestData)) {
         setRecentTickets(manifestData.slice(0, 6));
+        if (pendingData.length === 0) {
+          setPending(manifestData);
+        }
       } else {
         setRecentTickets([]);
       }
@@ -227,8 +230,13 @@ export default function GateDashboard() {
                           {v.owner?.name || "INDIVIDUAL_OWNER"}
                         </p>
                         <p className="break-words text-2xl font-black uppercase tracking-tighter text-foreground sm:text-3xl">
-                          {v.regNumber}
+                          {v.ticketId || v.regNumber}
                         </p>
+                        {v.ticketId && (
+                          <p className="mt-1 text-[9px] font-black uppercase tracking-widest text-primary">
+                            Plate: {v.regNumber}
+                          </p>
+                        )}
                       </div>
                     </div>
 
