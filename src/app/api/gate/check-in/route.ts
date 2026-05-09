@@ -68,7 +68,6 @@ export async function POST(req: Request) {
         .insert({
           phone: normalizedPhone,
           id_number: idNumber || null,
-          name: name || "Unknown Owner",
           role: "vendor",
         })
         .select()
@@ -87,7 +86,6 @@ export async function POST(req: Request) {
       // Update profile if needed
       const updateData: Record<string, any> = {};
       if (owner.role !== "vendor") updateData.role = "vendor";
-      if (name && !owner.name) updateData.name = name;
       if (idNumber && !owner.id_number) updateData.id_number = idNumber;
 
       if (Object.keys(updateData).length > 0) {
@@ -198,7 +196,7 @@ export async function POST(req: Request) {
         make: vehicle.make || "Unknown",
         model: vehicle.model || "Pending",
         year: vehicle.year || 2024,
-        owner_name: owner.name || "Unknown",
+        owner_name: name || owner.name || "Unknown",
         owner_phone: owner.phone,
         owner_id_number: owner.id_number,
         amount_paid: zone.price || 0,
