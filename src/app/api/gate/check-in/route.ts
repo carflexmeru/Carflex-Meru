@@ -29,7 +29,7 @@ export async function POST(req: Request) {
       .from("zones")
       .select("*")
       .eq("id", zoneId)
-      .single();
+      .maybeSingle();
 
     if (zoneError || !zone) {
       return NextResponse.json(
@@ -39,11 +39,27 @@ export async function POST(req: Request) {
     }
 
     // 2. Resolve or Create Profile
-    let { data: owner, error: ownerError } = await supabase
+    // We search by phone first, then ID number to avoid .or() complexity and ambiguity
+    let owner = null;
+    
+    // Search by phone
+    const { data: phoneMatch } = await supabase
       .from("profiles")
       .select("*")
-      .or(`phone.eq.${normalizedPhone},id_number.eq.${idNumber || ""}`)
-      .single();
+      .eq("phone", normalizedPhone)
+      .maybeSingle();
+    
+    owner = phoneMatch;
+
+    // If no phone match, search by ID number
+    if (!owner && idNumber) {
+      const { data: idMatch } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("id_number", idNumber)
+        .maybeSingle();
+      owner = idMatch;
+    }
 
     if (!owner) {
       // Create new profile
@@ -51,14 +67,15 @@ export async function POST(req: Request) {
         .from("profiles")
         .insert({
           phone: normalizedPhone,
-          id_number: idNumber,
-          name,
+          id_number: idNumber || null,
+          name: name || "Unknown Owner",
           role: "vendor",
         })
         .select()
-        .single();
+        .maybeSingle();
 
       if (createError || !newProfile) {
+        console.error("PROFILE_CREATE_ERROR:", createError);
         return NextResponse.json(
           { error: "Failed to create profile" },
           { status: 500 }
@@ -81,26 +98,23 @@ export async function POST(req: Request) {
       }
     }
 
-    // 3. Clear previous active bookings for this plate
-    await supabase
-      .from("bookings")
-      .update({ exit_at: new Date().toISOString() })
-      .eq("vehicle_id", (await supabase.from("vehicles").select("id").eq("reg_number", cleanPlate).single()).data?.id || "")
-      .is("exit_at", null);
-
-    // 4. Find or Create Vehicle
-    let { data: vehicle } = await supabase
+    // 3. Find or Create Vehicle
+    let { data: vehicle, error: vehicleFetchError } = await supabase
       .from("vehicles")
       .select("*")
       .eq("reg_number", cleanPlate)
-      .eq("owner_id", owner.id)
-      .single();
+      .maybeSingle();
+
+    if (vehicleFetchError) {
+       console.error("VEHICLE_FETCH_ERROR:", vehicleFetchError);
+    }
 
     if (vehicle) {
       // Update existing vehicle
-      await supabase
+      const { error: updateVehicleError } = await supabase
         .from("vehicles")
         .update({
+          owner_id: owner.id, // Ensure owner is linked
           zone_id: zoneId,
           event_name: eventName || vehicle.event_name || null,
           at_event: Boolean(eventName || vehicle.event_name),
@@ -108,16 +122,18 @@ export async function POST(req: Request) {
           is_verified: true
         })
         .eq("id", vehicle.id);
+        
+      if (updateVehicleError) console.error("VEHICLE_UPDATE_ERROR:", updateVehicleError);
     } else {
       // Create new vehicle
-      const { data: newVehicle } = await supabase
+      const { data: newVehicle, error: createVehicleError } = await supabase
         .from("vehicles")
         .insert({
           owner_id: owner.id,
           reg_number: cleanPlate,
           make: "Unknown",
           model: "Pending",
-          year: 2024,
+          year: new Date().getFullYear(),
           price: 0,
           zone_id: zoneId,
           event_name: eventName || null,
@@ -126,13 +142,24 @@ export async function POST(req: Request) {
           is_verified: true
         })
         .select()
-        .single();
+        .maybeSingle();
 
+      if (createVehicleError || !newVehicle) {
+        console.error("VEHICLE_CREATE_ERROR:", createVehicleError);
+        return NextResponse.json({ error: "Failed to create vehicle record" }, { status: 500 });
+      }
       vehicle = newVehicle;
     }
 
+    // 4. Clear previous active bookings for this vehicle
+    await supabase
+      .from("bookings")
+      .update({ exit_at: new Date().toISOString() })
+      .eq("vehicle_id", vehicle.id)
+      .is("exit_at", null);
+
     // 5. Create Booking
-    const { data: booking } = await supabase
+    const { data: booking, error: bookingError } = await supabase
       .from("bookings")
       .insert({
         vehicle_id: vehicle.id,
@@ -141,21 +168,27 @@ export async function POST(req: Request) {
         payment_method: paymentMethod || "cash",
       })
       .select()
-      .single();
+      .maybeSingle();
+      
+    if (bookingError || !booking) {
+       console.error("BOOKING_CREATE_ERROR:", bookingError);
+       return NextResponse.json({ error: "Failed to create booking record" }, { status: 500 });
+    }
 
     // 6. Generate Ticket
+    // Get last serial number
     const { data: lastTicket } = await supabase
       .from("registration_tickets")
       .select("serial_number")
       .order("serial_number", { ascending: false })
       .limit(1)
-      .single();
+      .maybeSingle();
 
     const nextSerial = ((lastTicket?.serial_number || 0) + 1);
     const formattedSerial = nextSerial.toString().padStart(4, '0');
     const ticketId = `CFX-${formattedSerial}`;
 
-    const { data: ticket } = await supabase
+    const { data: ticket, error: ticketError } = await supabase
       .from("registration_tickets")
       .insert({
         serial_number: nextSerial,
@@ -171,17 +204,27 @@ export async function POST(req: Request) {
         amount_paid: zone.price || 0,
         zone_name: zone.name || "General",
         status: "active",
-        qr_data: JSON.stringify({ ticketId })
+        qr_data: { ticketId } // Pass object directly
       })
       .select()
-      .single();
+      .maybeSingle();
+
+    if (ticketError || !ticket) {
+      console.error("TICKET_CREATE_ERROR:", ticketError);
+      // Even if ticket fails, we return the booking but warn
+      return NextResponse.json({ 
+        success: true, 
+        warning: "Ticket generation failed",
+        data: { vehicle, booking } 
+      });
+    }
 
     return NextResponse.json({ 
       success: true, 
       data: { 
         vehicle, 
         booking, 
-        ticketId: ticket?.ticket_id 
+        ticketId: ticket.ticket_id 
       } 
     });
   } catch (error) {
