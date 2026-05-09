@@ -61,7 +61,8 @@ export default function GateDashboard() {
         setApproved([]);
       }
 
-      const manifestRes = await fetch(`/api/gate/manifest?status=active${qs}`);
+      const manifestQuery = activeEvent ? `?status=active&eventName=${encodeURIComponent(activeEvent)}` : "?status=active";
+      const manifestRes = await fetch(`/api/gate/manifest${manifestQuery}`);
       const manifestData = await manifestRes.json();
       if (Array.isArray(manifestData)) {
         const normalized = manifestData.slice(0, 6);

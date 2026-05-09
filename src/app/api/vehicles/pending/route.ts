@@ -8,9 +8,7 @@ export async function GET(request: Request) {
 
     let query = supabase
       .from("vehicles")
-      .select(
-        "id,reg_number,make,model,year,status,is_verified,at_event,event_name,created_at,owner_id,zone_id,profiles:owner_id(id,name,phone,id_number),zones:zone_id(id,name,price),organizations:organization_id(id,name,rep_name,rep_id)"
-      )
+      .select("id,reg_number,make,model,year,status,is_verified,at_event,event_name,created_at,owner_id,zone_id")
       .eq("status", "draft")
       .eq("is_verified", false)
       .order("created_at", { ascending: false });
