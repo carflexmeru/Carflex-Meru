@@ -11,10 +11,10 @@ interface VehicleQRModalProps {
     make: string;
     model: string;
     year: number;
-    ownerName: string;
-    ownerPhone: string;
-    zoneName: string;
-    amountPaid: number;
+    ownerName?: string;
+    ownerPhone?: string;
+    zoneName?: string;
+    amountPaid?: number;
   } | null;
   onClose: () => void;
 }
@@ -62,8 +62,8 @@ export default function VehicleQRModal({
   const qrData = JSON.stringify({
     vehicleId: vehicle.id,
     regNumber: vehicle.regNumber,
-    ownerName: vehicle.ownerName,
-    amount: vehicle.amountPaid,
+    ownerName: vehicle.ownerName || "INDIVIDUAL_OWNER",
+    amount: vehicle.amountPaid || 0,
     timestamp: new Date().toISOString()
   });
 
@@ -111,11 +111,11 @@ export default function VehicleQRModal({
           </div>
           <div className="flex justify-between items-center border-t border-foreground/5 pt-3">
             <span className="text-zinc-500 font-bold uppercase tracking-wider text-[9px]">Owner:</span>
-            <span className="text-foreground font-black text-[10px]">{vehicle.ownerName}</span>
+            <span className="text-foreground font-black text-[10px]">{vehicle.ownerName || "INDIVIDUAL_OWNER"}</span>
           </div>
           <div className="flex justify-between items-center border-t border-foreground/5 pt-3">
             <span className="text-zinc-500 font-bold uppercase tracking-wider text-[9px]">Zone:</span>
-            <span className="text-primary font-black text-[10px]">{vehicle.zoneName}</span>
+            <span className="text-primary font-black text-[10px]">{vehicle.zoneName || "UNASSIGNED"}</span>
           </div>
         </div>
 
