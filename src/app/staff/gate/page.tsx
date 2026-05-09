@@ -6,6 +6,7 @@ import { useState, useEffect } from "react";
 
 interface Vehicle {
   id: string;
+  ticketId?: string;
   regNumber: string;
   make: string;
   model: string;
@@ -17,11 +18,13 @@ interface Vehicle {
   owner?: { name: string; phone?: string };
   zone?: { name: string; price: number };
   price?: number;
+  createdAt?: string;
 }
 
 export default function GateDashboard() {
   const [pending, setPending] = useState<Vehicle[]>([]);
   const [approved, setApproved] = useState<Vehicle[]>([]);
+  const [recentTickets, setRecentTickets] = useState<Vehicle[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeEvent, setActiveEvent] = useState("");
   const [activeTab, setActiveTab] = useState<"pending" | "approved">("pending");
@@ -52,6 +55,14 @@ export default function GateDashboard() {
       const approvedData = await approvedRes.json();
       if (Array.isArray(approvedData)) {
         setApproved(approvedData);
+      }
+
+      const manifestRes = await fetch(`/api/gate/manifest?status=active${qs}`);
+      const manifestData = await manifestRes.json();
+      if (Array.isArray(manifestData)) {
+        setRecentTickets(manifestData.slice(0, 6));
+      } else {
+        setRecentTickets([]);
       }
     } catch (err) {
       console.error(err);
@@ -102,6 +113,45 @@ export default function GateDashboard() {
           <p className="max-w-[42ch] text-[9px] font-bold uppercase tracking-widest leading-relaxed text-zinc-500 md:text-[10px]">
             Authorizing asset entry and verifying operational clearance.
           </p>
+        </div>
+
+        <div className="nm-card p-6 sm:p-8 md:p-10 space-y-4 border border-primary/10">
+          <div className="flex items-center justify-between gap-3">
+            <h3 className="text-[10px] font-black uppercase tracking-widest text-zinc-500">
+              Recent Registration Tickets
+            </h3>
+            <span className="text-[9px] font-black uppercase tracking-[0.3em] text-primary">
+              Live Feed
+            </span>
+          </div>
+          <div className="space-y-3">
+            {recentTickets.length === 0 ? (
+              <div className="nm-inset p-4 text-[10px] font-black uppercase tracking-widest text-zinc-600">
+                No recent tickets yet.
+              </div>
+            ) : (
+              recentTickets.map((ticket) => (
+                <div key={ticket.ticketId || ticket.id} className="nm-inset p-4 flex items-center justify-between gap-4">
+                  <div className="min-w-0">
+                    <p className="text-[9px] font-black uppercase tracking-widest text-zinc-500">
+                      {ticket.ownerName || "INDIVIDUAL_OWNER"}
+                    </p>
+                    <p className="text-sm font-black text-foreground break-words">
+                      {ticket.ticketId || ticket.regNumber}
+                    </p>
+                  </div>
+                  <div className="text-right shrink-0">
+                    <p className="text-[9px] font-black uppercase tracking-widest text-primary">
+                      {ticket.zoneName || "UNASSIGNED"}
+                    </p>
+                    <p className="text-[8px] uppercase text-zinc-500 mt-1">
+                      {ticket.createdAt ? new Date(ticket.createdAt).toLocaleTimeString() : "Recent"}
+                    </p>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
         </div>
 
         {/* Tabs */}
