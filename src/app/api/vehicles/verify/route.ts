@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+import { supabase } from "@/lib/supabase";
 
 // SEARCH BY PLATE (Handles Collisions like 'CARFLEX')
 export async function GET(request: Request) {
@@ -11,13 +11,17 @@ export async function GET(request: Request) {
   }
 
   try {
-    const vehicles = await prisma.vehicle.findMany({
-      where: { regNumber: plate.toUpperCase() },
-      include: { owner: true, zone: true }
-    });
+    const { data: vehicles, error } = await supabase
+      .from("vehicles")
+      .select("id,reg_number,make,model,year,price,status,is_verified,created_at,owner_id,zone_id")
+      .eq("reg_number", plate.toUpperCase())
+      .order("created_at", { ascending: false });
 
-    return NextResponse.json(vehicles);
+    if (error) throw error;
+
+    return NextResponse.json(vehicles || []);
   } catch (error) {
+    console.error("Search failed:", error);
     return NextResponse.json({ error: "Search failed" }, { status: 500 });
   }
 }
@@ -27,54 +31,59 @@ export async function POST(request: Request) {
   try {
     const body = await request.json();
     const id = body.id || body.vehicleId;
-    const { status } = body;
+    const status = body.status || "active";
 
     if (!id) {
       return NextResponse.json({ error: "Missing vehicle ID" }, { status: 400 });
     }
 
-    const updatedVehicle = await prisma.vehicle.update({
-      where: { id },
-      data: {
-        isVerified: true,
-        status: status || "active"
-      },
-      include: { owner: true }
-    });
+    const { data: updatedRows, error: updateError } = await supabase
+      .from("vehicles")
+      .update({
+        is_verified: true,
+        status,
+      })
+      .eq("id", id)
+      .select("id,reg_number,make,model,year,price,status,is_verified,created_at,owner_id,zone_id")
+      .limit(1);
 
-    // GENERATE RAW LISTING FOR VENDOR DASHBOARD
-    if (updatedVehicle) {
-       await prisma.rawListing.create({
-          data: {
-             originalRegNum: updatedVehicle.regNumber,
-             ownerPhone: updatedVehicle.owner?.phone || null,
-             ownerIdNumber: updatedVehicle.owner?.idNumber || null,
-             make: updatedVehicle.make,
-             model: updatedVehicle.model,
-             year: updatedVehicle.year
-          }
-       });
+    if (updateError) throw updateError;
+
+    const updatedVehicle = updatedRows?.[0];
+    if (!updatedVehicle) {
+      return NextResponse.json({ error: "Vehicle not found" }, { status: 404 });
     }
 
-    // RECORD TO ACTION REGISTRY - Only record once per vehicle
-    // Check if this vehicle has already been recorded as authorized
-    const existingLog = await prisma.actionLog.findFirst({
-      where: {
-        actionType: "AUTHORIZE_ENTRY",
-        description: {
-          contains: id
-        }
-      }
+    const { data: ownerRows } = await supabase
+      .from("profiles")
+      .select("id,phone,id_number,name")
+      .eq("id", updatedVehicle.owner_id || "")
+      .limit(1);
+
+    const owner = ownerRows?.[0] || null;
+
+    await supabase.from("raw_listings").insert({
+      original_reg_num: updatedVehicle.reg_number,
+      owner_phone: owner?.phone || null,
+      owner_id_number: owner?.id_number || null,
+      make: updatedVehicle.make,
+      model: updatedVehicle.model,
+      year: updatedVehicle.year,
     });
 
-    if (!existingLog) {
-      await prisma.actionLog.create({
-        data: {
-          actionType: "AUTHORIZE_ENTRY",
-          agentName: "GATE_TERMINAL",
-          description: `Asset ${updatedVehicle.regNumber} (ID: ${id}) was authorized for entry.`,
-          metadata: { vehicleId: id, plate: updatedVehicle.regNumber }
-        }
+    const { data: existingLog } = await supabase
+      .from("action_logs")
+      .select("id")
+      .eq("action_type", "AUTHORIZE_ENTRY")
+      .ilike("description", `%${id}%`)
+      .limit(1);
+
+    if (!existingLog?.length) {
+      await supabase.from("action_logs").insert({
+        action_type: "AUTHORIZE_ENTRY",
+        agent_name: "GATE_TERMINAL",
+        description: `Asset ${updatedVehicle.reg_number} (ID: ${id}) was authorized for entry.`,
+        metadata: { vehicleId: id, plate: updatedVehicle.reg_number },
       });
     }
 
