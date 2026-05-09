@@ -10,33 +10,33 @@
 }
 
 :root {
-  /* Obsidian Mode (Dark) - GLOBAL DEFAULT */
-  --background: #080808;
-  --foreground: #ffffff;
+  /* Charcoal Mode (Dark but Readable) - GLOBAL DEFAULT */
+  --background: #1a1a1a;
+  --foreground: #f5f5f5;
   --primary: #E60000;
   --primary-glow: rgba(230, 0, 0, 0.4);
-  --surface: #0c0c0c;
-  --nm-shadow: 10px 10px 20px #040404, -10px -10px 20px #121212;
-  --nm-inset: inset 5px 5px 10px #040404, inset -5px -5px 10px #121212;
-  --glass: rgba(255, 255, 255, 0.03);
-  --glass-border: rgba(255, 255, 255, 0.05);
-  --sidebar: #0c0c0c;
-  --sidebar-hover: #121212;
+  --surface: #242424;
+  --nm-shadow: 10px 10px 20px #0f0f0f, -10px -10px 20px #2f2f2f;
+  --nm-inset: inset 5px 5px 10px #0f0f0f, inset -5px -5px 10px #2f2f2f;
+  --glass: rgba(255, 255, 255, 0.08);
+  --glass-border: rgba(255, 255, 255, 0.12);
+  --sidebar: #1f1f1f;
+  --sidebar-hover: #2a2a2a;
 }
 
 [data-theme='light'] {
   /* Frost Mode (Light) - OPERATIONAL ONLY */
-  --background: #f4f4f7;
-  --foreground: #080808;
+  --background: #f0ebe3;
+  --foreground: #1f1a17;
   --primary: #E60000;
-  --primary-glow: rgba(230, 0, 0, 0.1);
-  --surface: #ffffff;
-  --nm-shadow: 10px 10px 20px #d1d1d6, -10px -10px 20px #ffffff;
-  --nm-inset: inset 5px 5px 10px #d1d1d6, inset -5px -5px 10px #ffffff;
-  --glass: rgba(0, 0, 0, 0.03);
-  --glass-border: rgba(0, 0, 0, 0.05);
-  --sidebar: #ffffff;
-  --sidebar-hover: #f8f8f8;
+  --primary-glow: rgba(230, 0, 0, 0.15);
+  --surface: #f8f5ef;
+  --nm-shadow: 10px 10px 20px #d9d3ca, -10px -10px 20px #ffffff;
+  --nm-inset: inset 5px 5px 10px #d9d3ca, inset -5px -5px 10px #ffffff;
+  --glass: rgba(0, 0, 0, 0.05);
+  --glass-border: rgba(0, 0, 0, 0.1);
+  --sidebar: #f8f5ef;
+  --sidebar-hover: #efe9df;
 }
 
 body {
@@ -45,6 +45,17 @@ body {
   font-family: 'Inter', system-ui, sans-serif;
   overflow-x: hidden;
   transition: background 0.5s cubic-bezier(0.4, 0, 0.2, 1), color 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  min-height: 100vh;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
 }
 
 /* Premium Neumorphic Card */
@@ -69,8 +80,12 @@ body {
   width: 100%;
   height: 100%;
   z-index: -1;
-  background: radial-gradient(circle at 50% 50%, #1a0000 0%, #080808 100%);
+  background: radial-gradient(circle at 50% 50%, #2a0000 0%, #1a1a1a 100%);
   overflow: hidden;
+}
+
+[data-theme='light'] .liquid-bg {
+  background: radial-gradient(circle at 50% 50%, #f5e6e0 0%, #f5f1eb 100%);
 }
 
 .liquid-blob {
@@ -81,7 +96,7 @@ body {
   filter: blur(120px);
   border-radius: 50%;
   animation: liquid-drift 20s infinite alternate ease-in-out;
-  opacity: 0.3;
+  opacity: 0.2;
 }
 
 @keyframes liquid-drift {
@@ -107,4 +122,24 @@ body {
 .text-stroke {
   -webkit-text-stroke: 1px rgba(255, 255, 255, 0.1);
   color: transparent;
+}
+
+[data-theme='light'] .text-stroke {
+  -webkit-text-stroke: 1px rgba(31, 26, 23, 0.16);
+}
+
+.contact-field::placeholder {
+  color: rgba(255, 255, 255, 0.30);
+}
+
+[data-theme='light'] .contact-field::placeholder {
+  color: rgba(31, 26, 23, 0.45);
+}
+
+.staff-field::placeholder {
+  color: rgba(245, 245, 245, 0.20);
+}
+
+[data-theme='light'] .staff-field::placeholder {
+  color: rgba(31, 26, 23, 0.36);
 }

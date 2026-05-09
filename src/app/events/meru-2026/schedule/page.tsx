@@ -6,13 +6,13 @@ export default function MeruEventSchedule() {
       day: "MAY 03, 2026 (SUNDAY)",
       title: "HIGH-STAKES BAZAAR",
       events: [
-        { time: "07:00", action: "Rapid Asset Deployment & Check-in", zone: "ADMIN GATE" },
-        { time: "08:30", action: "Final Zone Positioning & Forensics", zone: "ALL ZONES" },
-        { time: "09:00", action: "Mission Opening: Public Entrance", zone: "MAIN GATE" },
-        { time: "11:00", action: "VIP Premier Row & Official Ribbon Cut", zone: "ZONE A" },
-        { time: "13:00", action: "Live Asset Reviews & Auctions", zone: "THE YARD" },
-        { time: "16:00", action: "Final Sales Clearance Node", zone: "ADMIN GATE" },
-        { time: "17:30", action: "Asset Extraction & Mission End", zone: "GLOBAL" }
+        { time: "7:00 AM", action: "Rapid Asset Deployment & Check-in", zone: "ADMIN GATE" },
+        { time: "8:30 AM", action: "Final Zone Positioning & Forensics", zone: "ALL ZONES" },
+        { time: "9:00 AM", action: "Mission Opening: Public Entrance", zone: "MAIN GATE" },
+        { time: "11:00 AM", action: "VIP Premier Row & Official Ribbon Cut", zone: "ZONE A" },
+        { time: "1:00 PM", action: "Live Asset Reviews & Auctions", zone: "THE YARD" },
+        { time: "4:00 PM", action: "Final Sales Clearance Node", zone: "ADMIN GATE" },
+        { time: "5:30 PM", action: "Asset Extraction & Mission End", zone: "GLOBAL" }
       ]
     }
   ];

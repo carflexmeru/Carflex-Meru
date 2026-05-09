@@ -22,7 +22,7 @@ export default function MeruEventMap() {
             <img 
                src="/meru_showground_map_1777632374555.png" 
                alt="Tactical Map" 
-               className="w-full h-full object-cover rounded-[2.5rem] grayscale group-hover:grayscale-0 transition-all duration-700"
+               className="w-full h-full object-cover rounded-[2.5rem] transition-all duration-700"
             />
          </div>
 

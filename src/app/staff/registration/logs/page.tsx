@@ -6,15 +6,21 @@ import { useState, useEffect } from "react";
 export default function LogsPage() {
   const [logs, setLogs] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [activeEvent, setActiveEvent] = useState("");
 
   useEffect(() => {
+    const syncEvent = () => setActiveEvent(localStorage.getItem("carflex_staff_event") || "");
+    syncEvent();
+    window.addEventListener("staffeventchange", syncEvent);
     fetchLogs();
+    return () => window.removeEventListener("staffeventchange", syncEvent);
   }, []);
 
   const fetchLogs = async () => {
     try {
       setLoading(true);
-      const res = await fetch("/api/staff/logs");
+      const qs = activeEvent ? `?eventName=${encodeURIComponent(activeEvent)}` : "";
+      const res = await fetch(`/api/staff/logs${qs}`);
       const data = await res.json();
       if (Array.isArray(data)) {
         setLogs(data);
@@ -31,6 +37,10 @@ export default function LogsPage() {
       <div className="space-y-12">
         <div className="flex justify-between items-end">
           <div className="flex flex-col gap-4">
+            <div className="inline-flex w-fit items-center gap-2 rounded-full border border-[var(--glass-border)] bg-[var(--surface)] px-3 py-1 text-[9px] font-black uppercase tracking-[0.35em] text-zinc-500">
+              <span className="h-2 w-2 rounded-full bg-primary shadow-[0_0_10px_#E60000]" />
+              Active Event: {activeEvent || "None selected"}
+            </div>
             <h1 className="text-6xl font-black uppercase tracking-tighter leading-none">MAINFRAME <br/> <span className="text-primary italic text-stroke">LOGS.</span></h1>
             <p className="text-zinc-500 font-bold uppercase tracking-widest text-[10px]">Reviewing chronological operational data and system audit trails.</p>
           </div>

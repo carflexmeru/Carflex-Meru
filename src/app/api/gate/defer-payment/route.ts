@@ -5,7 +5,7 @@ export async function POST(request: Request) {
   let body;
   try {
     body = await request.json();
-    const { phone, regNumber, plate, zoneId, zone, idNumber } = body;
+    const { phone, regNumber, plate, zoneId, zone, idNumber, eventName } = body;
     
     const cleanPlate = (regNumber || plate || "").toUpperCase();
     const targetZoneId = zoneId || zone;
@@ -56,7 +56,11 @@ export async function POST(request: Request) {
       if (vehicle) {
         vehicle = await tx.vehicle.update({
           where: { id: vehicle.id },
-          data: { zoneId: targetZoneId }
+          data: {
+            zoneId: targetZoneId,
+            eventName: eventName || vehicle.eventName || null,
+            atEvent: Boolean(eventName || vehicle.eventName),
+          }
         });
       } else {
         vehicle = await tx.vehicle.create({
@@ -64,6 +68,8 @@ export async function POST(request: Request) {
             regNumber: cleanPlate,
             ownerId: owner.id,
             zoneId: targetZoneId,
+            eventName: eventName || null,
+            atEvent: Boolean(eventName),
             status: "draft",
           }
         });

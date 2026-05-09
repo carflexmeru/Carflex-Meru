@@ -35,16 +35,16 @@ export default function AboutPage() {
       {/* Stats Node */}
       <div className="nm-inset p-16 grid grid-cols-1 md:grid-cols-3 gap-12 text-center">
          <div className="space-y-2">
-            <p className="text-4xl font-black text-white italic">2026</p>
-            <p className="text-[10px] font-black text-zinc-500 uppercase tracking-widest">Est. Operations</p>
+            <p className="text-4xl font-black text-primary italic">2026</p>
+            <p className="text-[10px] font-black uppercase tracking-widest" style={{ color: "var(--foreground)", opacity: 0.55 }}>Est. Operations</p>
          </div>
          <div className="space-y-2">
             <p className="text-4xl font-black text-primary italic">100%</p>
-            <p className="text-[10px] font-black text-zinc-500 uppercase tracking-widest">Asset Verification</p>
+            <p className="text-[10px] font-black uppercase tracking-widest" style={{ color: "var(--foreground)", opacity: 0.55 }}>Asset Verification</p>
          </div>
          <div className="space-y-2">
-            <p className="text-4xl font-black text-white italic">24/7</p>
-            <p className="text-[10px] font-black text-zinc-500 uppercase tracking-widest">Tactical Support</p>
+            <p className="text-4xl font-black text-primary italic">24/7</p>
+            <p className="text-[10px] font-black uppercase tracking-widest" style={{ color: "var(--foreground)", opacity: 0.55 }}>Tactical Support</p>
          </div>
       </div>
 

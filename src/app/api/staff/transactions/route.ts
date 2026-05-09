@@ -1,12 +1,22 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
+    const { searchParams } = new URL(request.url);
+    const eventName = searchParams.get("eventName");
+
     // Fetch all bookings with payment data
     const transactions = await prisma.booking.findMany({
       where: {
-        paymentAmount: { gt: 0 }
+        paymentAmount: { gt: 0 },
+        ...(eventName
+          ? {
+              vehicle: {
+                eventName,
+              },
+            }
+          : {}),
       },
       include: {
         vehicle: {

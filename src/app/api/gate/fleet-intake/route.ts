@@ -59,7 +59,7 @@ export async function POST(req: Request) {
               zoneId: v.zoneId,
               status: "draft",
               isVerified: false,
-              images: []
+              images: JSON.stringify([])
             }
           });
         }

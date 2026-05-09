@@ -61,7 +61,7 @@ export default function MeruEventListings() {
              <Link href={`/marketplace/${vehicle.id}`} key={vehicle.id} className="nm-card group relative overflow-hidden flex flex-col h-full hover:scale-[1.02] transition-all border-none">
                 <div className="h-64 bg-zinc-900 relative">
                    {vehicle.images?.[0] ? (
-                     <img src={vehicle.images[0]} className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700" />
+                     <img src={vehicle.images[0]} className="w-full h-full object-cover transition-all duration-700" />
                    ) : (
                      <div className="w-full h-full flex items-center justify-center">
                         <span className="material-symbols-outlined text-4xl text-zinc-800">image_not_supported</span>

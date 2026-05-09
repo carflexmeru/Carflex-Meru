@@ -42,8 +42,13 @@ export const updateSession = async (request: NextRequest) => {
   try {
     await supabase.auth.getUser();
   } catch (error) {
-    console.error("MIDDLEWARE_AUTH_ERROR:", error);
+    // Silently handle auth errors - don't block requests
+    // This allows staff login and other public pages to work even if Supabase is misconfigured
+    if (process.env.NODE_ENV === 'development') {
+      console.debug("MIDDLEWARE_AUTH_DEBUG: Supabase auth check skipped or failed gracefully");
+    }
   }
 
   return supabaseResponse;
 };
+

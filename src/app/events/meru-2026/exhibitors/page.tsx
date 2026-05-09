@@ -74,7 +74,7 @@ export default function MeruExhibitors() {
                    </div>
                 </div>
 
-                <Link href={`/events/meru-2026/listings?vendorId=${ex.id}`} className="w-full nm-card bg-white text-black py-4 font-black uppercase tracking-widest text-[9px] hover:bg-primary hover:text-white transition-all border-none">
+                <Link href={`/events/meru-2026/listings?vendorId=${ex.id}`} className="w-full nm-card bg-[var(--surface)] text-foreground py-4 font-black uppercase tracking-widest text-[9px] hover:bg-primary hover:text-white transition-all border border-[var(--glass-border)]">
                    VIEW SHOWGROUND FLEET
                 </Link>
              </div>

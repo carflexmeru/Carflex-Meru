@@ -1,16 +1,27 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
+    const { searchParams } = new URL(request.url);
+    const eventName = searchParams.get("eventName");
+
     // We combine recent vehicles and bookings as 'actions'
     const vehicles = await prisma.vehicle.findMany({
+      where: eventName ? { eventName } : undefined,
       include: { owner: true, organization: true },
       orderBy: { createdAt: "desc" },
       take: 20
     });
 
     const bookings = await prisma.booking.findMany({
+      where: eventName
+        ? {
+            vehicle: {
+              eventName,
+            },
+          }
+        : undefined,
       include: { 
         vehicle: {
           include: { owner: true }

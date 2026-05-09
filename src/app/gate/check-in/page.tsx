@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import RegistrationTicketModal from "@/components/RegistrationTicketModal";
 import SecurityAlertModal from "@/components/SecurityAlertModal";
 import StaffLayout from "@/components/layout/StaffLayout";
 
@@ -13,8 +14,32 @@ interface Zone {
   occupancy: number;
 }
 
+interface VehicleInfo {
+  regNumber: string;
+  make: string;
+  model: string;
+  year: number;
+}
+
+interface WaitlistItem {
+  id: string;
+  vehicle?: {
+    regNumber: string;
+  };
+  zone?: {
+    name: string;
+    price: number;
+  };
+}
+
 export default function GateCheckIn() {
   const router = useRouter();
+  const [activeEvent, setActiveEvent] = useState(() => {
+    if (typeof window !== "undefined") {
+      return localStorage.getItem("carflex_staff_event") || "meru-10th-2026";
+    }
+    return "meru-10th-2026";
+  });
   const [zones, setZones] = useState<Zone[]>([]);
   const [showSecurityAlert, setShowSecurityAlert] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -40,11 +65,31 @@ export default function GateCheckIn() {
       localStorage.setItem("gate_checkin_cache", JSON.stringify(formData));
     }
   }, [formData]);
+
   const [status, setStatus] = useState<"idle" | "pushing" | "waiting" | "success" | "error">("idle");
   const [errorMessage, setErrorMessage] = useState("");
-  const [paymentMethod, setPaymentMethod] = useState<"cash" | "mpesa">("mpesa");
+  const [paymentMethod, setPaymentMethod] = useState<"cash" | "mpesa" | "paybill">("mpesa");
+  const [accountNumberOverride, setAccountNumberOverride] = useState("");
+  const [paymentProtocol, setPaymentProtocol] = useState<{ paybill: string; accountNumber: string }>({
+    paybill: "4575623",
+    accountNumber: "",
+  });
+
+  // Account number override will be updated in the plate input onChange handler to avoid cascading renders.
+
+  const [ticketModal, setTicketModal] = useState({
+    isOpen: false,
+    vehicleId: null as string | null,
+    vehicleInfo: null as VehicleInfo | null,
+  });
 
   useEffect(() => {
+    const syncEvent = () => {
+      setActiveEvent(localStorage.getItem("carflex_staff_event") || "");
+    };
+
+    window.addEventListener("staffeventchange", syncEvent);
+
     async function fetchZones() {
       try {
         const res = await fetch("/api/zones");
@@ -62,6 +107,26 @@ export default function GateCheckIn() {
       }
     }
     fetchZones();
+
+    return () => window.removeEventListener("staffeventchange", syncEvent);
+  }, []);
+
+  useEffect(() => {
+    async function fetchPaymentProtocol() {
+      try {
+        const res = await fetch("/api/admin/finance");
+        if (!res.ok) return;
+        const data = await res.json();
+        setPaymentProtocol(prev => ({
+          paybill: data.paymentProtocol?.paybill || prev.paybill,
+          accountNumber: data.paymentProtocol?.accountNumber || prev.accountNumber,
+        }));
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    fetchPaymentProtocol();
   }, []);
 
   const selectedZone = Array.isArray(zones) ? zones.find((z) => z.id === formData.zone) : null;
@@ -77,7 +142,7 @@ export default function GateCheckIn() {
     setIsLoading(true);
     setErrorMessage("");
 
-    if (paymentMethod === "cash") {
+    if (paymentMethod === "cash" || paymentMethod === "paybill") {
       setStatus("pushing");
       try {
         const res = await fetch("/api/gate/check-in", {
@@ -86,19 +151,23 @@ export default function GateCheckIn() {
           body: JSON.stringify({
             ...formData,
             zoneId: formData.zone,
-            paymentMethod: "cash",
-            paymentStatus: "paid"
+            paymentMethod: paymentMethod,
+            paymentStatus: "paid",
+            eventName: activeEvent || undefined,
+            metadata: paymentMethod === "paybill" ? { accountNumber: accountNumberOverride } : undefined
           }),
         });
 
         if (res.ok) {
-          setStatus("success");
+          const result = await res.json();
+          // Redirect directly to the standalone ticket page
+          router.push(`/gate/ticket/${result.data.ticketId}`);
         } else {
           const data = await res.json();
-          throw new Error(data.error || "Cash check-in failed");
+          throw new Error(data.error || "Check-in failed");
         }
-      } catch (err: any) {
-        setErrorMessage(err.message);
+      } catch (err) {
+        setErrorMessage(err instanceof Error ? err.message : "An error occurred");
         setStatus("error");
       } finally {
         setIsLoading(false);
@@ -116,6 +185,7 @@ export default function GateCheckIn() {
             regNumber: formData.plate.toUpperCase(),
             zoneId: formData.zone,
             idNumber: formData.idNumber,
+            eventName: activeEvent || undefined,
           }),
         });
 
@@ -123,8 +193,8 @@ export default function GateCheckIn() {
         if (!res.ok) throw new Error(data.error || "STK Push failed");
 
         setStatus("waiting");
-      } catch (error: any) {
-        setErrorMessage(error.message);
+      } catch (error) {
+        setErrorMessage(error instanceof Error ? error.message : "STK Push failed");
         setStatus("error");
         setIsLoading(false);
       }
@@ -138,9 +208,11 @@ export default function GateCheckIn() {
       const res = await fetch(`/api/gate/check-in-status?plate=${formData.plate}`);
       const data = await res.json();
       
-      if (data.status === "paid") {
-        setStatus("success");
-        setIsLoading(false);
+      if (data.success) {
+        // Direct redirect to the standalone ticket page
+        router.push(`/gate/ticket/${data.data.ticketId}`);
+      } else {
+        setErrorMessage(data.error || "Submission failed");
       }
     } catch (err) {
       console.error("Polling error:", err);
@@ -148,11 +220,13 @@ export default function GateCheckIn() {
   };
 
   useEffect(() => {
-    let interval: any;
+    let interval: NodeJS.Timeout | number | undefined;
     if (status === "waiting") {
       interval = setInterval(checkPaymentStatus, 3000);
     }
-    return () => clearInterval(interval);
+    return () => {
+      if (interval) clearInterval(interval as unknown as number);
+    };
   }, [status, formData.plate]);
 
   const handleDefer = async () => {
@@ -166,7 +240,7 @@ export default function GateCheckIn() {
       const res = await fetch("/api/gate/defer-payment", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({ ...formData, eventName: activeEvent || undefined }),
       });
 
       if (res.ok) {
@@ -177,14 +251,14 @@ export default function GateCheckIn() {
         const data = await res.json();
         throw new Error(data.error);
       }
-    } catch (error: any) {
-      setErrorMessage(error.message);
+    } catch (error) {
+      setErrorMessage(error instanceof Error ? error.message : "Deferral failed");
     } finally {
       setIsLoading(false);
     }
   };
 
-  const [waitlist, setWaitlist] = useState<any[]>([]);
+  const [waitlist, setWaitlist] = useState<WaitlistItem[]>([]);
   const fetchWaitlist = async () => {
     try {
       const res = await fetch("/api/gate/defer-payment");
@@ -206,6 +280,10 @@ export default function GateCheckIn() {
       <div className="space-y-16 animate-fade-in max-w-5xl mx-auto py-12 pb-40">
         {/* Page Header */}
         <div className="flex flex-col gap-3 px-4">
+          <div className="inline-flex w-fit items-center gap-2 rounded-full border border-[var(--glass-border)] bg-[var(--surface)] px-3 py-1 text-[9px] font-black uppercase tracking-[0.35em] text-zinc-500">
+            <span className="h-2 w-2 rounded-full bg-primary shadow-[0_0_10px_#E60000]" />
+            Active Event: {activeEvent || "None selected"}
+          </div>
           <h2 className="text-5xl md:text-7xl font-black text-foreground tracking-tighter uppercase leading-none">FAST-GATE <br/> <span className="text-primary italic">PROTOCOL.</span></h2>
           
           <div className="flex flex-wrap gap-4 mt-8">
@@ -220,6 +298,18 @@ export default function GateCheckIn() {
             >
               <span className="material-symbols-outlined text-sm">group_work</span>
               Switch to Fleet Manifest
+            </button>
+
+            <button
+              onClick={() => {
+                localStorage.removeItem("carflex_staff_event");
+                setActiveEvent("");
+                window.dispatchEvent(new Event("staffeventchange"));
+              }}
+              className="nm-card px-6 py-2 text-[10px] font-black text-foreground uppercase tracking-widest hover:text-primary transition-all flex items-center gap-2 border-none"
+            >
+              <span className="material-symbols-outlined text-sm">event_busy</span>
+              Exit Event
             </button>
 
             <button 
@@ -261,24 +351,30 @@ export default function GateCheckIn() {
                 
                 <div className="space-y-8">
                   <div className="flex flex-col gap-3">
-                    <label className="text-zinc-400 text-[10px] font-black uppercase tracking-widest px-2">Plate Identification</label>
+                    <label htmlFor="plate-input" className="text-zinc-400 text-[10px] font-black uppercase tracking-widest px-2">Plate Identification</label>
                     <div className="nm-inset">
                       <input
                         required
+                        id="plate-input"
                         type="text"
                         placeholder="KCX 123A"
                         className="w-full bg-transparent p-6 text-foreground font-mono text-3xl uppercase tracking-[0.3em] focus:text-primary outline-none transition-all placeholder:text-foreground/20 border-none"
                         value={formData.plate}
-                        onChange={(e) => setFormData({ ...formData, plate: e.target.value })}
+                        onChange={(e) => {
+                          const val = e.target.value;
+                          setFormData({ ...formData, plate: val });
+                          setAccountNumberOverride(val.toUpperCase());
+                        }}
                       />
                     </div>
                   </div>
 
                   <div className="flex flex-col gap-3">
-                    <label className="text-zinc-400 text-[10px] font-black uppercase tracking-widest px-2">Official Name (As in ID)</label>
+                    <label htmlFor="name-input" className="text-zinc-400 text-[10px] font-black uppercase tracking-widest px-2">Official Name (As in ID)</label>
                     <div className="nm-inset">
                       <input
                         required
+                        id="name-input"
                         type="text"
                         placeholder="e.g. John Doe"
                         className="w-full bg-transparent p-6 text-foreground font-bold tracking-[0.1em] focus:text-primary outline-none transition-all placeholder:text-foreground/20 border-none"
@@ -289,10 +385,11 @@ export default function GateCheckIn() {
                   </div>
 
                   <div className="flex flex-col gap-3">
-                    <label className="text-zinc-400 text-[10px] font-black uppercase tracking-widest px-2">National ID Archive</label>
+                    <label htmlFor="id-input" className="text-zinc-400 text-[10px] font-black uppercase tracking-widest px-2">National ID Archive</label>
                     <div className="nm-inset">
                       <input
                         required
+                        id="id-input"
                         type="text"
                         placeholder="12345678"
                         className="w-full bg-transparent p-6 text-foreground font-bold tracking-[0.1em] focus:text-primary outline-none transition-all placeholder:text-foreground/20 border-none"
@@ -311,38 +408,35 @@ export default function GateCheckIn() {
                 </div>
                 
                 <div className="flex flex-col gap-3">
-                  <label className="text-zinc-400 text-[10px] font-black uppercase tracking-widest px-2">Payment Protocol</label>
-                  <div className="flex gap-4 p-2 nm-inset rounded-2xl">
-                    <button
-                      type="button"
-                      onClick={() => setPaymentMethod("mpesa")}
-                      className={`flex-1 py-4 px-6 rounded-xl font-black text-[10px] uppercase tracking-widest transition-all ${
-                        paymentMethod === "mpesa" ? "bg-primary text-white shadow-[0_0_20px_rgba(230,0,0,0.3)]" : "text-zinc-500 hover:text-white"
-                      }`}
+                  <label htmlFor="payment-method-select" className="text-zinc-400 text-[10px] font-black uppercase tracking-widest px-2">Payment Protocol</label>
+                  <div className="nm-inset p-2 rounded-2xl relative">
+                    <select 
+                      id="payment-method-select"
+                      title="Select Payment Method"
+                      value={paymentMethod}
+                      onChange={(e) => setPaymentMethod(e.target.value as "cash" | "mpesa" | "paybill")}
+                      className="w-full bg-transparent p-4 text-foreground font-black text-[10px] uppercase tracking-widest outline-none border-none appearance-none cursor-pointer"
                     >
-                      M-Pesa Push
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setPaymentMethod("cash")}
-                      className={`flex-1 py-4 px-6 rounded-xl font-black text-[10px] uppercase tracking-widest transition-all ${
-                        paymentMethod === "cash" ? "bg-white text-black" : "text-zinc-500 hover:text-white"
-                      }`}
-                    >
-                      Physical Cash
-                    </button>
+                      <option value="mpesa" className="bg-zinc-800 text-white">STK Push (M-Pesa)</option>
+                      <option value="cash" className="bg-zinc-800 text-white">Physical Cash</option>
+                      <option value="paybill" className="bg-zinc-800 text-white">Manual Paybill</option>
+                    </select>
+                    <div className="absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none">
+                      <span className="material-symbols-outlined text-zinc-500 text-sm">expand_more</span>
+                    </div>
                   </div>
                 </div>
 
                 <div className="flex flex-col gap-6">
                   <div className="flex flex-col gap-3">
-                    <label className="text-zinc-400 text-[10px] font-black uppercase tracking-widest px-2">Primary Contact Number</label>
+                    <label htmlFor="contact-phone" className="text-zinc-400 text-[10px] font-black uppercase tracking-widest px-2">Primary Contact Number</label>
                     <div className="nm-inset">
                       <input
                         required
+                        id="contact-phone"
                         type="tel"
                         placeholder="0712345678"
-                        className="w-full bg-transparent p-6 text-white font-bold tracking-[0.4em] focus:text-primary outline-none transition-all placeholder:text-white/5 border-none"
+                        className="w-full bg-transparent p-6 text-foreground font-bold tracking-[0.4em] focus:text-primary outline-none transition-all placeholder:text-foreground/20 border-none"
                         value={formData.phone}
                         onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                       />
@@ -352,6 +446,19 @@ export default function GateCheckIn() {
 
                 {paymentMethod === "mpesa" && (
                   <div className="flex flex-col gap-6 animate-fade-in mt-6">
+                    <div className="nm-inset p-6 space-y-3">
+                      <p className="text-[9px] font-black uppercase tracking-widest text-zinc-500">Payment Details</p>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div className="bg-white/5 border border-white/5 p-4">
+                          <p className="text-[8px] font-black uppercase tracking-widest text-zinc-500 mb-1">Paybill</p>
+                          <p className="text-lg font-black tracking-tight text-foreground">{paymentProtocol.paybill || "Not set"}</p>
+                        </div>
+                        <div className="bg-white/5 border border-white/5 p-4">
+                          <p className="text-[8px] font-black uppercase tracking-widest text-zinc-500 mb-1">Plate Number</p>
+                          <p className="text-lg font-black tracking-tight text-foreground">{paymentProtocol.accountNumber || "Not set"}</p>
+                        </div>
+                      </div>
+                    </div>
                     {status === "waiting" ? (
                       <div className="space-y-4">
                         <button
@@ -368,9 +475,10 @@ export default function GateCheckIn() {
                     ) : (
                       <button
                         onClick={() => handleSubmit({ preventDefault: () => {} } as React.FormEvent)}
-                        className="nm-card w-full bg-primary text-white py-6 font-black uppercase tracking-widest text-[10px] shadow-[0_10px_30px_rgba(230,0,0,0.3)] hover:scale-[1.02] active:scale-95 transition-all border-none"
+                        disabled={isLoading}
+                        className="nm-card w-full !bg-primary text-white py-6 font-black uppercase tracking-widest text-[10px] shadow-[0_10px_30px_rgba(230,0,0,0.3)] hover:scale-[1.02] active:scale-95 transition-all border-none disabled:opacity-50"
                       >
-                        {status === "pushing" ? "INITIATING UPLINK..." : "INITIATE STK PUSH"}
+                        {isLoading ? "INITIATING UPLINK..." : (status === "pushing" ? "INITIATING UPLINK..." : "INITIATE STK PUSH")}
                       </button>
                     )}
                   </div>
@@ -379,20 +487,54 @@ export default function GateCheckIn() {
                 {paymentMethod === "cash" && (
                   <button
                     onClick={() => handleSubmit({ preventDefault: () => {} } as React.FormEvent)}
-                    className="nm-card w-full bg-white text-black py-6 font-black uppercase tracking-widest text-[10px] shadow-[0_10px_30px_rgba(255,255,255,0.1)] hover:scale-[1.02] active:scale-95 transition-all border-none"
+                    disabled={isLoading}
+                    className="nm-card w-full bg-white text-black py-6 font-black uppercase tracking-widest text-[10px] shadow-[0_10px_30px_rgba(255,255,255,0.1)] hover:scale-[1.02] active:scale-95 transition-all border-none disabled:opacity-50"
                   >
-                    AUTHORIZE CASH ENTRY
+                    {isLoading ? "AUTHORIZING..." : "AUTHORIZE CASH ENTRY"}
                   </button>
+                )}
+
+                {paymentMethod === "paybill" && (
+                  <div className="flex flex-col gap-6 animate-fade-in mt-6">
+                    <div className="nm-inset p-6 space-y-4">
+                      <p className="text-[9px] font-black uppercase tracking-widest text-zinc-500">Manual Payment Data</p>
+                      <div className="space-y-4">
+                        <div className="bg-white/5 border border-white/5 p-4 rounded-xl">
+                          <p className="text-[8px] font-black uppercase tracking-widest text-zinc-500 mb-1">Paybill Number</p>
+                          <p className="text-xl font-black tracking-tight text-primary">{paymentProtocol.paybill || "Not set"}</p>
+                        </div>
+                        <div className="bg-white/5 border border-white/5 p-4 rounded-xl">
+                          <label htmlFor="account-override" className="text-[8px] font-black uppercase tracking-widest text-zinc-500 mb-1 block">Account Number (Editable)</label>
+                          <input 
+                            id="account-override"
+                            type="text"
+                            value={accountNumberOverride}
+                            onChange={(e) => setAccountNumberOverride(e.target.value.toUpperCase())}
+                            className="w-full bg-transparent text-xl font-black tracking-tight text-foreground outline-none border-none p-0"
+                          />
+                        </div>
+                      </div>
+                      <p className="text-[8px] text-zinc-500 italic uppercase">Verify payment on your phone before authorizing entry.</p>
+                    </div>
+                    <button
+                      onClick={() => handleSubmit({ preventDefault: () => {} } as React.FormEvent)}
+                      disabled={isLoading}
+                      className="nm-card w-full !bg-primary text-white py-6 font-black uppercase tracking-widest text-[10px] shadow-[0_10px_30px_rgba(230,0,0,0.3)] hover:scale-[1.02] active:scale-95 transition-all border-none disabled:opacity-50"
+                    >
+                      {isLoading ? "AUTHORIZING..." : "AUTHORIZE PAYBILL ENTRY"}
+                    </button>
+                  </div>
                 )}
               </div>
 
               {/* DEFER BUTTON */}
               <button 
                 onClick={handleDefer}
-                className="nm-card w-full p-6 text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500 hover:text-white hover:bg-white/5 transition-all flex items-center justify-center gap-3 border-none"
+                disabled={isLoading}
+                className="nm-card w-full p-6 text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500 hover:text-white hover:bg-white/5 transition-all flex items-center justify-center gap-3 border-none disabled:opacity-50"
               >
                 <span className="material-symbols-outlined text-lg">history_toggle_off</span>
-                Defer to Ground Waitlist
+                {isLoading ? "PROCESSING..." : "Defer to Ground Waitlist"}
               </button>
             </div>
 
@@ -421,7 +563,7 @@ export default function GateCheckIn() {
                       onClick={() => setFormData({ ...formData, zone: zone.id })}
                       className={`flex justify-between items-center p-8 transition-all relative overflow-hidden border-none ${
                         formData.zone === zone.id
-                          ? "nm-inset text-white"
+                          ? "nm-inset text-foreground"
                           : "nm-card opacity-60 hover:opacity-100"
                       }`}
                     >
@@ -438,7 +580,7 @@ export default function GateCheckIn() {
                 </div>
               </div>
 
-              <div className="nm-card bg-primary p-12 text-white relative overflow-hidden group border-none">
+              <div className="nm-card !bg-primary p-12 text-white relative overflow-hidden group border-none">
                 <div className="absolute -right-10 -bottom-10 opacity-10 group-hover:rotate-12 transition-transform duration-700">
                    <span className="material-symbols-outlined text-[180px]">contactless</span>
                 </div>
@@ -448,7 +590,7 @@ export default function GateCheckIn() {
                   <p className="text-6xl font-black tracking-tighter mb-8">KES {selectedZone?.price || 0}</p>
                   
                   {errorMessage && (
-                    <div className="nm-inset bg-black/20 p-4 text-white text-[9px] font-black uppercase tracking-widest text-center">
+                    <div className="nm-inset bg-black/40 p-4 text-white text-[9px] font-black uppercase tracking-widest text-center">
                       CRITICAL ERROR: {errorMessage}
                     </div>
                   )}
@@ -462,7 +604,7 @@ export default function GateCheckIn() {
         {waitlist.length > 0 && (
           <div className="nm-card p-10 mt-12">
              <div className="flex items-center gap-4 mb-10">
-                <span className="material-symbols-outlined text-primary text-2xl">pending</span>
+                <span className="material-symbols-outlined text-primary text-xl">pending</span>
                 <h3 className="text-2xl font-black uppercase tracking-tighter text-foreground">
                    Ground Waitlist <span className="text-zinc-600">[{waitlist.length}]</span>
                 </h3>
@@ -484,12 +626,20 @@ export default function GateCheckIn() {
           </div>
         )}
 
-        <SecurityAlertModal 
-          isOpen={showSecurityAlert} 
-          onClose={() => setShowSecurityAlert(false)} 
-          regNumber={formData.plate} 
-        />
-      </div>
-    </StaffLayout>
+      <SecurityAlertModal 
+        isOpen={showSecurityAlert} 
+        onClose={() => setShowSecurityAlert(false)} 
+        regNumber={formData.plate} 
+      />
+
+      <RegistrationTicketModal
+        isOpen={ticketModal.isOpen}
+        vehicleId={ticketModal.vehicleId}
+        vehicleInfo={ticketModal.vehicleInfo}
+        autoGenerate
+        onClose={() => setTicketModal({ isOpen: false, vehicleId: null, vehicleInfo: null })}
+      />
+    </div>
+  </StaffLayout>
   );
 }

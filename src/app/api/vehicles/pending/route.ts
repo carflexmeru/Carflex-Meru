@@ -1,12 +1,18 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
+    const { searchParams } = new URL(request.url);
+    const eventName = searchParams.get("eventName");
+
+    const eventFilter = eventName ? { eventName } : {};
+
     const pendingVehicles = await prisma.vehicle.findMany({
       where: {
         status: "draft",
         isVerified: false,
+        ...eventFilter,
       },
       include: {
         owner: true,

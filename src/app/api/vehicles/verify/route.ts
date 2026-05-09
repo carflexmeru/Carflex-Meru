@@ -56,16 +56,27 @@ export async function POST(request: Request) {
        });
     }
 
-
-    // RECORD TO ACTION REGISTRY
-    await prisma.actionLog.create({
-      data: {
+    // RECORD TO ACTION REGISTRY - Only record once per vehicle
+    // Check if this vehicle has already been recorded as authorized
+    const existingLog = await prisma.actionLog.findFirst({
+      where: {
         actionType: "AUTHORIZE_ENTRY",
-        agentName: "GATE_TERMINAL",
-        description: `Asset ${updatedVehicle.regNumber} (ID: ${id}) was authorized for entry.`,
-        metadata: { vehicleId: id, plate: updatedVehicle.regNumber }
+        description: {
+          contains: id
+        }
       }
     });
+
+    if (!existingLog) {
+      await prisma.actionLog.create({
+        data: {
+          actionType: "AUTHORIZE_ENTRY",
+          agentName: "GATE_TERMINAL",
+          description: `Asset ${updatedVehicle.regNumber} (ID: ${id}) was authorized for entry.`,
+          metadata: { vehicleId: id, plate: updatedVehicle.regNumber }
+        }
+      });
+    }
 
     return NextResponse.json(updatedVehicle);
   } catch (error: any) {

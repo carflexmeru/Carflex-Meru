@@ -15,9 +15,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   ];
 
   return (
-    <div className="min-h-screen bg-white flex flex-col md:flex-row font-sans">
+    <div className="min-h-screen bg-[var(--background)] text-[var(--foreground)] flex flex-col md:flex-row font-sans">
       {/* Admin Sidebar */}
-      <aside className="w-full md:w-80 bg-[#0A0A0A] text-white flex flex-col p-8 z-30">
+      <aside className="w-full md:w-80 bg-[var(--sidebar)] text-[var(--foreground)] flex flex-col p-8 z-30 border-r border-[var(--glass-border)]">
         <div className="flex items-center gap-2 mb-16">
           <div className="w-8 h-8 bg-primary flex items-center justify-center font-black italic">CF</div>
           <span className="text-xl font-black uppercase tracking-tighter italic">Admin HQ</span>
@@ -31,7 +31,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               className={`flex items-center gap-4 px-6 py-4 font-black uppercase text-[10px] tracking-widest transition-all ${
                 pathname === item.path 
                   ? "bg-primary text-white shadow-[0_0_20px_#E60000]" 
-                  : "text-zinc-500 hover:text-white hover:bg-white/5"
+                  : "text-zinc-500 hover:text-foreground hover:bg-[var(--sidebar-hover)]"
               }`}
             >
               <span className="material-symbols-outlined text-lg">{item.icon}</span>
@@ -40,14 +40,14 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           ))}
         </nav>
 
-        <div className="pt-8 border-t border-white/5 space-y-4">
-           <div className="bg-white/5 p-4 rounded-none border border-white/10">
+        <div className="pt-8 border-t border-[var(--glass-border)] space-y-4">
+           <div className="bg-[var(--sidebar-hover)] p-4 rounded-none border border-[var(--glass-border)]">
               <p className="text-[8px] font-black uppercase tracking-widest text-primary mb-1">System Load</p>
-              <div className="h-1 bg-white/10 w-full">
+              <div className="h-1 bg-black/10 dark:bg-white/10 w-full">
                  <div className="h-1 bg-primary w-[32%]"></div>
               </div>
            </div>
-           <Link href="/" className="flex items-center gap-4 px-6 py-4 font-black uppercase text-[10px] tracking-widest text-zinc-500 hover:text-white transition-all">
+           <Link href="/" className="flex items-center gap-4 px-6 py-4 font-black uppercase text-[10px] tracking-widest text-zinc-500 hover:text-foreground transition-all">
             <span className="material-symbols-outlined text-lg">logout</span>
             Exit Admin Hub
           </Link>
@@ -55,8 +55,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       </aside>
 
       {/* Main Admin Canvas */}
-      <main className="flex-1 min-h-screen bg-[#F8F8F8] relative">
-        <header className="sticky top-0 bg-white border-b-4 border-black px-12 py-8 flex justify-between items-center z-20">
+      <main className="flex-1 min-h-screen bg-[var(--background)] relative">
+        <header className="sticky top-0 bg-[var(--surface)]/95 backdrop-blur-xl border-b border-[var(--glass-border)] px-6 md:px-12 py-6 md:py-8 flex justify-between items-center z-20">
           <h2 className="text-2xl font-black uppercase tracking-tight">
             {adminNav.find(n => n.path === pathname)?.name || "Master Command"}
           </h2>
@@ -65,13 +65,13 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
                <span className="text-[9px] font-black uppercase tracking-widest text-zinc-400">Database Live</span>
             </div>
-            <div className="w-10 h-10 bg-black text-white flex items-center justify-center border-2 border-primary">
+            <div className="w-10 h-10 bg-[var(--sidebar)] text-white flex items-center justify-center border-2 border-primary">
                <span className="material-symbols-outlined">shield</span>
             </div>
           </div>
         </header>
 
-        <div className="p-12">
+        <div className="p-6 md:p-12">
           {children}
         </div>
       </main>

@@ -23,10 +23,17 @@ export async function GET(request: Request) {
     });
 
     if (booking) {
+      const ticket = await prisma.registrationTicket.findFirst({
+        where: { vehicleId: booking.vehicleId },
+        orderBy: { createdAt: "desc" }
+      });
+
       return NextResponse.json({ 
+        success: true,
         status: "paid", 
         bookingId: booking.id,
-        amount: booking.paymentAmount 
+        amount: booking.paymentAmount,
+        ticketId: ticket?.ticketId || null
       });
     }
 

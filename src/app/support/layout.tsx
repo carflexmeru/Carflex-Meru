@@ -15,9 +15,9 @@ export default function SupportLayout({ children }: { children: React.ReactNode 
   ];
 
   return (
-    <div className="min-h-screen bg-white text-[#0A0A0A] font-sans flex flex-col">
+    <div className="min-h-screen bg-[var(--background)] text-[var(--foreground)] font-sans flex flex-col">
       {/* Support Header */}
-      <nav className="bg-[#0A0A0A] text-white px-12 py-8 flex flex-col md:flex-row justify-between items-center border-b border-white/5">
+      <nav className="bg-[var(--sidebar)] text-[var(--foreground)] px-12 py-8 flex flex-col md:flex-row justify-between items-center border-b border-[var(--glass-border)]">
         <div className="flex items-center gap-2 mb-6 md:mb-0">
           <img src="/logo.png" alt="CARFLEX" className="w-12 h-auto object-contain" />
           <span className="text-xl font-black uppercase tracking-tighter">Support <span className="text-primary italic">Pillar</span></span>
@@ -43,9 +43,9 @@ export default function SupportLayout({ children }: { children: React.ReactNode 
       </main>
 
       {/* Support Footer */}
-      <footer className="bg-zinc-50 border-t border-zinc-100 py-12 px-8 text-center">
+      <footer className="bg-[var(--surface)] border-t border-[var(--glass-border)] py-12 px-8 text-center">
         <p className="text-[10px] font-black uppercase tracking-widest text-zinc-400">Need direct intervention?</p>
-        <button className="mt-4 bg-black text-white px-10 py-4 font-black uppercase text-xs tracking-widest hover:bg-primary transition-all">
+        <button className="mt-4 bg-primary text-white px-10 py-4 font-black uppercase text-xs tracking-widest hover:opacity-90 transition-all">
           Contact Support Agent
         </button>
       </footer>

@@ -18,6 +18,13 @@ export const metadata: Metadata = {
   description: "Discover, Buy & Trade Your Perfect Car — Effortlessly.",
 };
 
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -26,7 +33,9 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased dark`}
+      suppressHydrationWarning
+      className={`${geistSans.variable} ${geistMono.variable} h-full w-full antialiased`}
+      data-theme="dark"
     >
       <head>
         <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
@@ -38,7 +47,7 @@ export default function RootLayout({
           `}
         </style>
       </head>
-      <body className="min-h-full flex flex-col bg-black text-white">
+      <body className="min-h-screen w-full flex flex-col bg-[var(--background)] text-[var(--foreground)] m-0 p-0">
         <LayoutWrapper>{children}</LayoutWrapper>
       </body>
     </html>
