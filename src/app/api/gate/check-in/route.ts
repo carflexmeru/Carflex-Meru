@@ -116,8 +116,7 @@ export async function POST(req: Request) {
         .update({
           owner_id: owner.id, // Ensure owner is linked
           zone_id: zoneId,
-          event_name: eventName || vehicle.event_name || null,
-          at_event: Boolean(eventName || vehicle.event_name),
+          at_event: Boolean(eventName),
           status: "draft",
           is_verified: true
         })
@@ -136,7 +135,6 @@ export async function POST(req: Request) {
           year: new Date().getFullYear(),
           price: 0,
           zone_id: zoneId,
-          event_name: eventName || null,
           at_event: Boolean(eventName),
           status: "draft",
           is_verified: true
@@ -172,7 +170,10 @@ export async function POST(req: Request) {
       
     if (bookingError || !booking) {
        console.error("BOOKING_CREATE_ERROR:", bookingError);
-       return NextResponse.json({ error: "Failed to create booking record" }, { status: 500 });
+       return NextResponse.json({ 
+         error: `Failed to create booking record: ${bookingError?.message || "Unknown error"}`,
+         details: bookingError?.message || "No error message provided"
+       }, { status: 500 });
     }
 
     // 6. Generate Ticket
