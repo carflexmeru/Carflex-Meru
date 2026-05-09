@@ -16,6 +16,10 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Carflex Bazaar",
   description: "Discover, Buy & Trade Your Perfect Car — Effortlessly.",
+  icons: {
+    icon: "/favicon.svg",
+    apple: "/favicon.svg",
+  },
 };
 
 export const viewport = {
