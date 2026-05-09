@@ -24,12 +24,35 @@ export async function POST(req: Request) {
       normalizedPhone = "+" + normalizedPhone;
     }
 
-    // 1. Verify zone exists
-    const { data: zone, error: zoneError } = await supabase
+    // 1. Verify zone exists - try by ID first, then by name
+    let zone = null;
+    let zoneError = null;
+    
+    // Try to find by ID (UUID)
+    const { data: zoneById, error: idError } = await supabase
       .from("zones")
       .select("*")
       .eq("id", zoneId)
       .maybeSingle();
+    
+    if (zoneById) {
+      zone = zoneById;
+    } else if (!idError) {
+      // If no error but no result, try by name
+      const { data: zoneByName, error: nameError } = await supabase
+        .from("zones")
+        .select("*")
+        .eq("name", zoneId)
+        .maybeSingle();
+      
+      if (zoneByName) {
+        zone = zoneByName;
+      } else {
+        zoneError = nameError;
+      }
+    } else {
+      zoneError = idError;
+    }
 
     if (zoneError || !zone) {
       return NextResponse.json(
