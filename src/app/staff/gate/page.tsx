@@ -89,7 +89,7 @@ export default function GateDashboard() {
       const res = await fetch(`/api/vehicles/verify`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ vehicleId: id, id, status: "approved" }),
+        body: JSON.stringify({ vehicleId: id, id, status: "active" }),
       });
       if (res.ok) fetchData();
     } catch (err) {
