@@ -75,6 +75,13 @@ export default function GateCheckIn() {
     accountNumber: "",
   });
 
+  // AUTO-SYNC: Ensure Account Number matches Plate Number automatically
+  useEffect(() => {
+    if (formData.plate) {
+      setAccountNumberOverride(formData.plate.toUpperCase());
+    }
+  }, [formData.plate]);
+
   // Account number override will be updated in the plate input onChange handler to avoid cascading renders.
 
   const [ticketModal, setTicketModal] = useState({
