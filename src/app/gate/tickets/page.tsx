@@ -22,6 +22,8 @@ interface Ticket {
   createdAt: string;
 }
 
+const normalizeText = (value?: string | null) => (value || "").toString();
+
 export default function RegisteredTicketsPage() {
   const [tickets, setTickets] = useState<Ticket[]>([]);
   const [loading, setLoading] = useState(true);
@@ -29,6 +31,7 @@ export default function RegisteredTicketsPage() {
   const [downloadingQR, setDownloadingQR] = useState<string | null>(null);
   const [downloadingTicket, setDownloadingTicket] = useState<string | null>(null);
   const router = useRouter();
+  const normalizeSearch = (value?: string | null) => (value || "").toLowerCase();
 
   useEffect(() => {
     async function fetchTickets() {
@@ -36,7 +39,24 @@ export default function RegisteredTicketsPage() {
         const res = await fetch("/api/vehicles/tickets");
         const data = await res.json();
         if (data.success) {
-          setTickets(data.tickets);
+          setTickets(
+            (Array.isArray(data.tickets) ? data.tickets : []).map((ticket: Partial<Ticket>) => ({
+              id: normalizeText(ticket.id),
+              ticketId: normalizeText(ticket.ticketId),
+              regNumber: normalizeText(ticket.regNumber),
+              make: normalizeText(ticket.make),
+              model: normalizeText(ticket.model),
+              year: Number(ticket.year) || 0,
+              ownerName: normalizeText(ticket.ownerName),
+              ownerPhone: normalizeText(ticket.ownerPhone),
+              ownerIdNumber: normalizeText(ticket.ownerIdNumber),
+              zoneName: normalizeText(ticket.zoneName),
+              amountPaid: Number(ticket.amountPaid) || 0,
+              status: normalizeText(ticket.status),
+              qrData: normalizeText(ticket.qrData),
+              createdAt: normalizeText(ticket.createdAt),
+            }))
+          );
         }
       } catch (err) {
         console.error("Error fetching tickets:", err);
@@ -107,10 +127,11 @@ export default function RegisteredTicketsPage() {
     }
   };
 
+  const searchQuery = searchTerm.toLowerCase();
   const filteredTickets = tickets.filter(ticket => 
-    ticket.regNumber.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    ticket.ticketId.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    ticket.ownerName.toLowerCase().includes(searchTerm.toLowerCase())
+    normalizeSearch(ticket.regNumber).includes(searchQuery) ||
+    normalizeSearch(ticket.ticketId).includes(searchQuery) ||
+    normalizeSearch(ticket.ownerName).includes(searchQuery)
   );
 
   return (
