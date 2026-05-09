@@ -13,7 +13,6 @@ function normalizePhone(phone: string) {
 async function resolveEvent(eventName?: string) {
   const existing = await prisma.event.findFirst({
     where: eventName ? { name: eventName } : { isActive: true },
-    orderBy: { createdAt: "desc" },
   });
 
   if (existing) return existing;

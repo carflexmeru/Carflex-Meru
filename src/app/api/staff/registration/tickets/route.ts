@@ -26,21 +26,23 @@ export async function POST(req: Request) {
       notes,
     } = body;
 
-    if (!regNumber || !ownerName || !ownerPhone || !zoneName) {
+    if (!regNumber || !ownerName || !ownerPhone) {
       return NextResponse.json(
-        { error: "Registration number, owner name, phone, and zone are required" },
+        { error: "Registration number, owner name, and phone are required" },
         { status: 400 }
       );
     }
 
     const cleanRegNumber = regNumber.toUpperCase().trim();
     const normalizedPhone = normalizePhone(ownerPhone);
-    const vehicleYear = year ? Number(year) : new Date().getFullYear();
+    const makeValue = typeof make === "string" ? make.trim() : "";
+    const modelValue = typeof model === "string" ? model.trim() : "";
+    const zoneValue = typeof zoneName === "string" ? zoneName.trim() : "";
+    const vehicleYear = year ? Number(year) : 0;
     const ticketAmount = amountPaid ? Number(amountPaid) : 0;
 
     let event = await prisma.event.findFirst({
       where: { isActive: true },
-      orderBy: { createdAt: "desc" },
     });
 
     if (!event) {
@@ -62,8 +64,8 @@ export async function POST(req: Request) {
       (await prisma.vehicle.create({
         data: {
           regNumber: cleanRegNumber,
-          make: make || "Unknown",
-          model: model || "Pending",
+          make: makeValue || "",
+          model: modelValue || "",
           year: vehicleYear,
           price: ticketAmount,
           status: "active",
@@ -87,14 +89,14 @@ export async function POST(req: Request) {
         vehicleId: vehicle.id,
         eventId: event.id,
         regNumber: cleanRegNumber,
-        make: make || vehicle.make || "Unknown",
-        model: model || vehicle.model || "Pending",
+        make: makeValue || vehicle.make || "",
+        model: modelValue || vehicle.model || "",
         year: vehicleYear,
         ownerName,
         ownerPhone: normalizedPhone,
         ownerIdNumber: ownerIdNumber || null,
         amountPaid: ticketAmount,
-        zoneName,
+        zoneName: zoneValue || "",
         status: "active",
         qrData: JSON.stringify({
           ticketId,
@@ -102,7 +104,7 @@ export async function POST(req: Request) {
           ownerName,
           ownerPhone: normalizedPhone,
           ownerIdNumber: ownerIdNumber || "",
-          zoneName,
+          zoneName: zoneValue || "",
           amountPaid: ticketAmount,
           eventName: eventName || "",
           processName: processName || "Registration ticket",

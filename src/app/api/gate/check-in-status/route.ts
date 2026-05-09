@@ -39,7 +39,7 @@ export async function GET(request: Request) {
         (booking.zone?.eventId
           ? await prisma.event.findUnique({ where: { id: booking.zone.eventId } })
           : null) ||
-        (await prisma.event.findFirst({ where: { isActive: true }, orderBy: { createdAt: "desc" } })) ||
+        (await prisma.event.findFirst({ where: { isActive: true } })) ||
         (await prisma.event.create({
           data: {
             name: "Carflex Event",

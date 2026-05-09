@@ -19,6 +19,9 @@ interface Ticket {
   printUrl: string;
 }
 
+const displayText = (value?: string | null) => (value && value.trim() ? value.trim() : "");
+const displayYear = (value?: number | null) => (value && value > 0 ? String(value) : "");
+
 export default function TicketPage({
   params
 }: {
@@ -271,7 +274,7 @@ export default function TicketPage({
             <div className="detail-row flex justify-between py-3 border-b border-[#eee] text-base">
               <span className="font-black uppercase text-[#333] w-2/5">Vehicle:</span>
               <span className="text-right font-black text-black">
-                {ticket.year} {ticket.make} {ticket.model}
+                {[displayYear(ticket.year), displayText(ticket.make), displayText(ticket.model)].filter(Boolean).join(" ")}
               </span>
             </div>
 
@@ -292,7 +295,7 @@ export default function TicketPage({
 
             <div className="detail-row flex justify-between py-3 border-b border-[#eee] text-base">
               <span className="font-black uppercase text-[#333] w-2/5">Market Zone:</span>
-              <span className="text-right font-black text-[#E60000]">{ticket.zoneName}</span>
+              <span className="text-right font-black text-[#E60000]">{displayText(ticket.zoneName)}</span>
             </div>
 
             <div className="detail-row flex justify-between mt-6 bg-[#E60000]/5 -mx-3 px-3 py-4 text-lg font-black border-2 border-[#E60000]/10">

@@ -88,11 +88,11 @@ export default function RegistrationTicketsPage() {
                 ["ownerName", "Owner Name"],
                 ["ownerPhone", "Phone Number"],
                 ["ownerIdNumber", "ID Number"],
-                ["make", "Make"],
-                ["model", "Model"],
-                ["year", "Year"],
+                ["make", "Make (optional)"],
+                ["model", "Model (optional)"],
+                ["year", "Year (optional)"],
                 ["amountPaid", "Amount Paid"],
-                ["zoneName", "Zone Name"],
+                ["zoneName", "Zone Name (optional)"],
                 ["processName", "Event Process"],
               ].map(([key, label]) => (
                 <label key={key} className="space-y-2">
@@ -131,7 +131,7 @@ export default function RegistrationTicketsPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className="nm-card inline-flex items-center justify-center gap-2 bg-primary px-5 py-4 text-[10px] font-black uppercase tracking-widest text-white transition-all hover:scale-[1.02] disabled:opacity-60"
+                className="nm-card inline-flex items-center justify-center gap-2 bg-primary px-5 py-4 text-[10px] font-black uppercase tracking-widest text-white transition-all hover:scale-[1.02] disabled:bg-primary/35 disabled:text-white disabled:shadow-none disabled:cursor-not-allowed disabled:hover:scale-100"
               >
                 <span className="material-symbols-outlined text-sm">confirmation_number</span>
                 {loading ? "CREATING..." : "CREATE TICKET"}

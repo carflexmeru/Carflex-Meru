@@ -21,6 +21,9 @@ type Ticket = {
   printUrl: string;
 };
 
+const displayText = (value?: string | null) => (value && value.trim() ? value.trim() : "");
+const displayYear = (value?: number | null) => (value && value > 0 ? String(value) : "");
+
 export default function StaffTicketScanner({ title }: { title: string }) {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
@@ -231,17 +234,23 @@ export default function StaffTicketScanner({ title }: { title: string }) {
                     <span className="text-[9px] font-black uppercase tracking-widest text-zinc-500">Owner</span>
                     <span className="font-black uppercase">{ticket.ownerName}</span>
                   </div>
-            <div className="flex justify-between gap-3">
+                  <div className="flex justify-between gap-3">
                     <span className="text-[9px] font-black uppercase tracking-widest text-zinc-500">Zone</span>
-                    <span className="font-black uppercase text-primary">{ticket.zoneName}</span>
+                    <span className="font-black uppercase text-primary">{displayText(ticket.zoneName)}</span>
                   </div>
                   <div className="flex justify-between gap-3">
                     <span className="text-[9px] font-black uppercase tracking-widest text-zinc-500">Event</span>
-                    <span className="font-black uppercase">{ticket.eventName || "Unknown"}</span>
+                    <span className="font-black uppercase">{displayText(ticket.eventName)}</span>
                   </div>
                   <div className="flex justify-between gap-3">
                     <span className="text-[9px] font-black uppercase tracking-widest text-zinc-500">Amount</span>
                     <span className="font-black uppercase text-primary">KSH {ticket.amountPaid?.toLocaleString()}</span>
+                  </div>
+                  <div className="flex justify-between gap-3">
+                    <span className="text-[9px] font-black uppercase tracking-widest text-zinc-500">Vehicle</span>
+                    <span className="font-black uppercase">
+                      {[displayYear(ticket.year), displayText(ticket.make), displayText(ticket.model)].filter(Boolean).join(" ")}
+                    </span>
                   </div>
                 </div>
 
