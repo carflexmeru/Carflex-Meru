@@ -10,6 +10,10 @@ interface Vehicle {
   make: string;
   model: string;
   year: number;
+  ownerName?: string;
+  ownerPhone?: string;
+  zoneName?: string;
+  amountPaid?: number;
   owner?: { name: string; phone: string };
   zone?: { name: string; price: number };
 }
@@ -46,7 +50,14 @@ export default function ExitHubPage() {
   };
 
   const handleShowQR = (vehicle: Vehicle) => {
-    setQrModal({ isOpen: true, vehicle });
+    const transformedVehicle = {
+      ...vehicle,
+      ownerName: vehicle.ownerName || vehicle.owner?.name || "INDIVIDUAL_OWNER",
+      ownerPhone: vehicle.ownerPhone || vehicle.owner?.phone || "",
+      zoneName: vehicle.zoneName || vehicle.zone?.name || "UNASSIGNED",
+      amountPaid: vehicle.amountPaid || 0
+    };
+    setQrModal({ isOpen: true, vehicle: transformedVehicle as any });
   };
 
   const filteredVehicles = vehicles.filter(v =>
