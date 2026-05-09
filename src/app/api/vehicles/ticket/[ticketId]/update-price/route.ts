@@ -1,5 +1,4 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
 import { supabase } from "@/lib/supabase";
 
 export async function PATCH(
@@ -17,25 +16,39 @@ export async function PATCH(
       );
     }
 
-    // Update in Prisma
-    const updatedTicket = await prisma.registrationTicket.update({
-      where: { ticketId },
-      data: { amountPaid: parseFloat(amountPaid.toString()) }
-    });
+    const newAmount = parseFloat(amountPaid.toString());
 
-    // Also update in Supabase for backup
-    await supabase
+    const { data: updatedTicket, error } = await supabase
       .from("registration_tickets")
-      .update({ amount_paid: parseFloat(amountPaid.toString()) })
-      .eq("ticket_id", ticketId);
+      .update({ amount_paid: newAmount })
+      .eq("ticket_id", ticketId)
+      .select("*")
+      .single();
+
+    if (error || !updatedTicket) {
+      return NextResponse.json({ error: "Ticket not found" }, { status: 404 });
+    }
 
     return NextResponse.json({
       success: true,
       ticket: {
-        ...updatedTicket,
-        qrCodeUrl: `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(updatedTicket.qrData)}`,
-        printUrl: `/api/vehicles/print-ticket/${updatedTicket.ticketId}`
-      }
+        id: updatedTicket.id,
+        ticketId: updatedTicket.ticket_id,
+        regNumber: updatedTicket.reg_number,
+        make: updatedTicket.make,
+        model: updatedTicket.model,
+        year: updatedTicket.year,
+        ownerName: updatedTicket.owner_name,
+        ownerPhone: updatedTicket.owner_phone,
+        ownerIdNumber: updatedTicket.owner_id_number,
+        amountPaid: updatedTicket.amount_paid,
+        zoneName: updatedTicket.zone_name,
+        status: updatedTicket.status,
+        qrData: updatedTicket.qr_data,
+        createdAt: updatedTicket.created_at,
+        qrCodeUrl: `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(updatedTicket.qr_data)}`,
+        printUrl: `/api/vehicles/print-ticket/${updatedTicket.ticket_id}`,
+      },
     });
   } catch (error) {
     console.error("Update ticket price error:", error);

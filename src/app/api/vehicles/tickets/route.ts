@@ -1,31 +1,18 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+import { supabase } from "@/lib/supabase";
 
-export async function GET(request: Request) {
+export async function GET() {
   try {
-    const tickets = await prisma.registrationTicket.findMany({
-      orderBy: { createdAt: 'desc' },
-      select: {
-        id: true,
-        ticketId: true,
-        regNumber: true,
-        make: true,
-        model: true,
-        year: true,
-        ownerName: true,
-        ownerPhone: true,
-        ownerIdNumber: true,
-        zoneName: true,
-        amountPaid: true,
-        status: true,
-        qrData: true,
-        createdAt: true
-      }
-    });
+    const { data: tickets, error } = await supabase
+      .from("registration_tickets")
+      .select("id,ticket_id,reg_number,make,model,year,owner_name,owner_phone,owner_id_number,zone_name,amount_paid,status,qr_data,created_at")
+      .order("created_at", { ascending: false });
+
+    if (error) throw error;
 
     return NextResponse.json({
       success: true,
-      tickets
+      tickets: tickets || [],
     });
   } catch (error) {
     console.error("Error fetching tickets:", error);
