@@ -1,26 +1,16 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+import { supabase } from "@/lib/supabase";
 
 export async function GET() {
   try {
-    let zones: any[] = [];
-    
-    try {
-      zones = await prisma.zone.findMany({
-        where: {
-          event: {
-            isActive: true,
-          },
-        },
-        take: 1000, // Limit to prevent timeout
-      });
-    } catch (e) {
-      console.warn("Could not fetch zones from database:", e);
-      // Return empty array instead of error
-      zones = [];
-    }
+    const { data: zones, error } = await supabase
+      .from("zones")
+      .select("id,name,capacity,occupancy:current_occupancy,price:fee_kes,is_active,event_id,created_at")
+      .limit(1000);
 
-    return NextResponse.json(zones);
+    if (error) throw error;
+
+    return NextResponse.json(zones || []);
   } catch (error) {
     console.error("Error fetching zones:", error);
     return NextResponse.json([], { status: 200 });

@@ -1,85 +1,101 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+import { supabase } from "@/lib/supabase";
 
-export async function POST(req: Request) {
+export async function POST(request: Request) {
   try {
-    const body = await req.json();
-    const { organization, vehicles, paymentMethod, totalAmount } = body;
+    const body = await request.json();
+    const { organization, vehicles, paymentMethod } = body;
 
-    // 1. Resolve or Create Organization and Representative Profile
-    const result = await prisma.$transaction(async (tx) => {
-      // Create/Update Org Representative Profile
-      const repProfile = await tx.profile.upsert({
-        where: { phone: organization.repPhone },
-        update: { name: organization.repName, idNumber: organization.repId },
-        create: {
+    const { data: repProfile, error: repError } = await supabase
+      .from("profiles")
+      .upsert(
+        {
           phone: organization.repPhone,
           name: organization.repName,
-          idNumber: organization.repId,
-          role: "vendor"
-        }
-      });
+          id_number: organization.repId,
+          role: "vendor",
+        },
+        { onConflict: "phone" }
+      )
+      .select("id,phone,name,id_number")
+      .single();
 
-      // Create Organization Record
-      const org = await tx.organization.create({
-        data: {
-          name: organization.name,
-          repName: organization.repName,
-          repId: organization.repId,
-        }
-      });
+    if (repError) throw repError;
 
-      // 2. Batch Vehicle & Booking Creation
-      const createdVehicles = await Promise.all(vehicles.map(async (v: any) => {
+    const { data: org, error: orgError } = await supabase
+      .from("organizations")
+      .insert({
+        name: organization.name,
+        rep_name: organization.repName,
+        rep_id: organization.repId,
+      })
+      .select("id,name,rep_name,rep_id")
+      .single();
+
+    if (orgError) throw orgError;
+
+    const createdVehicles = await Promise.all(
+      (vehicles || []).map(async (v: any) => {
         const cleanPlate = v.plate.toUpperCase();
-        let vehicle = await tx.vehicle.findFirst({
-          where: { regNumber: cleanPlate, organizationId: org.id }
-        });
+        const { data: existingVehicle, error: existingError } = await supabase
+          .from("vehicles")
+          .select("id,reg_number,organization_id,owner_id,zone_id,status,is_verified")
+          .eq("reg_number", cleanPlate)
+          .eq("organization_id", org.id)
+          .limit(1);
 
+        if (existingError) throw existingError;
+
+        let vehicle = existingVehicle?.[0];
         if (vehicle) {
-          vehicle = await tx.vehicle.update({
-            where: { id: vehicle.id },
-            data: { 
-              ownerId: repProfile.id,
-              zoneId: v.zoneId,
+          const { data: updatedVehicle, error: updateError } = await supabase
+            .from("vehicles")
+            .update({
+              owner_id: repProfile.id,
+              zone_id: v.zoneId,
               status: "draft",
-              isVerified: false 
-            }
-          });
+              is_verified: false,
+            })
+            .eq("id", vehicle.id)
+            .select("id,reg_number,organization_id,owner_id,zone_id,status,is_verified")
+            .single();
+          if (updateError) throw updateError;
+          vehicle = updatedVehicle;
         } else {
-          vehicle = await tx.vehicle.create({
-            data: {
-              regNumber: cleanPlate,
+          const { data: createdVehicle, error: createError } = await supabase
+            .from("vehicles")
+            .insert({
+              reg_number: cleanPlate,
               make: "FLEET_ASSET",
               model: organization.name,
               year: 2024,
               price: 0,
-              ownerId: repProfile.id,
-              organizationId: org.id,
-              zoneId: v.zoneId,
+              owner_id: repProfile.id,
+              organization_id: org.id,
+              zone_id: v.zoneId,
               status: "draft",
-              isVerified: false,
-              images: JSON.stringify([])
-            }
-          });
+              is_verified: false,
+              images: JSON.stringify([]),
+            })
+            .select("id,reg_number,organization_id,owner_id,zone_id,status,is_verified")
+            .single();
+          if (createError) throw createError;
+          vehicle = createdVehicle;
         }
 
-        await tx.booking.create({
-          data: {
-            vehicleId: vehicle.id,
-            zoneId: v.zoneId,
-            paymentStatus: "paid",
-            paymentMethod: paymentMethod,
-          }
+        const { error: bookingError } = await supabase.from("bookings").insert({
+          vehicle_id: vehicle.id,
+          zone_id: v.zoneId,
+          payment_status: "paid",
+          payment_method: paymentMethod,
         });
 
+        if (bookingError) throw bookingError;
         return vehicle;
-      }));
+      })
+    );
 
-      return { org, vehicles: createdVehicles };
-    });
-
-    return NextResponse.json({ success: true, data: result });
+    return NextResponse.json({ success: true, data: { org, vehicles: createdVehicles } });
   } catch (error: any) {
     console.error("FLEET_INTAKE_ERROR:", error);
     return NextResponse.json({ error: error.message }, { status: 500 });
