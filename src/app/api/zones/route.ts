@@ -1,18 +1,47 @@
 import { NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
-    const { data: zones, error } = await supabase
+    const { searchParams } = new URL(request.url);
+    const eventName = searchParams.get("eventName");
+
+    let query = supabase
       .from("zones")
-      .select("id,name,capacity,occupancy:current_occupancy,price:fee_kes,is_active,event_id,created_at")
-      .limit(1000);
+      .select("id,name,capacity,occupancy,price,event_id");
+
+    // If eventName is provided, filter by event
+    if (eventName) {
+      const { data: event } = await supabase
+        .from("events")
+        .select("id")
+        .eq("name", eventName)
+        .single();
+
+      if (event) {
+        query = query.eq("event_id", event.id);
+      }
+    } else {
+      // Get zones from the first active event
+      const { data: activeEvent } = await supabase
+        .from("events")
+        .select("id")
+        .eq("is_active", true)
+        .limit(1)
+        .single();
+
+      if (activeEvent) {
+        query = query.eq("event_id", activeEvent.id);
+      }
+    }
+
+    const { data: zones, error } = await query.order("name");
 
     if (error) throw error;
 
     return NextResponse.json(zones || []);
   } catch (error) {
-    console.error("Error fetching zones:", error);
-    return NextResponse.json([], { status: 200 });
+    console.error("Zones fetch error:", error);
+    return NextResponse.json([], { status: 200 }); // Return empty array instead of error
   }
 }
