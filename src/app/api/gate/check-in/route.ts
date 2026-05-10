@@ -172,21 +172,11 @@ async function createTicket(params: {
   const ticketId = `CFX-${nextSerial.toString().padStart(4, "0")}`;
   const issuedAt = new Date().toISOString();
   const ownerName = params.name || owner.name || "Unknown";
-  const qrData = JSON.stringify({
-    ticketId,
-    regNumber: cleanPlate,
-    ownerName,
-    ownerPhone: normalizedPhone,
-    ownerIdNumber: params.idNumber || owner.id_number || "",
-    zoneName: zone.name || "General",
-    amountPaid: zone.price || 0,
-    eventName: params.eventName || event.name,
-    paymentMethod: params.paymentMethod,
-    paymentStatus: params.paymentStatus,
-    metadata: params.metadata || {},
-    issuedAt,
-  });
-
+  
+  // QR code should encode the ticket page URL with download parameter
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://carflex-meru.vercel.app";
+  const ticketPageUrl = `${appUrl}/gate/ticket/${ticketId}?download=true`;
+  
   const { data: ticket, error: ticketError } = await supabase
     .from("registration_tickets")
     .insert({
@@ -204,7 +194,7 @@ async function createTicket(params: {
       amount_paid: zone.price || 0,
       zone_name: zone.name || "General",
       status: params.paymentStatus === "paid" ? "active" : "pending",
-      qr_data: qrData,
+      qr_data: ticketPageUrl,
     })
     .select("*")
     .single();

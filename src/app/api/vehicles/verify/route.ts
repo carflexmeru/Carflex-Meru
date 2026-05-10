@@ -68,18 +68,38 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Vehicle not found" }, { status: 404 });
     }
 
-    // Get the current vehicle to preserve event_name
+    // Get the current vehicle to preserve event_name and get zone info
     const { data: currentVehicle } = await supabase
       .from("vehicles")
-      .select("event_name,at_event")
+      .select("event_name,at_event,zone_id")
       .eq("id", vehicleId)
       .single();
+
+    // If vehicle doesn't have event_name, try to get it from the zone
+    let eventName = currentVehicle?.event_name;
+    if (!eventName && currentVehicle?.zone_id) {
+      const { data: zone } = await supabase
+        .from("zones")
+        .select("event_id")
+        .eq("id", currentVehicle.zone_id)
+        .single();
+      
+      if (zone?.event_id) {
+        const { data: event } = await supabase
+          .from("events")
+          .select("name")
+          .eq("id", zone.event_id)
+          .single();
+        eventName = event?.name;
+      }
+    }
 
     const { data: updatedRows, error: updateError } = await supabase
       .from("vehicles")
       .update({
         is_verified: true,
         status,
+        event_name: eventName || null,
       })
       .eq("id", vehicleId)
       .select("id,reg_number,make,model,year,price,status,is_verified,created_at,owner_id,zone_id,event_name,at_event")

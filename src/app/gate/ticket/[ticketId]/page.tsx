@@ -198,23 +198,23 @@ export default function TicketPage({
   return (
     <div className="min-h-screen bg-[#f5f5f5] p-4 md:p-12 flex flex-col items-center font-mono">
       {/* Action Bar (Not printed) */}
-      <div className="max-w-[1000px] w-full flex justify-between items-center mb-6 print:hidden">
+      <div className="max-w-[1000px] w-full flex flex-col md:flex-row justify-between items-start md:items-center gap-3 md:gap-4 mb-4 md:mb-6 print:hidden">
         <button
           onClick={() => router.push("/gate/check-in")}
-          className="flex items-center gap-2 text-zinc-500 hover:text-primary font-black uppercase text-[10px] tracking-widest"
+          className="flex items-center gap-2 text-zinc-500 hover:text-primary font-black uppercase text-[8px] md:text-[10px] tracking-widest"
         >
           <span className="material-symbols-outlined text-sm">arrow_back</span>
           Back to Check-In
         </button>
         
-        <div className="flex gap-4">
+        <div className="flex flex-wrap gap-2 md:gap-4 w-full md:w-auto">
           {editingPrice ? (
-            <div className="flex items-center gap-2 nm-inset p-1 px-3 bg-white border border-primary/20 rounded-full">
+            <div className="flex items-center gap-2 nm-inset p-1 px-2 md:px-3 bg-white border border-primary/20 rounded-full">
               <input
                 type="number"
                 value={newPrice}
                 onChange={(e) => setNewPrice(e.target.value)}
-                className="bg-transparent border-none text-primary font-black text-xs w-20 text-right focus:ring-0"
+                className="bg-transparent border-none text-primary font-black text-xs w-16 md:w-20 text-right focus:ring-0"
               />
               <button onClick={handleUpdatePrice} className="text-primary hover:scale-110"><span className="material-symbols-outlined text-sm font-black">check</span></button>
               <button onClick={() => setEditingPrice(false)} className="text-zinc-400 hover:scale-110"><span className="material-symbols-outlined text-sm font-black">close</span></button>
@@ -222,27 +222,27 @@ export default function TicketPage({
           ) : (
             <button 
               onClick={() => setEditingPrice(true)}
-              className="nm-card px-4 py-2 text-[10px] font-black text-zinc-500 uppercase tracking-widest hover:text-primary"
+              className="nm-card px-2 md:px-4 py-1 md:py-2 text-[8px] md:text-[10px] font-black text-zinc-500 uppercase tracking-widest hover:text-primary"
             >
               Adjust Price
             </button>
           )}
           <button 
             onClick={() => window.print()}
-            className="nm-card px-6 py-2 bg-primary text-white text-[10px] font-black uppercase tracking-widest shadow-[0_10px_20px_rgba(230,0,0,0.2)] border-none"
+            className="nm-card px-3 md:px-6 py-1 md:py-2 bg-primary text-white text-[8px] md:text-[10px] font-black uppercase tracking-widest shadow-[0_10px_20px_rgba(230,0,0,0.2)] border-none"
           >
             Print Ticket
           </button>
           <button
             onClick={downloadQrCode}
-            className="nm-card px-6 py-2 text-[10px] font-black uppercase tracking-widest hover:text-primary"
+            className="nm-card px-3 md:px-6 py-1 md:py-2 text-[8px] md:text-[10px] font-black uppercase tracking-widest hover:text-primary"
           >
             Download QR
           </button>
           <button
             onClick={shareTicket}
             disabled={sharing}
-            className="nm-card px-6 py-2 text-[10px] font-black uppercase tracking-widest hover:text-primary disabled:opacity-50"
+            className="nm-card px-3 md:px-6 py-1 md:py-2 text-[8px] md:text-[10px] font-black uppercase tracking-widest hover:text-primary disabled:opacity-50"
           >
             {sharing ? "Sharing..." : "Share Ticket"}
           </button>
@@ -250,23 +250,23 @@ export default function TicketPage({
       </div>
 
       {/* Main Ticket Container */}
-      <div className="ticket-container w-full max-w-[1000px] bg-white border-[3px] border-[#E60000] p-8 md:p-12 shadow-[0_10px_40px_rgba(0,0,0,0.1)] print:shadow-none print:max-w-none print:w-full print:h-screen print:flex print:flex-col print:justify-center">
+      <div className="ticket-container w-full max-w-[1000px] bg-white border-[3px] border-[#E60000] p-4 md:p-8 lg:p-12 shadow-[0_10px_40px_rgba(0,0,0,0.1)] print:shadow-none print:max-w-none print:w-full print:h-screen print:flex print:flex-col print:justify-center">
         
         {/* Header */}
-        <div className="header text-center mb-8 border-b-2 border-[#E60000] pb-6">
-          <h1 className="text-4xl font-black tracking-[4px] text-black mb-1">CARFLEX</h1>
-          <p className="text-sm font-black tracking-[2px] text-[#666] uppercase">Verification Ticket</p>
+        <div className="header text-center mb-4 md:mb-8 border-b-2 border-[#E60000] pb-3 md:pb-6">
+          <h1 className="text-2xl md:text-4xl font-black tracking-[2px] md:tracking-[4px] text-black mb-1">CARFLEX</h1>
+          <p className="text-xs md:text-sm font-black tracking-[1px] md:tracking-[2px] text-[#666] uppercase">Verification Ticket</p>
         </div>
 
         {/* Ticket Body */}
-        <div className="ticket-body flex flex-col md:flex-row gap-10 items-start">
+        <div className="ticket-body flex flex-col gap-4 md:gap-10 items-start">
           
           {/* QR Section */}
-          <div className="qr-section flex-shrink-0 w-full md:w-[300px] text-center p-6 bg-[#f9f9f9] border border-[#ddd]">
+          <div className="qr-section w-full md:w-[300px] flex-shrink-0 text-center p-3 md:p-6 bg-[#f9f9f9] border border-[#ddd]">
             <button
               type="button"
               onClick={() => setShowQrPreview(true)}
-              className="relative w-[260px] h-[260px] mx-auto bg-white p-2 border border-[#eee] cursor-zoom-in"
+              className="relative w-[180px] h-[180px] md:w-[260px] md:h-[260px] mx-auto bg-white p-2 border border-[#eee] cursor-zoom-in"
               title="Show QR code"
             >
               <Image
@@ -277,26 +277,26 @@ export default function TicketPage({
                 unoptimized
               />
             </button>
-            <p className="text-[10px] font-black mt-4 uppercase text-[#666] tracking-wider leading-relaxed">
+            <p className="text-[8px] md:text-[10px] font-black mt-2 md:mt-4 uppercase text-[#666] tracking-wider leading-relaxed">
               Scan for immediate <br/> verification
             </p>
-            <div className="mt-4 flex flex-wrap gap-2 justify-center">
-              <button onClick={downloadQrCode} className="nm-card px-4 py-2 text-[9px] font-black uppercase tracking-widest hover:text-primary">
+            <div className="mt-2 md:mt-4 flex flex-wrap gap-1 md:gap-2 justify-center">
+              <button onClick={downloadQrCode} className="nm-card px-2 md:px-4 py-1 md:py-2 text-[8px] md:text-[9px] font-black uppercase tracking-widest hover:text-primary">
                 Download QR
               </button>
-              <button onClick={shareTicket} className="nm-card px-4 py-2 text-[9px] font-black uppercase tracking-widest hover:text-primary">
+              <button onClick={shareTicket} className="nm-card px-2 md:px-4 py-1 md:py-2 text-[8px] md:text-[9px] font-black uppercase tracking-widest hover:text-primary">
                 Share
               </button>
             </div>
           </div>
 
           {/* Details Section */}
-          <div className="details flex-1 w-full space-y-1">
-            <div className="text-3xl font-black text-[#E60000] mb-6 tracking-tighter">
+          <div className="details flex-1 w-full space-y-0.5 md:space-y-1">
+            <div className="text-xl md:text-3xl font-black text-[#E60000] mb-3 md:mb-6 tracking-tighter">
               {ticket.ticketId}
             </div>
 
-            <div className="detail-row flex justify-between py-3 border-b border-[#eee] text-base">
+            <div className="detail-row flex justify-between py-2 md:py-3 border-b border-[#eee] text-sm md:text-base">
               <span className="font-black uppercase text-[#333] w-2/5">Registration:</span>
               <span className="text-right font-black text-black">{ticket.regNumber}</span>
             </div>
