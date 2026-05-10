@@ -102,6 +102,9 @@ export default function GateDashboard() {
       const result = await res.json();
       console.log("Vehicle authorized:", result);
       
+      // Add a small delay to ensure database is updated
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
       // Refresh data after successful authorization
       await fetchData();
       alert("Vehicle authorized successfully!");
