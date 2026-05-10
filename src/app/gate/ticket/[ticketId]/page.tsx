@@ -50,6 +50,14 @@ export default function TicketPage({
         if (data.success) {
           setTicket(data.ticket);
           setNewPrice(data.ticket.amountPaid?.toString() || "0");
+          
+          // Auto-download if ?download=true is in URL (for QR scans)
+          const params = new URLSearchParams(window.location.search);
+          if (params.get("download") === "true") {
+            setTimeout(() => {
+              downloadTicket(data.ticket);
+            }, 500);
+          }
         } else {
           setError(data.error || "Ticket not found");
         }
@@ -102,6 +110,28 @@ export default function TicketPage({
     a.click();
     window.URL.revokeObjectURL(url);
     document.body.removeChild(a);
+  };
+
+  const downloadTicket = async (ticketData?: Ticket) => {
+    const ticketToDownload = ticketData || ticket;
+    if (!ticketToDownload) return;
+
+    try {
+      const response = await fetch(ticketToDownload.printUrl);
+      const html = await response.text();
+      
+      const blob = new Blob([html], { type: "text/html" });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `ticket-${ticketToDownload.ticketId}.html`;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    } catch (err) {
+      console.error("Download ticket error:", err);
+    }
   };
 
   const shareTicket = async () => {

@@ -128,6 +128,8 @@ export async function POST(req: Request) {
     const serialNumber = await nextSerialNumber();
     const ticketId = `CFX-${serialNumber.toString().padStart(4, "0")}`;
 
+    const ticketPageUrl = `${new URL(req.url).origin}/gate/ticket/${ticketId}?download=true`;
+    
     const qrData = JSON.stringify({
       ticketId,
       regNumber: cleanRegNumber,
@@ -159,7 +161,7 @@ export async function POST(req: Request) {
         amount_paid: ticketAmount,
         zone_name: zoneValue || "",
         status: "active",
-        qr_data: qrData,
+        qr_data: ticketPageUrl,
       })
       .select("ticket_id,serial_number,vehicle_id,reg_number,make,model,year,owner_name,owner_phone,owner_id_number,amount_paid,zone_name,qr_data")
       .single();

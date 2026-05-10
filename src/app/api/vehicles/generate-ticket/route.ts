@@ -119,7 +119,7 @@ export async function POST(request: Request) {
         amountPaid: ticket.amount_paid,
         zoneName: ticket.zone_name,
         createdAt: ticket.created_at,
-        qrCodeUrl: `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(ticket.qr_data)}`,
+        qrCodeUrl: `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(ticket.qr_data + "?download=true")}`,
         printUrl: `/api/vehicles/print-ticket/${ticket.ticket_id}`,
       },
     });
