@@ -91,9 +91,23 @@ export default function GateDashboard() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ vehicleId: id, id, status: "active" }),
       });
-      if (res.ok) fetchData();
+      
+      if (!res.ok) {
+        const error = await res.json();
+        console.error("Verification failed:", error);
+        alert(`Authorization failed: ${error.error || "Unknown error"}`);
+        return;
+      }
+      
+      const result = await res.json();
+      console.log("Vehicle authorized:", result);
+      
+      // Refresh data after successful authorization
+      await fetchData();
+      alert("Vehicle authorized successfully!");
     } catch (err) {
-      console.error(err);
+      console.error("Authorization error:", err);
+      alert(`Error: ${err instanceof Error ? err.message : "Unknown error"}`);
     }
   };
 
