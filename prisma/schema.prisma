@@ -60,6 +60,7 @@ model Event {
   location  String
   isActive  Boolean  @default(true)
   zones     Zone[]
+  registrationTickets RegistrationTicket[]
   createdAt DateTime @default(now())
 }
 
@@ -302,6 +303,8 @@ model RegistrationTicket {
   ticketId     String   @unique
   vehicleId    String
   vehicle      Vehicle  @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+  eventId      String
+  event        Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
   regNumber    String
   make         String
   model        String

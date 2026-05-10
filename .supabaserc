@@ -1,0 +1,8 @@
+{
+  "projects": {
+    "production": {
+      "api_url": "https://ikrlxhqddvkttdffswps.supabase.co",
+      "db_url": "postgresql://postgres.ikrlxhqddvkttdffswps:%24Carflexmeru123%24@aws-1-eu-north-1.pooler.supabase.com:6543/postgres?pgbouncer=true&sslmode=require"
+    }
+  }
+}

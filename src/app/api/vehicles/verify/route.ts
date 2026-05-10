@@ -71,7 +71,7 @@ export async function POST(request: Request) {
     // Get the current vehicle to preserve event_name and get zone info
     const { data: currentVehicle } = await supabase
       .from("vehicles")
-      .select("event_name,at_event,zone_id")
+      .select("event_name,at_event,zone_id,make,model,year")
       .eq("id", vehicleId)
       .single();
 
@@ -94,13 +94,20 @@ export async function POST(request: Request) {
       }
     }
 
+    // Allow updating vehicle details if provided in request body
+    const updateData: any = {
+      is_verified: true,
+      status,
+      event_name: eventName || null,
+    };
+
+    if (body.make) updateData.make = body.make;
+    if (body.model) updateData.model = body.model;
+    if (body.year) updateData.year = body.year;
+
     const { data: updatedRows, error: updateError } = await supabase
       .from("vehicles")
-      .update({
-        is_verified: true,
-        status,
-        event_name: eventName || null,
-      })
+      .update(updateData)
       .eq("id", vehicleId)
       .select("id,reg_number,make,model,year,price,status,is_verified,created_at,owner_id,zone_id,event_name,at_event")
       .limit(1);
